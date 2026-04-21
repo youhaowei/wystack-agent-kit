@@ -1,0 +1,3 @@
+interface:
+  display_name: "A/B Test Setup"
+  short_description: "Design and scope A/B tests and experiments"

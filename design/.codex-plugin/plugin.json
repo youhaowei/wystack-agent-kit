@@ -1,0 +1,35 @@
+{
+  "name": "design",
+  "version": "0.1.0",
+  "description": "Design quality, creative direction, evaluation, and frontend interface guidance.",
+  "author": {
+    "name": "Youhao Wei",
+    "email": "wei@youhao.me"
+  },
+  "keywords": [
+    "design",
+    "frontend",
+    "ui",
+    "ux",
+    "review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Design",
+    "shortDescription": "Creative direction and UI quality workflows",
+    "longDescription": "Design quality, creative direction, evaluation, and frontend interface guidance for Codex.",
+    "developerName": "Youhao Wei",
+    "category": "Design",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Review this UI for obvious design issues",
+      "Help design a distinctive frontend flow",
+      "Polish this interface without changing the product"
+    ],
+    "brandColor": "#7C3AED",
+    "screenshots": []
+  }
+}

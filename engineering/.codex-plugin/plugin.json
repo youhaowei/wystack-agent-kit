@@ -1,0 +1,35 @@
+{
+  "name": "engineering",
+  "version": "0.3.1",
+  "description": "Development lifecycle roles for planning, architecture, implementation, quality assurance, and delivery.",
+  "author": {
+    "name": "Youhao Wei",
+    "email": "wei@youhao.me"
+  },
+  "keywords": [
+    "engineering",
+    "planning",
+    "architecture",
+    "qa",
+    "delivery"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Engineering",
+    "shortDescription": "Planning and delivery workflows for engineering work",
+    "longDescription": "Development lifecycle roles and skills for planning, architecture, implementation, quality assurance, and delivery in Codex.",
+    "developerName": "Youhao Wei",
+    "category": "Coding",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Plan this feature before implementation",
+      "Review these code changes for regressions",
+      "Turn this task into an execution plan"
+    ],
+    "brandColor": "#2563EB",
+    "screenshots": []
+  }
+}
