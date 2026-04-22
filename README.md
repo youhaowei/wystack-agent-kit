@@ -55,6 +55,30 @@ Codex's plugin marketplace spec expects repo entries to resolve through
 `plugins/marketing`, and `plugins/design` as symlinks to the real plugin
 directories, and the marketplace points at those shim paths.
 
+## Cowork Distribution
+
+Claude Cowork loads plugins from `~/.claude/plugins/marketplaces/local-desktop-app-uploads/wystack-<plugin>/`. Because Cowork's marketplace namespace collides with Anthropic's built-in plugins, each Cowork-deployed plugin is renamed with a `wystack-` prefix:
+
+- `plugin.json` `name` → `wystack-<plugin>`
+- Every `<plugin>:X` agent/skill reference in `*.md` → `wystack-<plugin>:X`
+
+Source files are untouched; the rewrite is applied to a staged copy. The CLI install keeps using the bare names.
+
+### Build + deploy
+
+```bash
+# Build zips into dist/ (for manual Cowork upload via the desktop app)
+./scripts/build-dist.sh [plugin ...]
+
+# Deploy directly to the Cowork marketplace dir (skip the upload step)
+./scripts/build-dist.sh --deploy --no-zip [plugin ...]
+
+# Watch sources and auto-deploy on change (requires: brew install fswatch)
+./scripts/watch-deploy.sh [plugin ...]
+```
+
+After a deploy, reload Cowork to pick up the new content.
+
 ## Notes
 
 - The skill content is shared across both harnesses.
