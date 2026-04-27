@@ -55,16 +55,12 @@ for p in "${plugins[@]}"; do
     --exclude='.agents' \
     "$p/" "$dst/"
 
-  python3 - "$dst/.claude-plugin/plugin.json" "$prefixed" <<'PY'
-import json, sys
-path, new_name = sys.argv[1], sys.argv[2]
-with open(path) as f:
-    d = json.load(f)
-d["name"] = new_name
-with open(path, "w") as f:
-    json.dump(d, f, indent=2)
-    f.write("\n")
-PY
+  bun --eval '
+const [path, newName] = Bun.argv.slice(1);
+const manifest = await Bun.file(path).json();
+manifest.name = newName;
+await Bun.write(path, `${JSON.stringify(manifest, null, 2)}\n`);
+' "$dst/.claude-plugin/plugin.json" "$prefixed"
 
   find "$dst" -type f -name '*.md' -print0 \
     | xargs -0 sed -i '' "s/\\([^a-zA-Z0-9_-]\\)$p:/\\1$prefixed:/g; s/^$p:/$prefixed:/g"

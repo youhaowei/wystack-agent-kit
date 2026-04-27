@@ -79,6 +79,29 @@ Source files are untouched; the rewrite is applied to a staged copy. The CLI ins
 
 After a deploy, reload Cowork to pick up the new content.
 
+### Deploy to Claude and Codex
+
+For the usual local development loop, deploy to both Claude Cowork and the Codex
+plugin cache with:
+
+```bash
+bun run deploy
+```
+
+This runs `build-dist.sh --deploy --no-zip` for Claude and
+`sync_codex_plugin_cache.js --force --apply` for Codex. It defaults Codex to
+symlink mode so this repo remains the active source of truth.
+
+Useful variants:
+
+```bash
+bun run deploy --dry-run
+bun run deploy engineering
+bun run deploy --codex-mode copy
+bun run deploy:claude
+bun run deploy:codex
+```
+
 ## Notes
 
 - The skill content is shared across both harnesses.
@@ -95,7 +118,7 @@ If you already have local skills or older plugins installed, audit overlaps
 before enabling these plugins in Codex:
 
 ```bash
-python3 scripts/manage_local_skills.py audit-overlaps
+bun scripts/manage_local_skills.js audit-overlaps
 ```
 
 This checks the repo plugin skills against:
@@ -117,22 +140,22 @@ Recommended rollout:
 2. Remove repo-backed standalone duplicates first:
 
    ```bash
-   python3 scripts/manage_local_skills.py cleanup-repo-backed
-   python3 scripts/manage_local_skills.py cleanup-repo-backed --apply
+   bun scripts/manage_local_skills.js cleanup-repo-backed
+   bun scripts/manage_local_skills.js cleanup-repo-backed --apply
    ```
 
 3. If you also have exact local duplicates across Codex, agents, and Claude, consolidate them:
 
    ```bash
-   python3 scripts/manage_local_skills.py consolidate-exact
-   python3 scripts/manage_local_skills.py consolidate-exact --apply
+   bun scripts/manage_local_skills.js consolidate-exact
+   bun scripts/manage_local_skills.js consolidate-exact --apply
    ```
 
 4. If you are adopting the current target state for shared globals and engineering-owned skills:
 
    ```bash
-   python3 scripts/manage_local_skills.py resolve-ambiguity
-   python3 scripts/manage_local_skills.py resolve-ambiguity --apply
+   bun scripts/manage_local_skills.js resolve-ambiguity
+   bun scripts/manage_local_skills.js resolve-ambiguity --apply
    ```
 
 5. Enable `engineering`, `marketing`, and `design` only after the overlap set is
@@ -141,8 +164,8 @@ Recommended rollout:
 If this repo should become the source of truth for your local Codex setup, use:
 
 ```bash
-python3 scripts/promote_codex_source_of_truth.py
-python3 scripts/promote_codex_source_of_truth.py --apply
+bun scripts/promote_codex_source_of_truth.js
+bun scripts/promote_codex_source_of_truth.js --apply
 ```
 
 What it does:
@@ -159,3 +182,25 @@ Current behavior is source-of-truth oriented:
 - it syncs `work` -> `engineering`
 - the design review skill is exposed as `design-review`, so it no longer collides
   with the standalone code review skill named `review`
+
+### Refresh the Codex plugin cache
+
+Codex installs local plugins into a versioned cache under
+`~/.codex/plugins/cache/<marketplace>/<plugin>/<version>/`. To make this repo the
+active local development source for installed Codex plugins, refresh that cache:
+
+```bash
+bun scripts/sync_codex_plugin_cache.js
+bun scripts/sync_codex_plugin_cache.js --apply
+```
+
+By default this uses symlinks, so edits in this repo are reflected in the cache
+after Codex reloads plugin metadata. To test copied cache behavior instead:
+
+```bash
+bun scripts/sync_codex_plugin_cache.js --mode copy --apply
+```
+
+Use `--plugin engineering` to sync one plugin. The script defaults to dry-run,
+reads each cache version from `.codex-plugin/plugin.json`, and refuses to replace
+unmarked cache directories unless `--force` is passed.

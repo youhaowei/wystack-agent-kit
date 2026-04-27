@@ -1,0 +1,10 @@
+{
+  "name": "wystack-plugins",
+  "private": true,
+  "scripts": {
+    "deploy": "./scripts/deploy.sh",
+    "deploy:dry-run": "./scripts/deploy.sh --dry-run",
+    "deploy:codex": "bun scripts/sync_codex_plugin_cache.js --force --apply",
+    "deploy:claude": "./scripts/build-dist.sh --deploy --no-zip"
+  }
+}
