@@ -47,7 +47,7 @@ After selection, ask for a brief description of the work.
 
 ### 2. Identify Project
 
-Infer from the **current working directory name** (last path segment). Map common directory names to known projects — e.g., `knowledgebase` → Knowledgebase, `powker` → Powker, `workforce` → WorkForce.
+Infer from the **current working directory name** (last path segment). Map common directory names to known projects — e.g., `knowledgebase` → Knowledgebase, `powker` → Powker, `rincon` → Rincon — Tucson Wedding Marketplace, `workforce` → WorkForce.
 
 If no match, ask the user which project.
 

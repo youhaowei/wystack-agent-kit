@@ -49,6 +49,7 @@ Data source: `collection://24cd48cc-af54-80d7-b03a-000b6e1a540b`
 |---------|-----|
 | Knowledgebase | `https://www.notion.so/30cd48ccaf5481889ae3f9238c4295d3` |
 | Powker | `https://www.notion.so/24cd48ccaf5480de8a2dee274b0cf1fb` |
+| Rincon — Tucson Wedding Marketplace | `https://www.notion.so/34dd48ccaf5481b694a0f81ce52702a4` |
 | WorkForce | `https://www.notion.so/2ffd48ccaf5481d7bb33d67599423042` |
 | unifai | `https://www.notion.so/30fd48ccaf54811199abf0b639497be0` |
 | WyStack | `https://www.notion.so/320d48ccaf5481968bf3e3e1580a6f6d` |
@@ -62,6 +63,7 @@ Map working directory name → project:
 | workforce | WorkForce |
 | knowledgebase | Knowledgebase |
 | powker | Powker |
+| rincon | Rincon — Tucson Wedding Marketplace |
 | unifai | unifai |
 | wystack | WyStack |
 

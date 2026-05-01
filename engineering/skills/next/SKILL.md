@@ -11,7 +11,7 @@ Find the best task to work on next for a given project.
 
 Project hint: `$ARGUMENTS`
 
-If no argument provided, infer the project from the **current working directory name** (last path segment). Map common directory names to known projects — e.g., `knowledgebase` → Knowledgebase, `powker` → Powker, `workforce` → WorkForce. If no match is found, ask the user which project.
+If no argument provided, infer the project from the **current working directory name** (last path segment). Map common directory names to known projects — e.g., `knowledgebase` → Knowledgebase, `powker` → Powker, `rincon` → Rincon — Tucson Wedding Marketplace, `workforce` → WorkForce. If no match is found, ask the user which project.
 
 ## Prerequisites
 

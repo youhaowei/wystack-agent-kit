@@ -39,13 +39,13 @@ after because it benefits from knowing what issues were already found.
 
 ## Context First
 
-Before dispatching any review lens, invoke `engineering:context` with mode
+Before dispatching any review lens, invoke `engineering:engineering-context` with mode
 `review` when that skill is available in the current harness.
 
 - Pass the returned context block through to `engineering:code-review`.
 - Pass the same block to `qa` and PM review so all three lenses evaluate the
   same requirements, decisions, non-goals, and known edge cases.
-- If `engineering:context` is unavailable, assemble the equivalent block
+- If `engineering:engineering-context` is unavailable, assemble the equivalent block
   manually from the ticket/spec links and repo docs, and label it as fallback
   context.
 
@@ -53,7 +53,7 @@ Before dispatching any review lens, invoke `engineering:context` with mode
 
 ```
 ┌─────────────────────┐
-│ engineering:context │
+│ engineering:engineering-context │
 └──────────┬──────────┘
            │
    ┌───────▼────────┐   ┌─────────────┐
@@ -80,7 +80,7 @@ If no ticket found, ask the user for a Notion URL or requirements description. F
 
 ### 2. Build Review Context
 
-Run `engineering:context` in `review` mode when available and carry its output
+Run `engineering:engineering-context` in `review` mode when available and carry its output
 forward unchanged. If it is unavailable, build the same block manually and
 label it as fallback context.
 

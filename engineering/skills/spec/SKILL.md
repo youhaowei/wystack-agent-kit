@@ -76,7 +76,8 @@ Used when a new spec is being written.
 4. **Decisions over descriptions** — focus on the non-obvious. Document WHY, not just WHAT.
 5. **Diagrams over prose** — component boundaries and data flow are almost always clearer as diagrams.
 6. **Save draft to the wiki** — delegate to the `wiki-librarian` agent. Provide: the page title (prefixed with "Spec — "), the full spec content, the project name, suggested Tags, and any related page URLs to cross-reference (especially the PRD it implements). The wiki-librarian handles schema, properties, title quirks, and dedup. Do NOT call wiki MCP tools directly.
-7. **Update related docs** — ask the wiki-librarian to search for and update related PRDs, specs, epics, and tasks to reference the new spec.
+7. **Update related docs** — ask the wiki-librarian to search for and update related PRDs, specs, epics, and tasks to reference the new or updated spec. When related tasks already exist, ensure the spec has an `Implementation tickets` section with their actual ticket URLs grouped by phase / architectural area / decision anchor. When a related PRD exists, ensure both pages link to each other.
+8. **Verify backlinks** — fetch the spec and related pages after updates. Do not report completion until the spec links to related PRD/task URLs and those pages link back to the spec, or until you have reported an explicit manual follow-up with the exact links/section text to add.
 
 Draft specs stay in the wiki while stakeholders iterate. They do not enter the repo yet.
 
@@ -163,7 +164,8 @@ Describe shape and intent. TypeScript interfaces, schemas, and record formats be
 4. **Decisions over descriptions** — focus on the non-obvious. Document WHY, not just WHAT.
 4. **Diagrams over prose** — component boundaries and data flow are almost always clearer as diagrams.
 5. **Save to Wiki** — delegate to the `wiki-librarian` agent. Provide: the page title (prefixed with "Spec — "), the full spec content, the project name, suggested Tags, and any related page URLs to cross-reference (especially the PRD it implements). The wiki-librarian handles schema, properties, title quirks, and dedup. Do NOT call Notion MCP tools directly.
-6. **Update related docs** — ask the wiki-librarian to search for and update related PRDs, specs, epics, and tasks to reference the new spec.
+6. **Update related docs** — ask the wiki-librarian to search for and update related PRDs, specs, epics, and tasks to reference the new or updated spec. When related tasks already exist, ensure the spec has an `Implementation tickets` section with their actual ticket URLs grouped by phase / architectural area / decision anchor. When a related PRD exists, ensure both pages link to each other.
+7. **Verify backlinks** — fetch the spec and related pages after updates. Do not report completion until the spec links to related PRD/task URLs and those pages link back to the spec, or until you have reported an explicit manual follow-up with the exact links/section text to add.
 
 ## Rules
 
@@ -171,6 +173,7 @@ Describe shape and intent. TypeScript interfaces, schemas, and record formats be
 - **Decisions are the core** — if there's no decision to document, there's no spec to write
 - **Architecture, not implementation** — component boundaries and data flow, not TypeScript interfaces
 - **Living document** — update when architecture changes
+- **Bidirectional links** — when creating or updating a spec, link it to related PRDs and actual task URLs, and update those related docs/tasks to link back. A spec is incomplete if known related tickets/PRDs exist but are not linked.
 - **Feeds into `engineering:breakdown`** — the spec + PRD together define what gets split into tickets
 - **Wiki, not project pages** — specs go in the Wiki database, not nested under project pages. This ensures discoverability and verification tracking.
 - **Use wiki-librarian for all Notion operations** — never call Notion MCP tools directly from the spec skill. The wiki-librarian agent handles schema compliance, title persistence, dedup, and cross-referencing.

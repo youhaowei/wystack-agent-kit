@@ -47,7 +47,7 @@ This workflow must run in both Claude-style harnesses and Codex:
   `engineering/agents/*.md`, or use the closest installed standalone skill
   (`code-reviewer`, `principal-engineer`, `qa`) when available.
 - Do not claim plugin parity unless the current session actually exposes the
-  engineering plugin skills. If the session lacks `engineering:context` or the
+  engineering plugin skills. If the session lacks `engineering:engineering-context` or the
   role briefs cannot be loaded, say so and continue with the best compatible
   fallback.
 
@@ -86,18 +86,40 @@ Classify against the roster to pick specialists.
 
 ### 2. Context Gathering
 
-**Invoke `engineering:context` with mode `review` when that skill is available.**
+**This step is a hard gate. You MUST invoke `engineering:engineering-context` (or the documented fallback) before step 4. Skipping it is the #1 cause of false-positive reviews — reviewers flag intentional design as bugs.**
+
+#### 2a. Extract identifiers from the branch and recent commits
+
+Before dispatch, parse the branch name and the last ~20 commit messages (`git log -20 --oneline`) for ticket IDs. Match these patterns (case-insensitive):
+
+- `task-{id}` / `task/{id}` / `task_{id}`
+- `{PROJECT}-{id}` (e.g. `WS-123`, `ENG-456`, `PROJ-789`) — any 2–6 letter prefix + dash + digits
+- Bare leading digits: `{id}-{slug}` or `{id}_{slug}`
+- Path-style prefixes: `feat/{id}-*`, `fix/{id}-*`, `eng/{id}-*`, `{user}/{id}-*`, `{user}/task-{id}-*`
+
+Collect every match. Commit messages often carry an ID even when the branch doesn't.
+
+#### 2b. Invoke the skill with explicit arguments
+
+Pass the branch name AND every extracted ticket ID as `$ARGUMENTS`, plus the mode:
+
+```
+engineering:engineering-context "<branch-name> <id1> <id2> ..." review
+```
+
+Do not rely on the engineering-context skill's branch-name inference alone — when the branch encodes a ticket ID, hand it over explicitly. **If you found a ticket ID, instruct context that task-manager MUST be dispatched with that ID, even if its freshness check thinks the ticket is already loaded.** Freshness on title alone is unreliable when only the ID matches.
+
 That skill owns the parallel dispatch (task-manager + wiki-librarian + Explore +
 kb), the freshness check that skips sources already in the conversation, and the
 Notion-fallback ladder. It returns a structured block with Goals / Non-Goals /
 Phase scope / Key decisions / Open questions / Edge-case expectations / Prior
 decisions (KB) / Known issues (KB retro) / Repo conventions.
 
-If `engineering:context` is not available in the current harness, gather the
+If `engineering:engineering-context` is not available in the current harness, gather the
 same block manually from the ticket/spec links and repo docs, and explicitly
-label the result as a fallback context block.
+label the result as a fallback context block. **The fallback is also mandatory — never proceed to step 4 with no context block at all.**
 
-Reviewers without this block produce false-positive findings that flag intentional design as bugs. If `engineering:context` reports gaps (no PRD found, unresolved open questions affecting the diff), pause and ask the user before dispatching reviewers.
+If `engineering:engineering-context` reports gaps (no PRD found, unresolved open questions affecting the diff), pause and ask the user before dispatching reviewers.
 
 Pass the returned block **verbatim** to every reviewer in step 4 — not paraphrased. Exact wording matters because reviewers check findings against it.
 

@@ -11,7 +11,7 @@ A conversational front door for one project. You are the **PM + Principal Engine
 
 Project hint: `$ARGUMENTS`
 
-If no argument provided, infer from the **current working directory name** (last path segment). Common mappings: `workforce` → WorkForce, `knowledgebase` → Knowledgebase, `powker` → Powker. If no match, ask the user which project.
+If no argument provided, infer from the **current working directory name** (last path segment). Common mappings: `workforce` → WorkForce, `knowledgebase` → Knowledgebase, `powker` → Powker, `rincon` → Rincon — Tucson Wedding Marketplace. If no match, ask the user which project.
 
 ## Prerequisites
 
