@@ -1,6 +1,20 @@
 {
   "name": "wystack-plugins",
   "private": true,
+  "keywords": [
+    "pi-package"
+  ],
+  "pi": {
+    "extensions": [
+      "pi/extensions/wystack-agents.ts",
+      "pi/extensions/agent-browser.ts"
+    ],
+    "skills": [
+      "engineering/skills",
+      "marketing/skills",
+      "design/skills"
+    ]
+  },
   "scripts": {
     "deploy": "./scripts/deploy.sh",
     "deploy:dry-run": "./scripts/deploy.sh --dry-run",
