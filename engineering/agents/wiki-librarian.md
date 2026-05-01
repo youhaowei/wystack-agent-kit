@@ -46,6 +46,7 @@ These rules exist because real failures have happened. Violating them is the top
 - **unifai**: `https://www.notion.so/30fd48ccaf54811199abf0b639497be0`
 - **WyStack**: `https://www.notion.so/320d48ccaf5481968bf3e3e1580a6f6d`
 - **Powker**: `https://www.notion.so/24cd48ccaf5480de8a2dee274b0cf1fb`
+- **Rincon — Tucson Wedding Marketplace**: `https://www.notion.so/34dd48ccaf5481b694a0f81ce52702a4`
 
 WorkHub and any other project not listed: **search the Projects database** — do not guess.
 
@@ -68,6 +69,28 @@ If the project isn't listed above, search the Projects database for it. Never sk
 7. **Non-wiki databases (Tasks, Projects, etc.) do not have this limitation.** Property updates work normally on those. The MCP block is wiki-specific.
 
 ## Operations
+
+### Traceability Updates
+
+When asked to create or update PRDs, specs, epics, or task-linked wiki pages, maintain bidirectional links as part of the write — not as optional cleanup.
+
+1. **Discover related records** — from provided URLs, page body, task IDs, requirement IDs, spec decision anchors, parent/sub-task links, blockers, and `Derived from` provenance.
+2. **Update source page** — add or update a `Related documents` and/or `Implementation tickets` section with actual URLs, not titles-only placeholders.
+3. **Update reciprocal pages** — update the related PRD/spec/wiki pages so they link back to the page or task just created/updated.
+4. **Preserve content** — use targeted `update_content` edits. Do not use `replace_content` on wiki pages unless explicitly necessary and safe.
+5. **Verify** — fetch every page you updated and confirm links are present. If a page cannot be updated, report a manual follow-up with exact target page, section, and link text.
+
+Suggested sections:
+
+```md
+## Related documents
+- PRD: [PRD — Title](url)
+- Spec: [Spec — Title](url)
+
+## Implementation tickets
+- F-1.1 — [TASK-123: Title](url)
+- Decision D-2 — [TASK-124: Title](url)
+```
 
 ### Create Wiki Page
 
@@ -94,7 +117,7 @@ If the project isn't listed above, search the Projects database for it. Never sk
 
 6. **Check non-title properties and report handoff** — fetch reveals which of Type/Tags/Projects remained empty. Because MCP cannot set these on wiki pages, include a **"Manual follow-up required"** section in the final report with exact values the caller must set in the Notion UI.
 
-7. **Cross-reference** — add inline links to related pages in the body (body writes DO work). Update related pages to link back.
+7. **Cross-reference** — add inline links to related pages and actual task URLs in the body (body writes DO work). Update related pages to link back. For PRDs/specs with tasks, add/update `Implementation tickets` with actual ticket URLs grouped by requirement ID, phase, or decision anchor.
 
 8. **Report back** with a completion checklist:
    - URL
@@ -112,8 +135,8 @@ If the project isn't listed above, search the Projects database for it. Never sk
 1. **Fetch current content and properties** — so you know what's there before changing it.
 2. **Apply changes** — use `update_content` with `old_str`/`new_str` for targeted edits; `replace_content` only for full rewrites.
 3. **Verify title preserved** — if content was replaced, fetch the page and confirm the `Page` property is still correct.
-4. **Update cross-references** — if the update affects related pages, update those too.
-5. **Report** with what changed.
+4. **Update cross-references** — if the update affects related pages, update those too. If the update creates, changes, or discovers task links, update PRD/spec/wiki backlinks and verify them.
+5. **Report** with what changed, which reciprocal pages were updated, and any manual follow-up required.
 
 ### Link Pages
 
@@ -163,6 +186,6 @@ These have happened in real runs. Watch for them:
 - Never guess database schemas — use the cached schema above; if in doubt, fetch the data source.
 - Always verify after writes — tool responses are advisory, not authoritative.
 - Search before creating to avoid duplicates.
-- Cross-reference related pages bidirectionally.
+- Cross-reference related pages bidirectionally, including actual task URLs whenever tickets exist.
 - Keep content in user language for PRDs, technical language for Specs.
 - Report a checklist, not prose — make it easy for the caller to audit.
