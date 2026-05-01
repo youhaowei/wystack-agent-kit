@@ -1,5 +1,5 @@
 ---
-name: context
+name: engineering-context
 description: "Gather spec-anchored context for engineering work by delegating to task-manager, wiki-librarian, Explore, and kb in parallel. Use whenever you're about to review, test, fix, plan, or document work that references a ticket, feature, or feature-branch. Invoke this BEFORE reviewers, test-writers, or architects — they produce false-positive findings without Goals, Non-Goals, and Key Decisions in hand. Also use when the user mentions a PRD/Spec URL, a TASK-### ID, or a feature name and you need the surrounding design context before proceeding."
 ---
 
@@ -12,10 +12,17 @@ Without this step, reviewers flag intentional design as bugs, test-writers encod
 ## Input
 
 `$ARGUMENTS` — optional. Accepts any of:
-- Branch name (detect `task-{id}-*`, `feat/{feature}-phase{N}`, `fix/{id}`)
+- Branch name. Detect ticket IDs in any of these shapes (case-insensitive):
+  - `task-{id}` / `task/{id}` / `task_{id}`
+  - `{PROJECT}-{id}` (e.g. `WS-123`, `ENG-456`) — 2–6 letter prefix + dash + digits
+  - Bare leading digits: `{id}-{slug}` / `{id}_{slug}`
+  - Path-style prefixes: `feat/{id}-*`, `fix/{id}-*`, `eng/{id}-*`, `{user}/{id}-*`, `{user}/task-{id}-*`
+  - Phase shape: `feat/{feature}-phase{N}`
 - Notion Task URL or TASK-### ID
 - Feature name / phase name for title-based search
-- Empty → infer from current branch + `git log -20 --oneline`
+- Empty → infer from current branch + `git log -20 --oneline` (commits often carry an ID even when the branch doesn't)
+
+When a ticket ID is detected (from args, branch, or commits), task-manager MUST be dispatched with that ID — do not let the freshness check skip it on title-match alone.
 
 **Mode** (optional, second arg): `review` | `test` | `plan` | `fix`. Adjusts what `Explore` returns. If omitted, the skill infers from conversation signals (see below). Explicit argument always wins.
 
@@ -165,7 +172,7 @@ A subagent's "unavailable" reply is never terminal — the question is *how* to 
 
 - Simple one-line fixes where the contract is self-evident (typo, import cleanup, lint nit)
 - Exploratory prototyping (throwaway work)
-- The conversation already ran `engineering:context` earlier in the session and the scope hasn't changed (freshness check would return "all four sources fresh" → skip the whole thing)
+- The conversation already ran `engineering:engineering-context` earlier in the session and the scope hasn't changed (freshness check would return "all four sources fresh" → skip the whole thing)
 
 ## Callers
 
