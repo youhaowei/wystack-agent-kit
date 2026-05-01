@@ -24,7 +24,7 @@ Design quality for frontend interfaces — creative direction, evaluation, Figma
 | Skill | Purpose |
 |-------|---------|
 | **build/** | Design principles, anti-patterns, aesthetic direction. Foundation for all design work. |
-| **design-review** (`review/`) | Structured evaluation — AI slop detection, hierarchy, a11y, performance. |
+| **design-review** (`design-review/`) | Structured evaluation — AI slop detection, hierarchy, a11y, performance. |
 | **polish/** | Final quality pass — alignment, spacing, states, copy, responsiveness. |
 | **distill/** | Simplification — remove complexity, reveal essence. |
 | **iterate/** | Figma iteration loop — code → Figma → screenshot → evaluate → refine. |

@@ -20,6 +20,43 @@ both Claude and Codex:
 
 ## Install
 
+### Pi
+
+This repo is a local Pi package. From the repo root:
+
+```bash
+pi install .
+```
+
+Loaded resources:
+
+- Plugin skills from `engineering/skills`, `marketing/skills`, and `design/skills`
+- WyStack role commands from `engineering/agents`, `marketing/agents`, and `design/agents`
+- A `wystack_agent` read-only subagent tool that runs a role brief in a separate `pi -p` process
+- An `agent_browser` tool and `/browser` command wrapping the `agent-browser` CLI
+
+For MCP/Notion, install `pi-mcp-adapter` separately:
+
+```bash
+pi install npm:pi-mcp-adapter
+```
+
+Useful commands after install/reload:
+
+```text
+/wystack-agents                 # list loaded role briefs
+/engineering-principal <task>   # run a role brief in the current session
+/marketing-strategist <task>
+/design-designer <task>
+/skill:code-review <args>       # invoke a plugin skill
+/browser open https://example.com
+/browser snapshot -i
+```
+
+For Notion via MCP OAuth, add the official Notion MCP server to your shared MCP config and authenticate with `/mcp-auth notion` inside Pi.
+
+If Pi is already running, use `/reload` after changing this package.
+
 ### Claude Code
 
 Add as a local plugin source pointing to the specific plugin directory:
