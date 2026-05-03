@@ -1,0 +1,3 @@
+interface:
+  display_name: "Establish"
+  short_description: "Bootstrap a project's visual design system: produces DESIGN.md with tokens, register, primitives mapping"

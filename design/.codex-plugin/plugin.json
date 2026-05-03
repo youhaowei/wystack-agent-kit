@@ -1,7 +1,7 @@
 {
   "name": "design",
-  "version": "0.1.0",
-  "description": "Design quality, creative direction, evaluation, and frontend interface guidance.",
+  "version": "1.0.0",
+  "description": "Design + site delivery — visual design, UX writing, marketing copy, and discoverability across search, AI search, and directories.",
   "author": {
     "name": "Youhao Wei",
     "email": "wei@youhao.me"
@@ -10,14 +10,16 @@
     "design",
     "frontend",
     "ui",
-    "ux",
-    "review"
+    "ux-writing",
+    "copywriting",
+    "discoverability",
+    "seo"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Design",
-    "shortDescription": "Creative direction and UI quality workflows",
-    "longDescription": "Design quality, creative direction, evaluation, and frontend interface guidance for Codex.",
+    "shortDescription": "Visual design, UX writing, marketing copy, discoverability",
+    "longDescription": "Design + site delivery in one plugin. Visual design (frontend, polish, design-review, establish), in-product UX writing, marketing copywriting, and discoverability across traditional search, AI search, structured data, site architecture, directories, and AI agent catalogs.",
     "developerName": "Youhao Wei",
     "category": "Design",
     "capabilities": [
@@ -25,9 +27,10 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Review this UI for obvious design issues",
-      "Help design a distinctive frontend flow",
-      "Polish this interface without changing the product"
+      "Set up the design system for this project",
+      "Build the landing page hero section",
+      "Make this plugin discoverable in AI search",
+      "Rewrite this empty state"
     ],
     "brandColor": "#7C3AED",
     "screenshots": []
