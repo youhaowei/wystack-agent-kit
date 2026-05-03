@@ -50,10 +50,12 @@ Work lifecycle skills migrated from work-plugin. Agents load these as needed.
 - `next/` — prioritized task selection from Notion
 - `new/` — codebase-informed task creation
 - `estimation/` — shared sizing scale for grooming and planning
+- `competitor-analysis/` — competitor profiling and comparison pages; informs positioning and PRD non-goals
 
 ### Principal
 - `spec/` — technical specification with architecture and key decisions (includes optional DDD Domain Model section)
 - `glossary/` — ubiquitous language: canonical domain terms, aliases, relationships. Shared by PRD, spec, code, tests.
+- `improve-codebase/` — find deepening opportunities (Ousterhout's lens + Fowler's catalog + WyStack constraints). Use when the user wants to improve architecture, find refactoring opportunities, or make a codebase more testable.
 
 ### Tech Lead / DevOps
 - `start/` — full task lifecycle (Notion to shipped code)

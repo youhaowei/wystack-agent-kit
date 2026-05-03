@@ -29,6 +29,7 @@ You are a Product Manager. Your job is defining what to build, why, and in what 
 - `groom/` — codebase-aware task planning and estimation
 - `next/` — prioritized task selection from Notion
 - `new/` — codebase-informed task creation
+- `competitor-analysis/` — competitor profiling and comparison pages; informs positioning and PRD non-goals
 
 ## Principles
 

@@ -3,242 +3,72 @@ name: groom
 description: "Groom engineering tasks with codebase-aware scope, acceptance criteria, estimates, and implementation planning. Use when the user asks to plan a task, refine a ticket, estimate work, or prepare implementation-ready next steps."
 ---
 
-# Plan Task
+<what-to-do>
 
 Interactive, codebase-aware grooming and implementation planning. Merges backlog refinement with plan writing into one adaptive skill.
 
-## Input
+**Input:** `$ARGUMENTS` —
 
-Task reference: `$ARGUMENTS`
+- **Notion URL** → Single-task mode.
+- **Project name** (e.g. `"knowledgebase"`) → Batch mode.
+- **Empty** → Infer project from CWD, enter batch mode.
 
-- **Notion URL** → Single-task mode (groom + plan one task)
-- **Project name** (e.g., "knowledgebase") → Batch mode (groom multiple tasks)
-- **Empty** → Infer project from CWD, enter batch mode
+**Prerequisites.** Load `notion-workspace` skill (or workspace context for the harness) and `engineering:estimation` before sizing work.
 
-## Prerequisites
+## Single-task mode
 
-Load these into YOUR context (needed for orchestration):
+1. **Fetch task details** — spawn `notion-researcher` (lightweight tier, e.g. Haiku). Return: title, status, priority, estimate, description, ACs, relations, linked specs.
+2. **Groom (if needed)** — skip if the task already has estimate + ACs + scope. Otherwise spawn two subagents in parallel: `notion-researcher` for related-task dependencies (blocked-by, blocking, parent), and `Explore` with the analysis prompt in [EXPLORATION-PROMPTS.md](EXPLORATION-PROMPTS.md#groom-analysis). Present results in the [groom-result format](EXPLORATION-PROMPTS.md#groom-result-format) and use the harness's native selection UI for triage (accept / reprioritize / re-estimate / redefine / split / skip-grooming).
+3. **Plan (always)** — spawn `Explore` with the implementation-plan prompt in [EXPLORATION-PROMPTS.md](EXPLORATION-PROMPTS.md#implementation-plan). Present in the [plan format](EXPLORATION-PROMPTS.md#plan-format). Ask whether to save to Notion (save / revise / skip).
+4. **Apply changes** — spawn `notion-writer`. Update properties (estimate, priority). Append ACs under `## Acceptance Criteria`, scope under `## Scope`, plan under `## Plan`. Set status to **Ready** if [auto-ready criteria](#auto-promotion-to-ready) are met.
+5. **Report** — short summary with old → new estimate, what sections were written, suggested next step (`engineering:start <task-url>`).
 
-```
-Load the installed `notion-workspace` skill or equivalent workspace context for the current harness.
-Load the installed `engineering:estimation` skill or equivalent estimation guidance before sizing work.
-```
+## Batch mode
+
+1. **Lightweight overview** — spawn `notion-researcher` to search tasks for the project. Return only: task count by status + compact list (ID, title, status, priority, estimate). No descriptions or page fetches.
+2. **Ask scope** — use the harness's native question UI *before* fetching details:
+   - **Full sweep** — every non-Done task (warn if >15).
+   - **Quick triage** — missing estimate, priority, or ACs.
+   - **Stale tasks** — stuck in Not Started / Later.
+   - **Specific epic** — drill into one area.
+3. **Per-task loop** — for each task in scope, run single-task mode (steps 1-5). Between tasks, ask the user: continue / stop here.
+4. **Session summary** — see the [batch summary format](EXPLORATION-PROMPTS.md#batch-summary-format).
+
+## Auto-promotion to Ready
+
+Set status to **Ready** when ALL hold:
+
+- Has an estimate.
+- Has acceptance criteria.
+- Has a scope definition (files, tests, docs, migration).
+- Is not blocked by an incomplete task.
+
+</what-to-do>
+
+<supporting-info>
+
+## Reference
+
+- [EXPLORATION-PROMPTS.md](EXPLORATION-PROMPTS.md) — Explore subagent prompts and presentation templates.
+- `engineering:estimation` skill — relative-scale anchors, multipliers/reducers, model-tier mapping. Don't duplicate; load it.
 
 ## Architecture
 
 | Concern | Where | Why |
-|---------|-------|-----|
+|---|---|---|
 | Refinement decisions, user interaction | **Main agent** | Needs conversation history |
 | Notion search & fetch | **`notion-researcher` subagent** | Verbose API responses stay out |
 | Codebase exploration | **`Explore` subagent** | File contents stay out |
 | Notion writes | **`notion-writer` subagent** | Confirmation noise stays out |
 
----
+## Interaction principles
 
-## Single-Task Mode (Notion URL provided)
+- **Scope first, fetch later** — ask what to review before pulling details.
+- **Parallel subagents** — Notion + Explore concurrent whenever possible.
+- **One task at a time** — in batch mode, fully process each before moving on.
+- **Estimation includes full scope** — tests, docs, migration are part of the estimate.
+- **Adaptive depth** — if the user is moving fast, reduce Explore thoroughness (`quick` vs `very thorough`).
+- **Main context stays clean** — only synthesized summaries return.
+- **Auto-promote to Ready** — when all criteria met after grooming + planning.
 
-### 1. Fetch Task Details
-
-Spawn **`notion-researcher`** on a lightweight model tier (for example, Haiku) to fetch the task page. Return: title, status, priority, estimate, description, acceptance criteria, relations, linked specs.
-
-### 2. Groom (if needed)
-
-Skip grooming if the task already has ALL of: estimate, acceptance criteria, and scope definition.
-
-**If grooming needed**, spawn **two subagents in parallel**:
-
-**`notion-researcher`** — Fetch related tasks (blocked-by, blocking, parent) for dependency context.
-
-**`Explore` subagent** — Given task title + description, explore the codebase:
-
-```
-Task: "{title}"
-{description}
-
-Using the estimation scale (XS through XXL), analyze:
-
-1. **Affected files** — paths + brief rationale
-2. **Implementation complexity** — files changed, new vs existing patterns, test infrastructure
-3. **Suggested estimate** — use the scale with reasoning:
-   - What model/agent tier would execute this?
-   - Apply multipliers/reducers from the estimation heuristics
-4. **Full scope at that estimate tier**:
-   - What tests are required? (unit, integration, edge cases)
-   - What docs need updating? (CLAUDE.md, inline, API docs)
-   - Any migration needed?
-5. **Suggested acceptance criteria** — concrete, testable, referencing actual file paths
-6. **If L+ size** — suggest how to split based on code module boundaries
-
-Exploration depth: "quick" for likely S/M, "very thorough" for likely L+.
-```
-
-Present grooming results:
-
-```
-### TASK-{id}: {title}
-Status: {status} | Priority: {priority} | Current estimate: {est} | Type: {type}
-
-**Description**: {summary}
-
-**Codebase Analysis**:
-- Files: {affected files}
-- Suggested estimate: **{size}** ({model tier, e.g. Sonnet or Opus}) — {reasoning}
-- Full scope at {size}:
-  - Tests: {what's required}
-  - Docs: {what needs updating}
-  - Migration: {if any}
-
-**Suggested Acceptance Criteria**:
-1. {criterion referencing code}
-2. {test criterion}
-3. {doc criterion}
-```
-
-Use the harness's native selection UI (multi-select if available) for triage:
-- **Accept suggestions** — Apply estimate + ACs + scope
-- **Reprioritize** — Change priority
-- **Re-estimate** — Override suggestion
-- **Redefine** — Update title/description/ACs
-- **Split** — Break into sub-tasks (present code-informed splits)
-- **Skip grooming** — Jump straight to planning
-
-### 3. Plan (always)
-
-Spawn **`Explore` subagent** for deep codebase exploration focused on implementation:
-
-```
-Task: "{title}"
-{description}
-{acceptance criteria}
-
-Create a detailed implementation plan:
-
-1. **Ordered implementation steps** — concrete changes with:
-   - Specific files, functions, and line ranges
-   - Existing patterns to follow (cite examples in codebase)
-   - Exact insertion points for new code
-   - Design decisions that need user input
-2. **Test strategy** — what to test, which test files, existing test patterns to follow
-3. **Dependencies** — order of operations, what must be done first
-4. **Risk areas** — parts most likely to need iteration
-
-Exploration depth: "very thorough"
-```
-
-Present the plan:
-
-```
-### Implementation Plan
-
-**Steps**:
-1. {step with specific file + function + what to change}
-2. {step referencing existing pattern to follow}
-3. {step for tests}
-4. {step for docs if needed}
-
-**Test Strategy**: {approach}
-**Risk Areas**: {what might need iteration}
-```
-
-Use the harness's native question UI:
-- **Question**: "Write this plan to the Notion task page?"
-- **Header**: "Save plan"
-- **Options**:
-  - **Save to Notion** — "Write plan to the task page under ## Plan"
-  - **Revise** — "I want to change the plan"
-  - **Skip saving** — "Don't save, I'll use it from memory"
-
-### 4. Apply Changes
-
-Spawn **`notion-writer`** subagent to:
-- Update properties (estimate, priority)
-- Append acceptance criteria under `## Acceptance Criteria`
-- Append scope definition under `## Scope` (files, tests, docs, migration)
-- Write implementation plan under `## Plan`
-- Set status to **Ready** if all criteria met:
-  - Has an estimate
-  - Has acceptance criteria
-  - Has a scope definition
-  - Is not blocked by an incomplete task
-
-### 5. Report
-
-```
-### Summary
-
-TASK-{id}: {title}
-- Estimate: {old} → {new} ({model tier, e.g. Sonnet or Opus})
-- Status: {old} → {new}
-- Added: {what sections were written}
-
-Ready to implement? Invoke `engineering:start {task-url}`.
-```
-
----
-
-## Batch Mode (project name or empty)
-
-### 1. Lightweight Overview
-
-Spawn **`notion-researcher`** to search tasks for the project. Return **only**: task count by status + compact list (ID, title, status, priority, estimate). No descriptions, no page fetches.
-
-Present the overview.
-
-### 2. Ask Scope
-
-Use the harness's native question UI **before fetching details**:
-
-- **Full sweep** — Every non-Done task (warn if >15)
-- **Quick triage** — Missing estimate, priority, or acceptance criteria
-- **Stale tasks** — Stuck in Not Started / Later
-- **Specific epic** — Drill into one area
-
-### 3. Per-Task Loop
-
-For each task in scope, run Single-Task Mode (Steps 1-5 above).
-
-Use the harness's native question UI between tasks:
-- **Continue** — Next task in the batch
-- **Stop here** — End the batch
-
-### 4. Session Summary
-
-```
-## Planning Summary
-
-### Changes
-- TASK-{id}: {title} — estimate: ? → M (large model tier, e.g. Opus), added ACs + plan → **Ready**
-- TASK-{id}: {title} — priority: Medium → High → **Ready**
-- TASK-{id}: {title} — split into 3 sub-tasks
-
-### Promoted to Ready ({count})
-- TASK-{id}: {title} (High, M) — has estimate, ACs, scope, plan, unblocked
-
-### Still Needs Work ({count})
-- TASK-{id}: {title} — missing: {what's missing}
-
-### Updated Priority Stack (Ready tasks first)
-1. TASK-{id}: {title} (High, S/medium model tier, e.g. Sonnet) — Ready
-2. TASK-{id}: {title} (High, M/large model tier, e.g. Opus) — Ready
-...
-
-### Stats
-Reviewed: {n} | Changed: {n} | Created: {n} | Archived: {n}
-```
-
-### 5. Follow-up
-
-- "Invoke `engineering:start` to begin implementation?"
-- "Done"
-
----
-
-## Interaction Principles
-
-- **Scope first, fetch later** — ask what to review before pulling details
-- **Parallel subagents** — Notion + Explore always concurrent when possible
-- **One task at a time** — in batch mode, fully process each before moving on
-- **Estimation includes full scope** — tests, docs, migration are part of the estimate
-- **Adaptive depth** — if user is moving fast, reduce Explore thoroughness
-- **Main context stays clean** — only synthesized summaries
-- **Auto-promote to Ready** — when all criteria met after grooming + planning
+</supporting-info>

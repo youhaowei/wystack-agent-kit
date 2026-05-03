@@ -1,0 +1,69 @@
+{
+  "source": "github.com/obra/superpowers",
+  "author": "Jesse Vincent (@obra)",
+  "license": "MIT",
+  "pin": {
+    "sha": "dd7a63ac45233dce0a6c6222a77f205ee7c78750",
+    "tag": "v5.0.7",
+    "date": "2026-03-31"
+  },
+  "checked_at": "2026-05-02",
+  "upstream_head": {
+    "sha": "e7a2d16476bf042e9add4699c9d018a90f86e4a6",
+    "date": "2026-04-28"
+  },
+  "imports": {
+    "_note": "Conceptual imports — superpowers' lifecycle shape, subagent dispatch pattern, code review structure, TDD discipline. We did not literally copy files; the divergence is too heavy.",
+    "concepts": [
+      "lifecycle: brainstorm → spec → plan → TDD → review → finish",
+      "subagent dispatch pattern (parallel agent execution)",
+      "git-worktree isolation per task",
+      "multi-agent code review",
+      "TDD discipline"
+    ]
+  },
+  "added_local": [
+    "skills/prd",
+    "skills/breakdown",
+    "skills/spec",
+    "skills/groom",
+    "skills/start",
+    "skills/finish",
+    "skills/swarm",
+    "skills/code-review",
+    "skills/full-review",
+    "skills/engineering-context",
+    "skills/orchestrate",
+    "skills/workspace",
+    "skills/project",
+    "skills/glossary",
+    "skills/improve-codebase",
+    "skills/next",
+    "skills/new",
+    "skills/estimation",
+    "skills/push-pr",
+    "skills/git-cleanup",
+    "skills/git-worktrees",
+    "skills/competitor-analysis",
+    "agents/pm",
+    "agents/principal",
+    "agents/stack-engineer",
+    "agents/dx-engineer",
+    "agents/ui-engineer",
+    "agents/qa",
+    "agents/devops",
+    "agents/wiki-librarian"
+  ],
+  "dropped": {
+    "_note": "Upstream skills/agents we've explicitly chosen not to mirror (yet)",
+    "skills": []
+  },
+  "renames": {},
+  "divergence_notes": [
+    "Notion integration is heavy: PRD/Spec/Tasks live in Notion Wiki",
+    "Two-label severity model (MUST/SUGGEST) with near-term-trigger test",
+    "Codex compatibility annotations in skill bodies — superpowers is Claude-Code only",
+    "Custom doc model: promoted specs in repo, drafts in wiki",
+    "Don't open PRs upstream that restructure skills to our <what-to-do>/<supporting-info> pattern — superpowers' CLAUDE.md explicitly rejects compliance restructures"
+  ]
+}
