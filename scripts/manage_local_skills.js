@@ -244,7 +244,7 @@ function codexConfigStatus() {
     return [`missing: ${CODEX_CONFIG}`];
   }
   const text = readFileSync(CODEX_CONFIG, "utf8");
-  return ["engineering", "marketing", "design"].map((pluginName) => {
+  return ["engineering", "design"].map((pluginName) => {
     const pattern = new RegExp(`^\\[plugins\\."${pluginName}@youhaowei-local"\\]\\s*\\nenabled = true\\s*$`, "m");
     return `${pluginName}: ${pattern.test(text) ? "enabled" : "not enabled"} in ${CODEX_CONFIG}`;
   });
@@ -256,7 +256,7 @@ function claudePluginStatus() {
   }
   const data = JSON.parse(readFileSync(CLAUDE_INSTALLED_PLUGINS, "utf8"));
   const plugins = data.plugins ?? {};
-  return ["engineering@wystack-plugins", "marketing@wystack-plugins", "design@wystack-plugins"].map((key) => {
+  return ["engineering@wystack-plugins", "design@wystack-plugins"].map((key) => {
     const installs = plugins[key] ?? [];
     if (installs.length === 0) {
       return `${key}: not installed`;

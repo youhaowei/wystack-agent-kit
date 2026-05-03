@@ -28,7 +28,7 @@ for arg in "$@"; do
 done
 
 if [ ${#plugins[@]} -eq 0 ]; then
-  plugins=(engineering marketing design)
+  plugins=(engineering design)
 fi
 
 deploy_root="$HOME/.claude/plugins/marketplaces/local-desktop-app-uploads"
@@ -82,4 +82,4 @@ await Bun.write(path, `${JSON.stringify(manifest, null, 2)}\n`);
 done
 
 rm -rf "$staging"
-rm -f dist/engineering.zip dist/marketing.zip dist/design.zip 2>/dev/null || true
+rm -f dist/engineering.zip dist/design.zip 2>/dev/null || true

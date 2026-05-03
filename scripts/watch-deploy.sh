@@ -15,7 +15,7 @@ fi
 
 plugins=("$@")
 if [ ${#plugins[@]} -eq 0 ]; then
-  plugins=(engineering marketing design)
+  plugins=(engineering design)
 fi
 
 echo "initial deploy..."

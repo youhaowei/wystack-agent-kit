@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const HOME = homedir();
 const DEFAULT_BACKUP_ROOT = join(HOME, ".codex", "backups");
-const PLUGIN_DIRS = ["engineering", "marketing", "design"];
+const PLUGIN_DIRS = ["engineering", "design"];
 
 function timestamp() {
   const now = new Date();

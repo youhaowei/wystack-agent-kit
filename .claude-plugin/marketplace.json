@@ -11,13 +11,8 @@
       "source": "./engineering"
     },
     {
-      "name": "marketing",
-      "description": "Growth and content roles — strategist, content writer, SEO engineer, CRO analyst, growth manager, analytics engineer.",
-      "source": "./marketing"
-    },
-    {
       "name": "design",
-      "description": "Design quality — creative direction, evaluation, Figma iteration, anti-pattern detection.",
+      "description": "Design + site delivery — visual design, in-product UX writing, marketing copy, and discoverability across search, AI search, and directories.",
       "source": "./design"
     }
   ]

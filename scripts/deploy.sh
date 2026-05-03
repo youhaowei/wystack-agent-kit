@@ -52,7 +52,7 @@ case "$codex_mode" in
 esac
 
 if [ ${#plugins[@]} -eq 0 ]; then
-  plugins=(engineering marketing design)
+  plugins=(engineering design)
 fi
 
 echo "Deploying plugins: ${plugins[*]}"

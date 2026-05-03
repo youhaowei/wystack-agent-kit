@@ -15,8 +15,9 @@ both Claude and Codex:
 | Plugin | Purpose |
 |--------|---------|
 | `engineering/` | Development lifecycle — PM, principal, tech lead, QA, devops |
-| `marketing/` | Growth & content — strategy, copy, SEO, CRO, acquisition, analytics |
-| `design/` | UI design direction, review, polish, and Figma iteration |
+| `design/` | Design + site delivery — visual design, in-product UX writing, marketing copy, and discoverability across search, AI search, and directories |
+
+> Marketing plugin was harvested into `design/` on 2026-05-02 — site work is one workflow, not three. See `UPSTREAM.md`.
 
 ## Install
 
@@ -30,8 +31,8 @@ pi install .
 
 Loaded resources:
 
-- Plugin skills from `engineering/skills`, `marketing/skills`, and `design/skills`
-- WyStack role commands from `engineering/agents`, `marketing/agents`, and `design/agents`
+- Plugin skills from `engineering/skills` and `design/skills`
+- WyStack role commands from `engineering/agents` and `design/agents`
 - A `wystack_agent` read-only subagent tool that runs a role brief in a separate `pi -p` process
 - An `agent_browser` tool and `/browser` command wrapping the `agent-browser` CLI
 
@@ -46,8 +47,9 @@ Useful commands after install/reload:
 ```text
 /wystack-agents                 # list loaded role briefs
 /engineering-principal <task>   # run a role brief in the current session
-/marketing-strategist <task>
 /design-designer <task>
+/design-copywriter <task>
+/design-marketing-specialist <task>
 /skill:code-review <args>       # invoke a plugin skill
 /browser open https://example.com
 /browser snapshot -i
@@ -64,7 +66,7 @@ Add as a local plugin source pointing to the specific plugin directory:
 ```json
 {
   "type": "local",
-  "path": "/path/to/wystack/plugins/marketing"
+  "path": "/path/to/wystack/plugins/design"
 }
 ```
 
@@ -88,9 +90,9 @@ Or register the repo as a Codex marketplace using:
 ```
 
 Codex's plugin marketplace spec expects repo entries to resolve through
-`./plugins/<plugin-name>`. This repo includes `plugins/engineering`,
-`plugins/marketing`, and `plugins/design` as symlinks to the real plugin
-directories, and the marketplace points at those shim paths.
+`./plugins/<plugin-name>`. This repo includes `plugins/engineering` and
+`plugins/design` as symlinks to the real plugin directories, and the
+marketplace points at those shim paths.
 
 ## Cowork Distribution
 
@@ -168,8 +170,8 @@ The most likely collision surface is an older local plugin or a standalone skill
 with the same name. In practice:
 
 - `engineering` is likely to overlap with an older `work` plugin
-- `marketing` is likely to overlap with standalone marketing skills already
-  installed in `~/.agents/skills`
+- `design` may overlap with the impeccable plugin if installed (it's
+  derivative of `pbakaus/impeccable` v1.3.0; see `UPSTREAM.md`)
 
 Recommended rollout:
 
@@ -195,7 +197,7 @@ Recommended rollout:
    bun scripts/manage_local_skills.js resolve-ambiguity --apply
    ```
 
-5. Enable `engineering`, `marketing`, and `design` only after the overlap set is
+5. Enable `engineering` and `design` only after the overlap set is
    understood.
 
 If this repo should become the source of truth for your local Codex setup, use:
