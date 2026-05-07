@@ -84,6 +84,7 @@ Worktree: {cleaned | preserved | N/A}
 **If PR**:
 - Invoke `engineering:push-pr`
 - Return the PR URL in the outcome
+- Continue to **Step 5: Shepherd PR** before status updates
 
 **If keep branch**:
 - Preserve the current branch or worktree as-is
@@ -93,18 +94,105 @@ Worktree: {cleaned | preserved | N/A}
 - Preserve a brief note about why the work was discarded
 - Clean up the branch or worktree only after confirmation
 
-### 5. Map Git Outcome to Notion Status
+### 5. Shepherd PR (PR path only)
+
+Goal: drive the PR to **green CI + all comments resolved + approved**, then hand off to a human for merge. Never auto-merge.
+
+Loop until **ready-to-merge** or **human-needed**:
+
+**a) Watch CI**
+
+```bash
+gh pr checks {pr-number} --watch --fail-fast
+```
+
+On failure, classify:
+
+| Class | Action |
+|---|---|
+| Mechanical (lint, format, type, deterministic test) | Fix locally, commit, push, restart loop |
+| Flaky (known intermittent, passes on rerun) | `gh run rerun <run-id> --failed`, note in handoff |
+| Logic / behavior failure | Read logs, attempt fix only if cause is clear and in-scope |
+| Infra / external (timeout, registry, env) | Surface to human — do not silently rerun |
+| Cause unclear after one investigation pass | Surface to human |
+
+**b) Pull PR review state**
+
+```bash
+gh pr view {pr-number} --json reviews,reviewDecision,mergeable,mergeStateStatus
+gh api repos/{owner}/{repo}/pulls/{pr-number}/comments        # inline
+gh api repos/{owner}/{repo}/issues/{pr-number}/comments       # top-level
+```
+
+**c) Triage every unresolved comment**
+
+| Class | Action |
+|---|---|
+| Actionable + clear + in-scope | Fix, commit referencing the comment, push |
+| Nit / style in touched code | Fix unless trivially low-value |
+| Question requiring product / scope decision | Surface to human, do not guess |
+| Requests scope expansion beyond ticket | Surface to human; recommend a follow-up ticket |
+| Speculative ("could this race?", no observed bug) | Reply with rationale, recommend follow-up ticket |
+| Conflicting reviewer opinions | Surface to human |
+
+After addressing actionable comments, reply on each thread with a one-line note pointing at the fix commit, then re-request review:
+
+```bash
+gh pr ready {pr-number}                               # if draft
+gh pr edit {pr-number} --add-reviewer {reviewer}      # re-request if needed
+```
+
+**d) Check merge state**
+
+| `mergeStateStatus` | Action |
+|---|---|
+| `CLEAN` + approved + green | **Ready** — exit loop, hand off |
+| `BLOCKED` (missing approvals / required checks) | Continue waiting / addressing |
+| `BEHIND` | Update branch from base (`gh pr update-branch`), re-loop |
+| `DIRTY` (merge conflict) | Surface to human — do not resolve conflicts unilaterally on a published branch |
+| `UNSTABLE` | Treat as CI failure path |
+
+**e) Stall detection**
+
+Surface to human when any of:
+- No reviewer activity for >24h after re-request
+- Same CI check failed twice with the same root cause after a fix attempt
+- More than 3 fix-push cycles without convergence
+- Any change required would expand scope beyond the ticket
+
+**f) Handoff**
+
+When **ready-to-merge** or **human-needed**, post a single status block:
+
+```
+### PR Shepherd Status
+
+PR: {url}
+State: {ready-to-merge | needs-human}
+CI: {green | failing: <check-names>}
+Reviews: {approved by X | changes requested by Y | pending}
+Unresolved threads: {count} ({list with links})
+Cycles: {n fix-push iterations}
+
+{If needs-human:}
+Action needed: {one line per blocker, with link}
+```
+
+Do **not** run `gh pr merge`. Human merges.
+
+### 6. Map Git Outcome to Notion Status
 
 Based on the final outcome:
 
 | Git Outcome | Notion Status | Rationale |
 |---|---|---|
-| `merged` | **Done** | Work is on the base branch |
-| `pr-created` | **In Review** | Awaiting review |
+| `merged` | **Done** | Local merge already on base branch |
+| `pr-created` (ready-to-merge) | **In Review** | Green + approved, awaiting human merge |
+| `pr-created` (needs-human) | **In Review** | Blocked on human input — note blockers in summary |
 | `kept` | **In Progress** | Branch preserved, not finished |
 | `discarded` | **Not Started** | Work was thrown away |
 
-### 6. Update Notion
+### 7. Update Notion
 
 Spawn **`notion-writer`** on a lightweight model tier (for example, Haiku) to:
 
@@ -130,7 +218,7 @@ Spawn **`notion-writer`** on a lightweight model tier (for example, Haiku) to:
 
 **If discarded**: Write a brief note explaining why the work was abandoned.
 
-### 7. Report and Suggest Next
+### 8. Report and Suggest Next
 
 ```
 ### Task Finished
@@ -157,6 +245,9 @@ Use the harness's native question UI:
 - **Task already Done**: Warn and ask if they still want to finish it again
 - **PR already exists**: Reuse it rather than opening a duplicate
 - **Discarded work on a Not Started task**: Don't change status (already Not Started)
+- **Shepherd loop divergence**: Reviewer requests scope expansion — propose a follow-up ticket instead of expanding the branch (per "ship through review" / scope discipline)
+- **CI green but no reviewer**: After 24h, surface to human; do not self-merge even if all checks pass
+- **Force-push during shepherd**: Avoid unless reviewer explicitly asks — preserves review history
 
 ## Notes
 
