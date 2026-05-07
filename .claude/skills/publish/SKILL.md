@@ -39,16 +39,38 @@ If multiple, ask the user which to publish (or all).
 
 ### 2. Choose bump
 
-Read current version from `<plugin>/.claude-plugin/plugin.json`. Recommend bump level by what changed:
+Read current version from `<plugin>/.claude-plugin/plugin.json`.
 
-| Change shape | Bump |
-|---|---|
-| New skill / agent / capability | minor |
-| Skill description / wording / docs only | patch |
-| Removed / renamed skill, breaking schema change | major |
-| Security or correctness fix | patch |
+**Versioning policy in this repo: SemVer with shifted slots while pre-1.0.**
 
-Show the recommendation to the user (`current 0.7.0 → 0.8.0 (minor: added brainstorm skill)`) and confirm before editing.
+While a plugin is `0.X.Y`, the first digit is locked (semantic identity) and the remaining slots shift down one level:
+
+| Slot | Pre-1.0 (`0.X.Y`) | Post-1.0 (`X.Y.Z`) |
+|---|---|---|
+| 1st (`0` / `X`) | Locked — only flips on a real 1.0 release | major |
+| 2nd (`X` / `Y`) | **major** — breaking changes | minor |
+| 3rd (`Y` / `Z`) | **minor** — additive changes & fixes | patch |
+| separate patch | none — small fixes ride the next minor | yes |
+
+Bump table (use the slot that matches the plugin's current track):
+
+| Change shape | Pre-1.0 bump | Post-1.0 bump |
+|---|---|---|
+| New skill / new agent / new capability | 3rd digit | minor |
+| New step inside an existing skill | 3rd digit | minor |
+| Skill description / trigger wording change | 3rd digit | minor (description **is** the trigger contract) |
+| Security or correctness fix | 3rd digit | patch |
+| Removed or renamed skill / agent | 2nd digit | major |
+| Breaking schema or argument change | 2nd digit | major |
+| Marketplace metadata only (`marketplace.json`) | no bump | no bump |
+| Repo-internal typo, comment, or doc fix | no bump on its own — rides next release | no bump on its own — rides next release |
+
+**1.0 graduation** is a judgment call, not a mechanical trigger. Promote when:
+- The plugin's user-visible surface (skill names, agent names, descriptions) has stabilized
+- You'd treat any future skill rename or removal as a contract break worth signalling
+- Confirm with the user before flipping `0.X.Y → 1.0.0`
+
+Show the recommendation to the user (`current 0.7.0 → 0.7.1 (3rd digit, pre-1.0 minor: added shepherd step to finish skill)`) and confirm before editing.
 
 ### 3. Sync version across both manifests
 
