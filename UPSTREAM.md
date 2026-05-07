@@ -2,7 +2,7 @@
 
 This repo's plugins are derived from external open-source projects. This file tracks what we forked, when we last checked for upstream changes, and what to look for on the next check.
 
-**Cadence:** review every 4–6 weeks, or when something breaks.
+**Cadence:** weekly automated check via [`wystack-plugins-upstream-check`](https://claude.ai/code/routines/trig_01HDUVVr19YBf4hefUF6ANwh) routine (Mondays 9am Phoenix). Stays quiet unless something's worth porting.
 
 **Process for a check-in:**
 
@@ -17,17 +17,21 @@ Each plugin owns a machine-readable `UPSTREAM-BASELINE.json` capturing its curre
 
 ## Engineering plugin
 
-| Field | Value |
-|---|---|
-| Source | https://github.com/obra/superpowers |
-| Author | Jesse Vincent ([@obra](https://github.com/obra)) |
-| License | MIT |
-| Current pinned | v5.0.7 (cached at `~/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/`) |
-| Upstream HEAD | `e7a2d16` (2026-04-28) |
-| Last checked | 2026-05-02 |
-| Baseline | [`engineering/UPSTREAM-BASELINE.json`](engineering/UPSTREAM-BASELINE.json) |
+**Sources:** one primary substrate (superpowers) plus two inspiration sources monitored weekly.
 
-**What we took:** the high-level lifecycle shape (brainstorm → spec → plan → TDD → review → finish), the subagent dispatch pattern, git-worktree isolation, multi-agent code review, and TDD discipline.
+| Source | Role | Pin | License | Last checked |
+|---|---|---|---|---|
+| [obra/superpowers](https://github.com/obra/superpowers) | substrate | v5.0.7 (`dd7a63a`, 2026-03-31) | MIT | 2026-05-02 |
+| [garrytan/gstack](https://github.com/garrytan/gstack) | inspiration | 1.26.2.0 (`30fe6bb`, 2026-05-04) | MIT | 2026-05-04 |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | inspiration | `b843cb5` (2026-04-30) | MIT | 2026-05-04 |
+
+Baseline: [`engineering/UPSTREAM-BASELINE.json`](engineering/UPSTREAM-BASELINE.json)
+
+**What we took (superpowers):** the high-level lifecycle shape (brainstorm → spec → plan → TDD → review → finish), the subagent dispatch pattern, git-worktree isolation, multi-agent code review, and TDD discipline.
+
+**What we're watching for (gstack):** role-based agents (CEO/Designer/Eng Manager/Release Manager/Doc Engineer/QA), AskUserQuestion gating patterns, plan-mode review skills (`plan-eng-review`, `plan-design-review`, `plan-ceo-review`, `plan-devex-review`), doc conventions (DESIGN.md / ETHOS.md / AGENTS.md / ARCHITECTURE.md), and skills we lack (`investigate`, `ship`, `land-and-deploy`, `freeze`/`unfreeze`, `retro`, `office-hours`, `pair-agent`). Concept-port only — Tan's stack is opinionated for his team's workflow + Conductor MCP variant. Cross-pollinate to design plugin if any new gstack skill is design-focused (the `design-*` family).
+
+**What we're watching for (mattpocock):** net-new skills outside our coverage. At pin: `diagnose`, `grill-with-docs`, `improve-codebase-architecture`, `tdd`, `to-issues`, `to-prd`, `triage`, `zoom-out`. Already-covered (don't re-port): `improve-codebase-architecture`, `tdd`, `triage`, `to-prd`. Net-new candidates: `zoom-out` (perspective shift), `grill-with-docs` (interrogate library docs before integrating), `diagnose` (lightweight bug diagnosis distinct from triage). Also has `CONTEXT.md` per-skill convention similar to our `glossary` skill, and recently adopted `<what-to-do>` / `<supporting-info>` body pattern (validates our own format).
 
 **Local divergence (intentional):**
 
@@ -115,16 +119,15 @@ The marketing plugin was **deleted** on 2026-05-02. Reasons:
 
 ## Quick check command
 
-When ready for a sweep:
+The weekly routine handles this automatically. To run manually:
 
 ```bash
-# Engineering
-gh api repos/obra/superpowers/releases/latest --jq '.tag_name + " — " + .published_at'
+# All five sources — HEAD vs pin
 gh api repos/obra/superpowers/commits/main --jq '.sha + "  " + .commit.author.date'
-
-# Design (impeccable inspiration)
-gh api repos/pbakaus/impeccable/releases --jq '.[0:3] | .[] | .tag_name + "  " + .published_at'
-gh api 'repos/pbakaus/impeccable/commits?per_page=10' --jq '.[] | "\(.sha[0:7])  \(.commit.author.date | split("T")[0])  \(.commit.message | split("\n")[0])"'
+gh api repos/pbakaus/impeccable/tags --jq '.[0:5] | .[] | .name + "  " + .commit.sha[0:7]'
+gh api repos/coreyhaines31/marketingskills/commits/main --jq '.sha + "  " + .commit.author.date'
+gh api repos/garrytan/gstack/commits/main --jq '.sha + "  " + .commit.author.date'
+gh api repos/mattpocock/skills/commits/main --jq '.sha + "  " + .commit.author.date'
 
 # Three-way diff workflow (any plugin):
 # 1. Read <plugin>/UPSTREAM-BASELINE.json for pin.sha + imports map.
