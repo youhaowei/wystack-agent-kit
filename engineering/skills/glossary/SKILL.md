@@ -56,7 +56,7 @@ Used when terms need to be coined, debated, or consolidated.
 
 1. **Collect** — scan the current conversation, open PRDs, specs, and recent code changes for domain terms in use. Note ambiguities (same word, different meaning) and synonyms (different words, same meaning).
 2. **Challenge** — for each ambiguous or conflicting term, propose a canonical name with reasoning. Present alternatives and defer to the user.
-3. **Interview** — for non-obvious concepts, MUST invoke the brainstorm skill: call `Skill("brainstorm", "--grill")`. Use this to force explicitness about boundaries between concepts. Skip for terms that are obviously unambiguous.
+3. **Interview** — for non-obvious concepts, MUST invoke the brainstorm skill: call `Skill("engineering:brainstorm", "--grill")`. Use this to force explicitness about boundaries between concepts. Skip for terms that are obviously unambiguous.
 4. **Write entries** — one per term. Group by domain cluster. Be opinionated about canonical names.
 5. **Save draft to wiki** — delegate to the `wiki-librarian` agent. Provide: the page title (prefixed with "Glossary — "), the full content, the project name, suggested Tags, and cross-references to related PRDs/specs. The wiki-librarian handles schema and dedup. Do NOT call wiki MCP tools directly.
 6. **Cross-update related docs** — ask the wiki-librarian to scan open PRDs and specs for uses of the terms and flag any that don't match the glossary's canonical names.

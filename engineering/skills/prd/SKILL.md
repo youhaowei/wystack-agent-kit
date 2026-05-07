@@ -1,6 +1,6 @@
 ---
 name: prd
-description: "Write a Product Requirements Document — a formal behavior spec describing what the system should do from the user's perspective. Use when a feature needs documentation before breakdown into tickets. Triggers on: \"write a PRD\", \"document this feature\", \"behavior spec\", \"product requirements\", or after `brainstorm --grill` produces a design that needs formal documentation."
+description: "Write a Product Requirements Document — a formal behavior spec describing what the system should do from the user's perspective. Use when a feature needs documentation before breakdown into tickets. Triggers on: \"write a PRD\", \"document this feature\", \"behavior spec\", \"product requirements\", or after `engineering:brainstorm --grill` produces a design that needs formal documentation."
 ---
 
 # PRD
@@ -43,7 +43,7 @@ A PRD describes **what** and **why** — never **how**. Those details belong in 
 ## How to Write It
 
 1. **Research** — explore the codebase, read existing docs, check Notion for related specs. Understand what exists.
-2. **Interview** — MUST invoke the brainstorm skill before proceeding: call `Skill("brainstorm", "--grill")`. Do NOT ask ad-hoc inline questions — brainstorm's structured flow (one-at-a-time interview, parallel research, codex pressure test) must run in full. Continue with step 3 only after brainstorm completes.
+2. **Interview** — MUST invoke the brainstorm skill before proceeding: call `Skill("engineering:brainstorm", "--grill")`. Do NOT ask ad-hoc inline questions — brainstorm's structured flow (one-at-a-time interview, parallel research, codex pressure test) must run in full. Continue with step 3 only after brainstorm completes.
 3. **Check the glossary** — before writing, load the project glossary (either `.claude/glossary.md` in the repo or the wiki draft via `wiki-librarian`). Use canonical term names throughout the PRD — no casual synonyms. If the PRD introduces a domain term that isn't yet in the glossary, note it; step 7 will seed it back into the glossary.
 4. **Write stories as one-liners** — the PRD captures scope and intent. Each story is one sentence. Detailed acceptance criteria are written when tickets are created, not upfront.
 5. **Tag requirements with IDs** — each story gets a stable ID (e.g., `F-1.2`). These IDs are the only trace that will appear in the repo (via E2E test JSDoc per `docs/doc-model.md`). Keep IDs stable across PRD edits.

@@ -1,6 +1,6 @@
 ---
 name: spec
-description: "Write, promote, or update a technical specification — system design, component boundaries, data flow, key decisions (including ADRs). The engineering counterpart to `prd`. Use when architecture needs documenting before implementation, when a signed-off draft is ready to promote into the repo, or when editing an already-promoted spec. Triggers on: \"write a spec\", \"tech spec\", \"design doc\", \"architecture doc\", \"system design\", \"promote the spec\", or after `brainstorm --grill` produces architecture that needs formal documentation."
+description: "Write, promote, or update a technical specification — system design, component boundaries, data flow, key decisions (including ADRs). The engineering counterpart to `prd`. Use when architecture needs documenting before implementation, when a signed-off draft is ready to promote into the repo, or when editing an already-promoted spec. Triggers on: \"write a spec\", \"tech spec\", \"design doc\", \"architecture doc\", \"system design\", \"promote the spec\", or after `engineering:brainstorm --grill` produces architecture that needs formal documentation."
 ---
 
 <what-to-do>
@@ -20,7 +20,7 @@ Default selection: if no spec exists → draft. If wiki spec is `approved`/`impl
 ## Phase 1 — Draft
 
 1. **Research** — explore the codebase. The `engineering:principal` agent is a good collaborator.
-2. **Challenge trade-offs** — MUST invoke `Skill("brainstorm", "--grill")` before proceeding. Do NOT ask ad-hoc inline questions — the brainstorm flow (one-at-a-time interview, parallel research, codex pressure test) must run in full.
+2. **Challenge trade-offs** — MUST invoke `Skill("engineering:brainstorm", "--grill")` before proceeding. Do NOT ask ad-hoc inline questions — the brainstorm flow (one-at-a-time interview, parallel research, codex pressure test) must run in full.
 3. **Reference the PRD** — the spec implements PRD behaviors. Cross-reference, don't duplicate.
 4. **Decisions over descriptions** — focus on the non-obvious. Document WHY, not just WHAT. See [SPEC-FORMAT.md](SPEC-FORMAT.md) for what a spec captures and the right level of detail.
 5. **Diagrams over prose** — component boundaries and data flow are almost always clearer as diagrams.

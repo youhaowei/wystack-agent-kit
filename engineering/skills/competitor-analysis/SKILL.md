@@ -1,6 +1,13 @@
 ---
 name: competitor-analysis
-description: Research, profile, and compare competitors. Use when the user mentions "competitor research," "competitor analysis," "competitive intelligence," "competitor profile," "competitor landscape," "who are my competitors," "vs page," "alternative page," "comparison page," "[Product] vs [Product]," "[Product] alternative," or shares competitor URLs. Output is structured profile docs and optional comparison/alternative pages. PM-owned: research feeds positioning and PRD work, not design execution.
+description: >-
+  Research, profile, and compare competitors. Use when the user mentions
+  "competitor research," "competitor analysis," "competitive intelligence,"
+  "competitor profile," "competitor landscape," "who are my competitors,"
+  "vs page," "alternative page," "comparison page," "[Product] vs [Product],"
+  "[Product] alternative," or shares competitor URLs. Output is structured
+  profile docs and optional comparison/alternative pages. PM-owned: research
+  feeds positioning and PRD work, not design execution.
 ---
 
 # Competitor Analysis

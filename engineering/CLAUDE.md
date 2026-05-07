@@ -44,6 +44,7 @@ generic subagents or local role simulation.
 Work lifecycle skills migrated from work-plugin. Agents load these as needed.
 
 ### PM
+- `brainstorm/` — gate skill for non-trivial changes; auto-picks lens (idea-validation / plan-ambition / domain-driven / builder) based on context. Frameworks live in `FRAMEWORKS.md` (YC six forcing questions, four ambition modes, DDD discipline). Invoked by `prd` step 2.
 - `prd/` — behavior spec from user perspective
 - `breakdown/` — PRD + spec to vertical-slice tickets
 - `groom/` — codebase-aware task planning and estimation
