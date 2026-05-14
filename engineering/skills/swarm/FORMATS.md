@@ -20,10 +20,10 @@ The prompt sent to each implementer teammate:
 You are a teammate on {project}-sprint. Implement this task, open a PR, report back.
 
 ## TASK-{id} — {title}
-Notion: {url}
+Work item: {url_or_path}
 
 ### Spec
-{full Notion page content}
+{full work-item content}
 
 ### Acceptance Criteria
 {ACs}
@@ -41,7 +41,7 @@ Notion: {url}
 
 ### Rules
 - Never merge to master — PR only.
-- Never mark Notion Done — the orchestrator handles status.
+- Never mark the work item Done — the orchestrator handles status.
 - Don't touch files outside your ticket's scope.
 - Don't kill processes on ports 19675, 19676.
 - If stuck >10 min, message the orchestrator.

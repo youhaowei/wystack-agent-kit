@@ -27,12 +27,12 @@ Code review and QA run in parallel. PM runs after — it benefits from knowing w
 `$ARGUMENTS` —
 
 - **Empty** — full review of current branch vs base.
-- **Notion URL** — full review against a specific ticket.
+- **Work-item URL/path** — full review against a specific task.
 - **`--code-only`** — skip QA and PM, just run `engineering:code-review`.
 
 ## Pipeline
 
-1. **Resolve ticket.** Detect from branch name (`task-{id}-*`) or use the provided Notion URL. Spawn `notion-researcher` (lightweight tier) to fetch title, ACs, scope, plan, user stories. If no ticket found, ask the user for a URL or requirements description — full review without requirements context is too weak (QA can't verify ACs, PM can't assess user value).
+1. **Resolve ticket.** Detect from branch name (`task-{id}-*`) or use the provided work-item URL/path. Use the configured provider adapter to fetch title, ACs, scope, plan, user stories. If no ticket found, ask the user for a URL/path or requirements description — full review without requirements context is too weak (QA can't verify ACs, PM can't assess user value).
 
 2. **Build review context.** Invoke `engineering:engineering-context` with mode `review`. Pass the returned block **verbatim** to all three lenses so they evaluate the same requirements, decisions, non-goals, and edge cases. If the skill is unavailable, assemble the equivalent block manually and label it as fallback context.
 

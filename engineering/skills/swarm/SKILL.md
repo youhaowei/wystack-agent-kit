@@ -1,6 +1,6 @@
 ---
 name: swarm
-description: "Spawn a team of background teammates in isolated worktrees to execute multiple Notion tickets in parallel, then coordinate reviews and merges. Use when the user explicitly wants parallel ticket execution across a project. For single-task work or specialist routing, use start or orchestrate instead."
+description: "Spawn a team of background teammates in isolated worktrees to execute multiple configured work items in parallel, then coordinate reviews and merges. Use when the user explicitly wants parallel ticket execution across a project. For single-task work or specialist routing, use start or orchestrate instead."
 ---
 ## Skill communication contract
 
@@ -23,19 +23,19 @@ You coordinate; teammates implement in worktrees; user approves every merge.
 - **project** — project name (e.g. `workforce`). Infer from CWD if omitted.
 - **--max N** — max concurrent implementers (default 2). Reviews add ~3× transient load.
 
-**Prerequisites.** Load `notion-workspace` skill (or equivalent) for project URLs and schema.
+**Prerequisites.** Load `engineering:workspace` for `.wystack` provider mappings and project identity. If setup is missing, run `engineering:setup-agent-kit`.
 
 ## Roles
 
 - **You** — spawn teammates, relay findings, present gates. Don't implement.
 - **User** — selects tickets, approves grooms, approves merges. Decides everything.
-- **Teammates** — background, worktree-isolated, one per ticket. Implement → test → PR → report. Never merge, never mark Notion Done.
+- **Teammates** — background, worktree-isolated, one per ticket. Implement -> test -> PR -> report. Never merge, never mark the work item Done.
 
 ## Start
 
-1. **Resolve project** from argument or CWD → project URLs in workspace skill.
+1. **Resolve project** from argument or CWD using `engineering:workspace`.
 2. **Pick tickets** — run `engineering:next`, let the user select. Honor `addBlockedBy` dependencies.
-3. **Pre-fetch specs** — one `engineering:task-manager` teammate on a light tier (e.g. Haiku) batches the Notion pages for all selected tickets. Agents need full specs, not titles.
+3. **Pre-fetch specs** — one `engineering:task-manager` teammate on a light tier (e.g. Haiku) batches configured work-item/doc reads for all selected tickets. Agents need full specs, not titles.
 4. **Create team** — `TeamCreate { name: "{project}-sprint" }`, plus a `TaskCreate` per ticket with dependencies wired.
 
 ## Loop
@@ -62,7 +62,7 @@ Agent({
 })
 ```
 
-Update state: `TaskUpdate → in_progress`, Notion → **In Progress**.
+Update state: `TaskUpdate -> in_progress`, work item -> configured **In Progress** status.
 
 The teammate brief lives in [FORMATS.md](FORMATS.md#teammate-brief).
 
@@ -70,12 +70,12 @@ The teammate brief lives in [FORMATS.md](FORMATS.md#teammate-brief).
 
 For each PR a teammate reports:
 
-1. Notion → **In Review**.
+1. Work item -> configured **In Review** status.
 2. Spawn one reviewer teammate that runs `engineering:full-review` (it spawns its own code/QA/PM sub-agents internally — one team roster entry per PR).
 3. Relay blocking findings to the implementer via `SendMessage`. They fix and push.
 4. **Re-review full scope every round.** Rigor does not decay. Loop until zero blocking findings.
 5. Present the [merge gate](FORMATS.md#merge-gate).
-6. **Approve** — merge, Notion → Done, unblock dependents. **Request changes** — relay to implementer. **Defer** — PR stays open, move on.
+6. **Approve** — merge, work item -> configured **Done** status, unblock dependents. **Request changes** — relay to implementer. **Defer** — PR stays open, move on.
 
 ## Agent lifecycle
 
@@ -103,9 +103,9 @@ When the user calls it, summarize using the [sprint summary format](FORMATS.md#s
 
 - [FORMATS.md](FORMATS.md) — teammate brief, launch gate, merge gate, sprint summary.
 
-## Notion status
+## Work-item status
 
-Only the orchestrator writes Notion status, only on user decisions:
+Only the orchestrator writes work-item status, only on user decisions:
 
 ```
 Not Started → Ready → In Progress → In Review → Done

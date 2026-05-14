@@ -1,6 +1,6 @@
 ---
 name: next
-description: "Review Notion tasks for a project and recommend what to work on next. Use when the user asks what to do next, which task to pick, what is ready to implement, or how to prioritize current engineering work."
+description: "Review configured work items for a project and recommend what to work on next. Use when the user asks what to do next, which task to pick, what is ready to implement, or how to prioritize current engineering work."
 ---
 ## Skill communication contract
 
@@ -26,45 +26,45 @@ If no argument provided, infer the project from the **current working directory 
 
 ## Prerequisites
 
-Load workspace context first (contains cached schemas and project URLs):
+Load workspace context first (contains `.wystack` provider mappings and status vocabulary):
 
 ```
-Load the installed `notion-workspace` skill or equivalent workspace context for the current harness.
+Load `engineering:workspace`. If `.wystack/storage.json` is missing, run `engineering:setup-agent-kit` before querying a task system.
 ```
 
 ## Workflow
 
 ### 1. Identify the Project
 
-Using the Known Project URLs from the workspace skill, find the matching project URL and data source ID for the Tasks database.
+Using `.wystack/storage.json`, find the project identity, task provider, status mappings, and provider capabilities.
 
 ### 2. Discover Tasks via Sub-agent
 
-Spawn an **`engineering:task-manager`** agent on a lightweight model tier (for example, Haiku) to do all Notion API work. This keeps verbose API responses out of the main context.
+Spawn an **`engineering:task-manager`** agent on a lightweight model tier when available to do provider-specific task discovery. This keeps verbose API responses out of the main context.
 
 **Prompt the researcher with:**
 
 ```
-Find actionable tasks for the {Project Name} project in Notion.
+Find actionable work items for the {Project Name} project.
 
-Tasks database data source: collection://24cd48cc-af54-8069-afc6-000b3ce9c348
-Project page URL: {project_url}
+Task provider: {provider}
+Task source: {path_or_tracker}
 
 Instructions:
-1. Search the Tasks data source for "{Project Name}" tasks
+1. Search the configured task source for "{Project Name}" work items
 2. From search results, fetch ONLY tasks that look actionable:
    - Skip tasks with titles starting with "Research:" (usually completed spikes)
    - Skip tasks that are clearly sub-tasks of epics (fetch the epic instead)
    - Prioritize recently edited tasks (more likely to be active)
    - Cap at 5 fetches maximum
 3. For each fetched task, extract these properties:
-   - Task ID (userDefined:ID), Title, Status, Priority, Estimate, Task type
+   - Task ID, Title, Status, Priority, Estimate, Task type
    - Blocked by (relation URLs), Blocking (relation URLs)
    - Sub-tasks (if epic)
 4. Return a structured summary:
 
 READY (Status: Ready, not blocked — groomed and implementation-ready):
-- TASK-{id}: {title} | {priority} | {estimate} | {type} | Blocks: {blocking count} | URL: {url}
+- TASK-{id}: {title} | {priority} | {estimate} | {type} | Blocks: {blocking count} | Location: {url_or_path}
   Brief: {first sentence of content or highlight}
 
 NOT STARTED (Status: Not Started, not blocked — may need grooming):
@@ -137,7 +137,7 @@ Why pick this:
 {reasoning — unblocks others,
 quick win, highest priority, etc.}
 
-Notion: {url}
+Location: {url_or_path}
 ```
 
 Add `(Recommended)` to the label of the top-ranked option.
@@ -157,13 +157,13 @@ Based on the user's choice:
   ```
   **Kickstart prompt — copy into a new session:**
 
-  > Implement TASK-{id}: {title}. Notion URL: {url}
+  > Implement TASK-{id}: {title}. Work item: {url_or_path}
   >
   > Context: {2-3 sentences of relevant context from this session — key files,
   > design decisions, algorithms discussed, anything that saves the next session
-  > from re-discovering}. Use `engineering:start` with the Notion URL above.
+  > from re-discovering}. Use `engineering:start` with the work item above.
   ```
-- The kickstart prompt should include **session-specific context** that would otherwise be lost — not just the task description (which is already in Notion), but insights, file paths, design decisions, or implementation approaches discussed in the current conversation.
+- The kickstart prompt should include **session-specific context** that would otherwise be lost — not just the task description (which is already in the work-item store), but insights, file paths, design decisions, or implementation approaches discussed in the current conversation.
 - Tell the user to start a fresh session or open a new terminal and paste the prompt.
 
 **If they pick "Other"** → Ask what they'd like to do instead (plan/groom tasks via `engineering:groom`, create a new task via `engineering:new`, etc.)
@@ -177,7 +177,7 @@ Based on the user's choice:
 
 ## Notes
 
-- Use cached DB schema from workspace skill — never fetch schema at runtime
-- The researcher agent handles ALL Notion API calls — main agent never calls notion-search/fetch directly
+- Use `.wystack/storage.json` from the workspace skill
+- Provider adapters handle external API calls — main agent should not call provider APIs directly unless the adapter says so
 - If the project has an epic, the researcher should surface sub-tasks rather than the epic itself
-- Total Notion API calls should be ~1 search + ~3-5 fetches (not 1 search + N fetches)
+- Keep provider calls bounded: prefer one search plus a few targeted fetches, not one search plus N full fetches.

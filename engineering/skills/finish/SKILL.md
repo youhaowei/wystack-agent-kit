@@ -1,6 +1,6 @@
 ---
 name: finish
-description: "Finish an engineering task by running the final quality gate, landing the branch, cleaning up, and updating Notion. Use when implementation is done and the user wants to merge, open a PR, keep the branch, or discard the work."
+description: "Finish an engineering task by running the final quality gate, landing the branch, cleaning up, and updating the configured work item. Use when implementation is done and the user wants to merge, open a PR, keep the branch, or discard the work."
 ---
 ## Skill communication contract
 
@@ -16,13 +16,13 @@ Every skill output should reduce the user's cognitive load while preserving enou
 
 # Finish Task
 
-Own the final engineering lifecycle directly: verify, decide landing strategy, execute the git path, clean up, then update Notion.
+Own the final engineering lifecycle directly: verify, decide landing strategy, execute the git path, clean up, then update the configured work item.
 
 ## Input
 
 Task reference: `$ARGUMENTS`
 
-- **Notion URL** → Use directly
+- **Work-item URL/path** → Use directly
 - **Empty** → Detect from current branch name (expects `task-{id}-*` pattern)
 
 ## Prerequisites
@@ -30,23 +30,23 @@ Task reference: `$ARGUMENTS`
 Load workspace context:
 
 ```
-Load the installed `notion-workspace` skill or equivalent workspace context for the current harness.
+Load `engineering:workspace`. If `.wystack/storage.json` is missing, run `engineering:setup-agent-kit` before updating work-item status.
 ```
 
 ## Workflow
 
 ### 1. Resolve Task
 
-**If URL provided**: Extract task URL for later Notion updates.
+**If URL/path provided**: Keep it for later work-item updates.
 
 **If empty**: Detect from current branch:
 ```bash
 git branch --show-current
 ```
 
-If branch matches `task-{id}-*` pattern, extract the task ID and spawn **`notion-researcher`** on a lightweight model tier (for example, Haiku) to search for the task by ID. If no match, ask the user for the Notion URL.
+If branch matches `task-{id}-*` pattern, extract the task ID and search the configured work-item store by ID. If no match, ask the user for the work-item URL/path.
 
-Fetch task details (title, status, URL) via `notion-researcher` if not already known.
+Fetch task details (title, status, URL/path) via the configured provider adapter if not already known.
 
 ### 2. Final Quality Gate
 
@@ -191,11 +191,11 @@ Action needed: {one line per blocker, with link}
 
 Do **not** run `gh pr merge`. Human merges.
 
-### 6. Map Git Outcome to Notion Status
+### 6. Map Git Outcome to Work-Item Status
 
 Based on the final outcome:
 
-| Git Outcome | Notion Status | Rationale |
+| Git Outcome | Work-item status | Rationale |
 |---|---|---|
 | `merged` | **Done** | Local merge already on base branch |
 | `pr-created` (ready-to-merge) | **In Review** | Green + approved, awaiting human merge |
@@ -203,9 +203,9 @@ Based on the final outcome:
 | `kept` | **In Progress** | Branch preserved, not finished |
 | `discarded` | **Not Started** | Work was thrown away |
 
-### 7. Update Notion
+### 7. Update Work Item
 
-Spawn **`notion-writer`** on a lightweight model tier (for example, Haiku) to:
+Use the configured provider adapter to:
 
 **a) Update task status** to the mapped value from Step 3.
 
@@ -238,7 +238,7 @@ TASK-{id}: {title}
 Status: {old} → {new}
 {PR: {url} — if applicable}
 
-Notion updated with completion summary.
+Work item updated with completion summary.
 ```
 
 Use the harness's native question UI:
@@ -251,7 +251,7 @@ Use the harness's native question UI:
 
 ## Edge Cases
 
-- **No branch name match**: Ask the user for the Notion URL directly
+- **No branch name match**: Ask the user for the work-item URL/path directly
 - **Multiple tasks in branch name**: Use the first ID found, confirm with user
 - **Task already Done**: Warn and ask if they still want to finish it again
 - **PR already exists**: Reuse it rather than opening a duplicate
@@ -264,5 +264,5 @@ Use the harness's native question UI:
 
 - This skill is the counterpart to `engineering:start` — one starts the lifecycle, this one finishes it
 - `engineering:push-pr` and `engineering:git-cleanup` are supporting tools, but this skill owns the overall finish flow
-- The completion summary in Notion creates a permanent record of what was done
+- The completion summary in the work-item store creates a permanent record of what was done
 - Branch name convention `task-{id}-*` enables automatic task detection

@@ -47,7 +47,7 @@ These are the constraints on any deepening proposal in a WyStack-flavored codeba
 - **Token-driven design.** Semantic tokens, OKLCH. No raw hex. Theming is structural.
 - **Fail loudly at boundaries.** `Result<T, E>` or tagged errors. `null` for absence, never for failure. Never swallow.
 - **One file, one job.** Concepts co-located. Read one file, understand it. Agent-navigable.
-- **Doc model.** Promoted specs and glossaries live in the repo. PRDs and tasks live in Notion. See `engineering/CLAUDE.md` and `engineering/docs/doc-model.md`.
+- **Doc model.** Promoted specs and glossaries live in the repo. PRDs and work items live in the configured `.wystack` stores. See `engineering/CLAUDE.md` and `engineering/docs/doc-model.md`.
 
 ## Cross-references
 

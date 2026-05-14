@@ -1,6 +1,6 @@
 ---
 name: start
-description: "Run the full engineering task lifecycle from Notion ticket selection through planning, workspace setup, implementation, and finish. Use when the user wants to start a task end-to-end from a ticket URL, task ID, or backlog selection."
+description: "Run the full engineering task lifecycle from configured work-item selection through planning, workspace setup, implementation, and finish. Use when the user wants to start a task end-to-end from a work-item URL/path, task ID, or backlog selection."
 ---
 ## Skill communication contract
 
@@ -16,14 +16,14 @@ Every skill output should reduce the user's cognitive load while preserving enou
 
 # Do Task
 
-State-machine orchestrator for Notion task lifecycle. Routes based on current task status.
+State-machine orchestrator for the configured work-item lifecycle. Routes based on current task status.
 
 ## Input
 
 Task reference: `$ARGUMENTS`
 
 Accepts:
-- **Notion URL** — full page URL
+- **Work-item URL/path** — provider URL or local markdown path
 - **Task ID** — e.g., "TASK-42" or just "42"
 - **Empty** — falls back to `engineering:next` to pick a task
 
@@ -32,24 +32,24 @@ Accepts:
 Load workspace context:
 
 ```
-Load the installed `notion-workspace` skill or equivalent workspace context for the current harness.
+Load `engineering:workspace`. If `.wystack/storage.json` is missing, run `engineering:setup-agent-kit` before resolving or updating work items.
 ```
 
 ## Workflow
 
 ### 1. Resolve Task
 
-**If URL provided**: Extract page ID, fetch via `notion-researcher` on a lightweight model tier (for example, Haiku).
+**If URL/path provided**: Fetch via the configured provider adapter from `.wystack/storage.json`.
 
-**If Task ID provided**: Search Tasks database via `notion-researcher` for matching ID, then fetch.
+**If Task ID provided**: Search the configured work-item store for matching ID, then fetch.
 
-**If empty**: Invoke `engineering:next` and use the selected task. When that selection completes, continue from Step 2 (Review Ticket) with that task's URL.
+**If empty**: Invoke `engineering:next` and use the selected task. When that selection completes, continue from Step 2 (Review Ticket) with that task's URL/path.
 
 Extract from the fetched task:
 - Title, Status, Priority, Estimate, Task type
 - Page content (look for `## Plan`, `## Acceptance Criteria`, `## Scope` sections)
 - Task ID (userDefined:ID)
-- URL
+- URL/path
 
 ### 2. Review Ticket
 
@@ -79,7 +79,7 @@ Use the harness's native question UI:
   - **Pick another** — "This isn't what I want to work on"
 
 - If **Looks good**: Continue to Step 3.
-- If **Update description**: Discuss changes with the user. If Notion updates are needed, use `notion-writer` on a lightweight model tier (for example, Haiku) to apply them. Then re-present the summary and confirm.
+- If **Update description**: Discuss changes with the user. If work-item updates are needed, use the configured provider adapter to apply them. Then re-present the summary and confirm.
 - If **Pick another**: Invoke `engineering:next`.
 
 ### 3. Route by Status
@@ -96,7 +96,7 @@ Use the harness's native question UI:
 
 ### 4. Offer Planning
 
-Check if the task has a `## Plan` section in its Notion page content.
+Check if the task has a `## Plan` section in its stored content.
 
 **If no plan exists**:
 ```
@@ -111,11 +111,11 @@ Use the harness's native question UI:
   - **Quick start** — "Skip planning, go straight to implementation (I know what to do)"
   - **Pick another** — "Go back to task selection"
 
-- If **Full planning**: Invoke `engineering:groom <task-url>`. When it completes, the task should be "Ready" — continue to Step 5.
+- If **Full planning**: Invoke `engineering:groom <task-url-or-path>`. When it completes, the task should be "Ready" — continue to Step 5.
 - If **Quick start**: Continue to Step 5 directly.
 - If **Pick another**: Invoke `engineering:next`.
 
-**If plan already exists** (In Planning status): Show the plan summary, ask if it's ready to execute. If yes, update status to "Ready" via `notion-writer` and continue to Step 5.
+**If plan already exists** (In Planning status): Show the plan summary, ask if it's ready to execute. If yes, update status to "Ready" via the configured provider adapter and continue to Step 5.
 
 ### 5. Set Up Workspace
 
@@ -135,14 +135,13 @@ Create and check out a branch in the current directory:
 
 No worktree creation — the user can launch the current harness in a worktree if they want isolation.
 
-**5c. Update Notion status**:
+**5c. Update work-item status**:
 
-Spawn **`notion-writer`** on a lightweight model tier (for example, Haiku) to set status to "In Progress":
+Use the configured provider adapter to set status to "In Progress":
 
 ```
-Update the Notion task at {task_url}.
-Set status to "In progress".
-Use mcp__plugin_Notion_notion__notion-update-page.
+Update the work item at {task_url_or_path}.
+Set status to the configured in-progress value.
 ```
 
 ### 6. Resume (In Progress)
@@ -171,7 +170,7 @@ After resolving the workspace, continue to Step 7.
 
 Present the execution approach based on what's available:
 
-**If the task has a `## Plan` section** (from Notion or local `docs/plans/`):
+**If the task has a `## Plan` section** (from the work-item body or local `docs/plans/`):
 
 Use the harness's native question UI:
 - **Question**: "How would you like to execute?"
@@ -187,9 +186,9 @@ Use the harness's native question UI:
 
 When implementation is complete (user signals done, or execution skill completes):
 
-Invoke `engineering:finish <task-url>` to handle:
+Invoke `engineering:finish <task-url-or-path>` to handle:
 - Git lifecycle (merge / PR / keep / discard)
-- Notion status update
+- Work-item status update
 - Completion summary
 
 ## State Transitions
@@ -218,6 +217,6 @@ Later ──→ Not Started (manual) ──→ ...
 ## Notes
 
 - This skill is the main entry point — it composes `engineering:next`, `engineering:new` (transitively via next), `engineering:groom`, `executing-plans`, and `engineering:finish`
-- Notion status updates happen via `notion-writer` on a lightweight model tier (for example, Haiku) to keep noise out
-- Workspace context from `notion-workspace` is loaded once and reused throughout
+- Work-item status updates happen via the configured provider adapter
+- Workspace context from `engineering:workspace` is loaded once and reused throughout
 - The worktree name convention (`task-{id}-{slug}`) enables resume detection

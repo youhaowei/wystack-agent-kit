@@ -2,7 +2,7 @@
 
 This repo's plugins are derived from external open-source projects. This file tracks what we forked, when we last checked for upstream changes, and what to look for on the next check.
 
-**Cadence:** weekly automated check via [`wystack-plugins-upstream-check`](https://claude.ai/code/routines/trig_01HDUVVr19YBf4hefUF6ANwh) routine (Mondays 9am Phoenix). Stays quiet unless something's worth porting.
+**Cadence:** weekly automated check via [`wystack-agent-kit-upstream-check`](https://claude.ai/code/routines/trig_01HDUVVr19YBf4hefUF6ANwh) routine (Mondays 9am Phoenix). Stays quiet unless something's worth porting.
 
 **Process for a check-in:**
 
@@ -35,10 +35,10 @@ Baseline: [`engineering/UPSTREAM-BASELINE.json`](engineering/UPSTREAM-BASELINE.j
 
 **Local divergence (intentional):**
 
-- Heavy WyStack/Notion integration (PRD/Spec/Tasks live in Notion Wiki).
+- Heavy local workspace integration. Historically this was WyStack/Notion-specific; current direction is `.wystack` setup plus provider adapters.
 - Custom doc model (`engineering/docs/doc-model.md`) — promoted specs in repo, drafts in wiki.
 - Two-label severity model (MUST / SUGGEST) with a "near-term-trigger" test for ticket creation. See `engineering/skills/code-review/SEVERITY.md`.
-- Notion-aware skills (`groom`, `swarm`, `start`, `finish`, `next`, `new`, `project`, `workspace`) with no upstream equivalent.
+- Lifecycle skills (`groom`, `swarm`, `start`, `finish`, `next`, `new`, `project`, `workspace`) with `.wystack` storage setup and private-provider adapters.
 - `improve-codebase` skill (Ousterhout vocabulary + Fowler catalog + WyStack constraints) — added 2026-05-01.
 - `competitor-analysis` skill — owned by `pm`, derived from coreyhaines31/marketingskills `competitor-profiling` + `competitor-alternatives`. Added 2026-05-02.
 - Codex compatibility annotations in skill bodies — superpowers is Claude-Code only.

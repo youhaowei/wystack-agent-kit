@@ -39,7 +39,7 @@ Route, fan out, synthesize. You stay the conductor — specialists do the work.
 | stdui / tokens / primitives / component quality | `ui-engineer` |
 | tests / triage / verify / edge cases | `qa` |
 | git / CI / releases / branches / deploy | `devops` |
-| Notion wiki CRUD / PRDs / Specs | `wiki-librarian` |
+| Work-doc CRUD / PRDs / Specs | `wiki-librarian` |
 | positioning / pricing / competitors | `strategist` |
 | copy / editorial / email / social | `content-writer` |
 | SEO / schema / programmatic / organic | `seo-engineer` |

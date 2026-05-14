@@ -1,6 +1,6 @@
 ---
 name: new
-description: "Create a new task in the Notion Tasks database with codebase-aware scope and estimate suggestions. Use when the user wants to capture new engineering work, turn an idea into a task, or write up follow-on implementation work."
+description: "Create a new work item in the configured task system with codebase-aware scope and estimate suggestions. Use when the user wants to capture new engineering work, turn an idea into a task, or write up follow-on implementation work."
 ---
 ## Skill communication contract
 
@@ -16,7 +16,7 @@ Every skill output should reduce the user's cognitive load while preserving enou
 
 # New Task
 
-Create a codebase-informed task in Notion with estimates, acceptance criteria, and scope.
+Create a codebase-informed work item in the configured task system with estimates, acceptance criteria, and scope.
 
 ## Input
 
@@ -29,7 +29,7 @@ If no argument, use the harness's native question UI to ask what needs to be don
 Load these into YOUR context (needed for orchestration):
 
 ```
-Load the installed `notion-workspace` skill or equivalent workspace context for the current harness.
+Load `engineering:workspace`. If `.wystack/storage.json` is missing, run `engineering:setup-agent-kit` before creating external work records.
 Load the installed `engineering:estimation` skill or equivalent estimation guidance before sizing work.
 ```
 
@@ -39,7 +39,7 @@ Load the installed `engineering:estimation` skill or equivalent estimation guida
 |---------|-------|-----|
 | Orchestration, user interaction | **Main agent** | Needs conversation history |
 | Codebase exploration | **`Explore` subagent** | File contents stay out |
-| Notion writes | **`notion-writer` subagent** | Confirmation noise stays out |
+| Task-system writes | **work-item manager / provider adapter** | Confirmation noise stays out |
 
 ## Workflow
 
@@ -119,24 +119,30 @@ Use the harness's native question UI for confirmation:
 
 If "Edit first": ask what to change, update, and re-present.
 
-### 5. Create in Notion
+### 5. Create in Configured Task System
 
-Spawn **`notion-writer`** subagent to create the task:
+Use the configured work-item provider from `.wystack/storage.json`.
+
+If provider is local markdown, create a new file under `.wystack/tasks/` with
+valid frontmatter and the body sections below. If provider is GitHub/GitLab or
+another external tracker, follow `.wystack/storage.json` and any
+`.wystack/adapters/<provider>.md` instructions. If provider is Notion, delegate
+through the Notion adapter rather than hard-coding database IDs in this skill.
+
+Provider-neutral create request:
 
 ```
-Create a task in the Notion Tasks database.
+Create a work item.
 
-Tasks database data source: collection://24cd48cc-af54-8069-afc6-000b3ce9c348
-
-Properties:
+Fields:
 - Task name: "{title}"
-- Status: "Not Started"
+- Status: configured backlog/not-started value
 - Priority: "{priority}"
 - Estimates: "{estimate}"
 - Task type: "{type}"
-- Project: ["{project_url}"]
+- Project: "{project_name}"
 
-Page content:
+Body:
 ## Description
 {description}
 
@@ -155,7 +161,7 @@ After creation, present options:
 
 ```
 Task created: TASK-{id} — {title}
-Notion: {url}
+Location: {url_or_path}
 ```
 
 Use the harness's native question UI:
@@ -174,6 +180,6 @@ Use the harness's native question UI:
 
 ## Notes
 
-- Uses cached DB schema from workspace skill — never fetch schema at runtime
+- Uses `.wystack/storage.json` from the workspace skill
 - Exploration keeps file contents out of main context
-- The notion-writer handles all Notion API calls
+- Provider-specific adapters handle external API calls

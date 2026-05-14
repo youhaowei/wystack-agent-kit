@@ -53,7 +53,7 @@ A PRD describes **what** and **why** — never **how**. Those details belong in 
 
 ## How to Write It
 
-1. **Research** — explore the codebase, read existing docs, check Notion for related specs. Understand what exists.
+1. **Research** — explore the codebase, read existing docs, check the configured doc/work-item stores for related specs. Understand what exists.
 2. **Interview** — MUST invoke the brainstorm skill before proceeding: call `Skill("engineering:brainstorm", "--grill")`. Do NOT ask ad-hoc inline questions — brainstorm's structured flow (one-at-a-time interview, parallel research, codex pressure test) must run in full. Continue with step 3 only after brainstorm completes.
 3. **Check the glossary** — before writing, load the project glossary (either `.claude/glossary.md` in the repo or the wiki draft via `wiki-librarian`). Use canonical term names throughout the PRD — no casual synonyms. If the PRD introduces a domain term that isn't yet in the glossary, note it; step 7 will seed it back into the glossary.
 4. **Write stories as one-liners** — the PRD captures scope and intent. Each story is one sentence. Detailed acceptance criteria are written when tickets are created, not upfront.
@@ -61,7 +61,7 @@ A PRD describes **what** and **why** — never **how**. Those details belong in 
 6. **Completeness over detail** — make sure every use case has a story. Missing a story is worse than a story missing details.
 7. **Write behaviors, not implementation** — "User can undo a fork" not "Add an undo button that calls revertFork()".
 8. **Seed new terms to the glossary** — for each domain term the PRD introduced that wasn't already in the glossary, invoke the `glossary` skill (draft phase) to add an entry. Do this before saving the PRD so the final PRD uses only canonical names.
-9. **Save to Wiki** — delegate to the `wiki-librarian` agent. Provide: the page title (prefixed with "PRD — "), the full PRD content, the project name, suggested Tags, and any related page URLs to cross-reference. The wiki-librarian handles schema, properties, title quirks, and dedup. Do NOT call Notion MCP tools directly.
+9. **Save to doc store** — delegate to the `wiki-librarian` agent. Provide: the page title (prefixed with "PRD — "), the full PRD content, the project name, suggested Tags, and any related page URLs/paths to cross-reference. The wiki-librarian handles schema, provider quirks, and dedup. Do NOT call provider APIs directly.
 10. **Update related docs** — ask the wiki-librarian to search for and update related specs, PRDs, epics, and tasks to reference the new or updated PRD. When related tasks already exist, ensure the PRD has an `Implementation tickets` section with their actual ticket URLs grouped by requirement/story. When related specs exist, ensure both pages link to each other.
 11. **Verify backlinks** — fetch the PRD and the related pages after updates. Do not report completion until the PRD links to the related spec/task URLs and those pages link back to the PRD, or until you have reported an explicit manual follow-up with the exact links/section text to add.
 
@@ -77,6 +77,6 @@ A PRD describes **what** and **why** — never **how**. Those details belong in 
 - **Living document** — update when scope changes
 - **Separate from tickets** — PRD is the spec, tickets are the work items. `engineering:breakdown` converts one to the other.
 - **Bidirectional links** — when creating or updating a PRD, link it to related specs and actual task URLs, and update those related docs/tasks to link back. A PRD is incomplete if known related tickets/specs exist but are not linked.
-- **Wiki, not project pages** — PRDs go in the Wiki database, not nested under project pages. This ensures discoverability and verification tracking.
-- **Use wiki-librarian for all Notion operations** — never call Notion MCP tools directly from the PRD skill. The wiki-librarian agent handles schema compliance, title persistence, dedup, and cross-referencing.
+- **Configured doc store, not ad hoc project pages** — PRDs go where `.wystack/storage.json` says planning docs live.
+- **Use wiki-librarian for all doc-store operations** — never call provider APIs directly from the PRD skill. The wiki-librarian agent handles schema compliance, provider quirks, dedup, and cross-referencing.
 - **See `docs/doc-model.md`** for how the PRD relates to spec, glossary, requirement IDs, and the broader plugin doc model.

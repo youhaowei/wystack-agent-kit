@@ -1,17 +1,21 @@
-# Engineering Plugin
+# WyStack Engineering
 
-Development lifecycle roles — from requirements through shipped code.
+WyStack Agent Kit engineering workflows — from requirements through shipped code.
 
 ## Doc Model
 
-This plugin separates planning from implementation:
+This plugin separates workflow logic from project storage:
 
-- **Wiki** (Notion) holds PRDs, tasks, initiatives, and draft specs/glossaries — planning and ops layer.
+- **Agent Kit core** holds portable skills and role briefs.
+- **`.wystack/` setup** tells the skills which task tracker and document store this repo uses.
+- **Provider adapters** own storage quirks for GitHub, GitLab, Linear, Jira, Notion, or local markdown.
 - **Repo** holds promoted specs, glossaries, ADRs (inside specs), code, and tests — implementation truth.
 - **Requirements** reach the repo through E2E test JSDoc, never as mirrored PRD files.
 - **Committed artifacts are tool-agnostic** — no wiki URLs, page IDs, or tool names.
 
 Full rules, lifecycle, and promotion ceremony: `docs/doc-model.md`. Load before writing or updating any PRD, spec, glossary, or coverage check.
+
+Storage contract and setup ceremony: `docs/storage-contract.md` and `skills/setup-agent-kit/SKILL.md`. Load before using lifecycle skills in a repo that lacks `.wystack/storage.json`.
 
 ## Testing Philosophy
 
@@ -83,7 +87,7 @@ Default handoff shape:
 | **ui-engineer** | @wystack/ui (stdui) — design system, primitive usage, token compliance, UI code quality |
 | **qa** | Bug triage, testing, verification, coverage |
 | **devops** | Git, CI/CD, releases, branch management, deployment |
-| **wiki-librarian** | Notion Wiki CRUD — creates/updates PRDs, Specs, and other wiki pages with correct schema and cross-references |
+| **wiki-librarian** | Document-store role brief — creates/updates PRDs, Specs, and other work docs through the configured provider |
 
 ## Skills
 
@@ -94,7 +98,8 @@ Work lifecycle skills migrated from work-plugin. Agents load these as needed.
 - `prd/` — behavior spec from user perspective
 - `breakdown/` — PRD + spec to vertical-slice tickets
 - `groom/` — codebase-aware task planning and estimation
-- `next/` — prioritized task selection from Notion
+- `setup-agent-kit/` — creates `.wystack` task/doc setup for a repo
+- `next/` — prioritized task selection from the configured work-item store
 - `new/` — codebase-informed task creation
 - `estimation/` — shared sizing scale for grooming and planning
 - `competitor-analysis/` — competitor profiling and comparison pages; informs positioning and PRD non-goals
@@ -105,7 +110,7 @@ Work lifecycle skills migrated from work-plugin. Agents load these as needed.
 - `improve-codebase/` — find deepening opportunities (Ousterhout's lens + Fowler's catalog + WyStack constraints). Use when the user wants to improve architecture, find refactoring opportunities, or make a codebase more testable.
 
 ### Tech Lead / DevOps
-- `start/` — full task lifecycle (Notion to shipped code)
+- `start/` — full task lifecycle (configured work item to shipped code)
 - `groom/` — codebase-aware implementation planning (shared with PM)
 - `finish/` — verify, merge/PR, cleanup
 - `push-pr/` — commit, push, and open or update a PR
@@ -121,12 +126,12 @@ Work lifecycle skills migrated from work-plugin. Agents load these as needed.
 - `full-review/` — code review + QA + PM pre-merge gate
 
 ### Workspace
-- `workspace/` — cached Notion schemas, project URLs, and conventions used by engineering workflows
+- `workspace/` — cached workspace/provider context used by engineering workflows
 
 ### Wiki Librarian
-- Used by the `prd/` and `spec/` workflows for the save-to-Notion step
-- Owns Wiki database schema, Notion API quirks, dedup, and cross-referencing
-- Other agents should delegate all Notion Wiki operations to wiki-librarian
+- Used by the `prd/` and `spec/` workflows for the save-to-doc-store step
+- Owns document-store schema, provider quirks, dedup, and cross-referencing
+- Other agents should delegate document-store operations to wiki-librarian
 
 ### QA
 The QA agent still draws from general engineering knowledge and tools rather than a plugin-specific skill file.

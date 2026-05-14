@@ -18,9 +18,9 @@ Every skill output should reduce the user's cognitive load while preserving enou
 
 Turn a PRD into actionable tickets.
 
-`$ARGUMENTS` — Notion PRD URL, spec URL, doc path, or empty (search for recent PRDs/specs).
+`$ARGUMENTS` — PRD URL/path, spec URL/path, doc path, or empty (search configured docs for recent PRDs/specs).
 
-**Prerequisites.** Load the `engineering:workspace` skill first for Notion schemas.
+**Prerequisites.** Load the `engineering:workspace` skill first for configured task/doc providers.
 
 1. **Load PRD + Spec.** Fetch the PRD (what to build) and spec (key decisions, architecture). Understand: user goals, system boundaries, and the architectural decisions that inform how to slice.
 2. **Explore codebase.** Understand what exists — affected modules, integration points, existing patterns, test infrastructure. This informs where to draw slice boundaries.
@@ -45,8 +45,8 @@ Turn a PRD into actionable tickets.
 
 ## Reference
 
-- `engineering:workspace` — Notion schemas + project URLs (load before starting).
-- `engineering:task-manager` / `engineering:wiki-librarian` — never call Notion MCP tools directly.
+- `engineering:workspace` — `.wystack` provider mappings and project identity (load before starting).
+- `engineering:task-manager` / `engineering:wiki-librarian` — use provider adapters; never call provider APIs directly unless the adapter says so.
 
 ## Splitting techniques (SPIDR)
 

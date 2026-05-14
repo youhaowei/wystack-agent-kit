@@ -1,7 +1,7 @@
 {
   "name": "engineering",
-  "description": "Development lifecycle roles for planning, architecture, implementation, quality assurance, and delivery.",
-  "version": "0.7.1",
+  "description": "WyStack Agent Kit engineering workflows for planning, architecture, implementation, quality assurance, and delivery.",
+  "version": "0.7.2",
   "author": {
     "name": "Youhao Wei"
   }

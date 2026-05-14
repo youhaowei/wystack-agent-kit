@@ -23,7 +23,7 @@ Without this step, reviewers flag intentional design as bugs, test-writers encod
 `$ARGUMENTS` —
 
 - Branch name (ticket-ID detection patterns: `task-{id}`, `{PROJECT}-{id}` like `WS-123`/`ENG-456`, bare leading digits, path-style prefixes like `feat/{id}-*`).
-- Notion Task URL or `TASK-###` ID.
+- Work-item URL/path or `TASK-###` ID.
 - Feature/phase name for title-based search.
 - Empty → infer from current branch + `git log -20 --oneline` (commits often carry an ID even when the branch doesn't).
 
@@ -41,8 +41,8 @@ Scan the current conversation for context already loaded — re-fetching wastes 
 
 | Source | Already-loaded signals |
 |---|---|
-| `task-manager` (ticket) | A `TASK-###` with ACs, a Notion Task URL fetched this session, or the user pasted the ticket body |
-| `wiki-librarian` (PRD/Spec) | Text containing `## Goals`, `## Non-Goals`, `Decision #`, user stories like `US-5`, or a Wiki URL fetched |
+| `task-manager` (ticket) | A `TASK-###` with ACs, a work-item URL/path fetched this session, or the user pasted the ticket body |
+| `wiki-librarian` (PRD/Spec) | Text containing `## Goals`, `## Non-Goals`, `Decision #`, user stories like `US-5`, or a doc URL/path fetched |
 | `Explore` (repo) | A recent `Explore` agent report, or substantial reads of `CLAUDE.md` / `DESIGN.md` + multiple files in the affected modules |
 | `kb` (prior decisions) | Recent `kb search` output, or loaded project memory files beyond `MEMORY.md` |
 
@@ -54,14 +54,14 @@ When unsure, err toward re-fetching — stale context is worse than one extra su
 
 Launch the not-skipped specialists in a **single message**.
 
-#### a. `engineering:task-manager` → Notion Tasks
+#### a. `engineering:task-manager` → configured work items
 
 Pass:
 - Branch name + search patterns (`task-{id}-*`, `feat/{feature}-phase{N}`, `fix/{id}`).
 - Relevant commits — commit messages often carry `TASK-###` even when the branch doesn't.
 - Explicit request for: ticket title, ID, status, ACs, scope, plan, **and any linked PRD/Spec URLs** (passed through to wiki-librarian).
 
-#### b. `engineering:wiki-librarian` → Notion Wiki
+#### b. `engineering:wiki-librarian` → configured work docs
 
 Pass:
 - Task's linked PRD/Spec URLs (if known upfront — pass through, don't make it search).
@@ -131,9 +131,9 @@ Never silently categorize. If signals disagree (invoking skill says `review` but
 
 ## Fallback paths
 
-If `task-manager` or `wiki-librarian` reports _"Notion unavailable"_:
+If `task-manager` or `wiki-librarian` reports the configured provider is unavailable:
 
-1. Try loading the Notion MCP via `ToolSearch select:mcp__plugin_Notion_notion__notion-fetch`.
+1. Check `.wystack/storage.json` and any `.wystack/adapters/<provider>.md` instructions.
 2. Re-dispatch the specialist once the tool is available. Specialists know the Wiki/Tasks schema; raw MCP calls don't.
 3. `WebFetch` as last resort for public pages.
 

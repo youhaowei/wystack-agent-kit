@@ -1,7 +1,7 @@
 {
   "name": "youhaowei-local",
   "interface": {
-    "displayName": "Youhaowei Local"
+    "displayName": "WyStack Agent Kit"
   },
   "plugins": [
     {

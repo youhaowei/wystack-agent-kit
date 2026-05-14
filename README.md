@@ -1,10 +1,14 @@
-# WyStack Plugins
+# WyStack Agent Kit
 
-Private marketplace of agent role definitions, skills, and tools.
+Portable agent skills, role briefs, runtime adapters, and local project setup.
 
-Each subdirectory is an independently installable plugin containing domain-specific
-agent roles and the knowledge they need. The repo now ships dual packaging for
-both Claude and Codex:
+WyStack Agent Kit is the source package for the agent workflows I use across
+projects. It keeps the reusable workflow logic separate from each repo's task
+tracker, documentation store, and runtime-specific agent support.
+
+Each subdirectory is an independently installable plugin containing
+domain-specific skills and role briefs. The repo ships dual packaging for both
+Claude and Codex:
 
 - Claude manifests live under `.claude-plugin/`
 - Codex manifests live under `.codex-plugin/`
@@ -18,6 +22,27 @@ both Claude and Codex:
 | `design/` | Design + site delivery — visual design, in-product UX writing, marketing copy, and discoverability across search, AI search, and directories |
 
 > Marketing plugin was harvested into `design/` on 2026-05-02 — site work is one workflow, not three. See `UPSTREAM.md`.
+
+## Project Setup
+
+The public kit does not assume my private Notion workspace. Any repo using the
+engineering lifecycle skills should configure its own work system first:
+
+```text
+.wystack/
+  workspace.md       # project identity, conventions, and domain doc layout
+  storage.json       # task/doc provider and status mappings
+  tasks/             # local markdown fallback for work items
+  docs/              # local markdown fallback for PRDs/specs/notes
+```
+
+Run `engineering:setup-agent-kit` before using lifecycle skills such as
+`engineering:next`, `engineering:new`, `engineering:start`, `engineering:groom`,
+`engineering:breakdown`, `engineering:swarm`, or `engineering:finish`.
+
+Default setup is local markdown under `.wystack/`. Users can map the same
+workflow contract to GitHub Issues, GitLab Issues, Linear, Jira, Notion, or any
+other tracker by documenting the adapter in `.wystack/storage.json`.
 
 ## Skill Communication Contract
 
@@ -52,7 +77,7 @@ Loaded resources:
 - A `wystack_agent` read-only subagent tool that runs a role brief in a separate `pi -p` process
 - An `agent_browser` tool and `/browser` command wrapping the `agent-browser` CLI
 
-For MCP/Notion, install `pi-mcp-adapter` separately:
+For external tools via MCP, install `pi-mcp-adapter` separately:
 
 ```bash
 pi install npm:pi-mcp-adapter
@@ -71,7 +96,8 @@ Useful commands after install/reload:
 /browser snapshot -i
 ```
 
-For Notion via MCP OAuth, add the official Notion MCP server to your shared MCP config and authenticate with `/mcp-auth notion` inside Pi.
+For tracker-specific MCP OAuth, add that provider's MCP server to your shared
+MCP config and authenticate with `/mcp-auth <provider>` inside Pi.
 
 If Pi is already running, use `/reload` after changing this package.
 
@@ -82,7 +108,7 @@ Add as a local plugin source pointing to the specific plugin directory:
 ```json
 {
   "type": "local",
-  "path": "/path/to/wystack/plugins/design"
+  "path": "/path/to/wystack-agent-kit/design"
 }
 ```
 
@@ -95,14 +121,14 @@ Install a plugin directly from one of the plugin directories:
 ```json
 {
   "type": "local",
-  "path": "/path/to/wystack-plugins/engineering"
+  "path": "/path/to/wystack-agent-kit/engineering"
 }
 ```
 
 Or register the repo as a Codex marketplace using:
 
 ```text
-/path/to/wystack-plugins/.agents/plugins/marketplace.json
+/path/to/wystack-agent-kit/.agents/plugins/marketplace.json
 ```
 
 Codex's plugin marketplace spec expects repo entries to resolve through

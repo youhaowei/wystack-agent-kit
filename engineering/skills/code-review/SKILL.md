@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: "Run a multi-agent static code review with parallel expert reviewers and Notion ticket context. Use when the user asks to review code, review a branch, review changes, check regressions, or get feedback before merge. Also invoked by `engineering:full-review` and `engineering:finish`."
+description: "Run a multi-agent static code review with parallel expert reviewers and configured work-item/doc context. Use when the user asks to review code, review a branch, review changes, check regressions, or get feedback before merge. Also invoked by `engineering:full-review` and `engineering:finish`."
 ---
 ## Skill communication contract
 

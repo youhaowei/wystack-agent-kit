@@ -63,7 +63,7 @@ Most sessions blend lenses: a new feature on an existing codebase needs idea-val
 
 ## Flow
 
-1. **Explore context** — check files, docs, commits, existing Notion tasks. Know what exists before asking. Look for `CONTEXT.md`, `docs/adr/`, `DESIGN.md`, `PRODUCT.md`, project glossary.
+1. **Explore context** — check files, docs, commits, and existing work items from the configured task system. Know what exists before asking. Look for `.wystack/`, `CONTEXT.md`, `docs/adr/`, `DESIGN.md`, `PRODUCT.md`, project glossary.
 2. **Detect lens** — see table above. Pick what's in context.
 3. **Detect mode** — implement vs document-only? Ask if unclear.
 4. **Scope check** — if too large for one spec, decompose into sub-projects first.

@@ -1,6 +1,6 @@
 ---
 name: workspace
-description: "Load cached Notion workspace context for engineering workflows, including schemas, project URLs, and conventions. Use before Notion-backed planning, prioritization, task creation, or documentation workflows."
+description: "Load repo-local WyStack Agent Kit workspace context, including .wystack storage mappings, project identity, provider capabilities, and local conventions. Use before planning, prioritization, task creation, or documentation workflows."
 ---
 ## Skill communication contract
 
@@ -14,123 +14,89 @@ Every skill output should reduce the user's cognitive load while preserving enou
 - Prefer compact state/evidence/next-action tables for handoffs.
 
 
-# Notion Workspace Context
+# Workspace Context
 
-Cached schemas and conventions for all Notion operations. **Never fetch schemas at runtime** — everything is here.
+Load the repo-local `.wystack/` setup first. If `.wystack/storage.json` does not
+exist, tell the caller to run `engineering:setup-agent-kit` before lifecycle
+skills that read or write work items.
 
-## Tasks Database
+## Public Contract
 
-Data source: `collection://24cd48cc-af54-8069-afc6-000b3ce9c348`
+Expected setup:
 
-| Property | Type | Values |
-|----------|------|--------|
-| Task name | title | — |
-| Status | status | Not Started, Ready, Later, Needs Review, In progress, In Planning, In Review, Done, Won't Do |
-| Priority | select | Optional, Low, Medium, High, Urgent |
-| Task type | select | Research, Bug, Feature, Tech Debt, Epic, writing, Task |
-| Estimates | select | ?, XS, S, M, L, XL, XXL |
-| Tags | multi_select | UI, Design System, Refactor, Zustand Store, Enhancement, Connector, Auto Claude, Performance, Code Quality, WorkForce Sessions, WorkForce Fork |
-| Project | relation | **Required** — use Known Project URLs below |
-| Parent | relation | Parent task URL (for sub-tasks) |
-| Sub-tasks | relation | Auto-populated from Parent |
-| Blocked by | relation | Blocking task URLs |
-| Blocking | relation | Auto-populated from Blocked by |
-| Derived from | relation | Research/spike that informed this task |
-| Due | date | `date:Due:start` format |
-| Start Date | date | `date:Start Date:start` format |
-| Timeline | date range | `date:Timeline:start` + `date:Timeline:end` |
-| Assignee | person | JSON array of user IDs |
-| ID | userDefined | Auto-generated task number |
-
-## Projects Database
-
-Data source: `collection://24cd48cc-af54-80d7-b03a-000b6e1a540b`
-
-| Property | Type | Values |
-|----------|------|--------|
-| Project name | title | — |
-| Status | select | Focused, On Hold, Planning, Archived, Watching, Not Started |
-| Tech Stack | multi_select | TypeScript, React, SolidJS, Tauri, Bun, SwiftUI, Next.js, Convex, DuckDB, Notion API, AI Vision |
-| Repository | url | GitHub repo URL |
-| Description | text | — |
-
-## Known Project URLs
-
-| Project | URL |
-|---------|-----|
-| Knowledgebase | `https://www.notion.so/30cd48ccaf5481889ae3f9238c4295d3` |
-| Powker | `https://www.notion.so/24cd48ccaf5480de8a2dee274b0cf1fb` |
-| Rincon — Tucson Wedding Marketplace | `https://www.notion.so/34dd48ccaf5481b694a0f81ce52702a4` |
-| WorkForce | `https://www.notion.so/2ffd48ccaf5481d7bb33d67599423042` |
-| unifai | `https://www.notion.so/30fd48ccaf54811199abf0b639497be0` |
-| WyStack | `https://www.notion.so/320d48ccaf5481968bf3e3e1580a6f6d` |
-
-## Project Detection
-
-Map working directory name → project:
-
-| Directory | Project |
-|-----------|---------|
-| workforce | WorkForce |
-| knowledgebase | Knowledgebase |
-| powker | Powker |
-| rincon | Rincon — Tucson Wedding Marketplace |
-| unifai | unifai |
-| wystack | WyStack |
-
-## Wiki Database (Docs)
-
-Data source: `collection://2ffd48cc-af54-80f8-a8ae-000b636ca605`
-
-**All specs, PRDs, and architecture docs go here** — not under project pages.
-
-| Property | Type | Values |
-|----------|------|--------|
-| Page | title | — |
-| Type | select | PRD, Spec, Design, Research, Guide |
-| Tags | multi_select | Architecture, AI, Agent, UI, Infrastructure, Data, Workflow, Electron |
-| Owner | person | — |
-| Verification | verification | verified / unverified (with optional expiry) |
-| 🏗️ Projects | relation | Use Known Project URLs |
-| Parent page | relation (self) | For doc hierarchy |
-| Sub-page | relation (self) | Auto-populated from Parent page |
-| Last edited time | auto | — |
-
-**Note:** Wiki custom properties cannot be set via API. Type and Tags must be set manually in Notion after page creation.
-
-### When to use wiki vs tasks vs project pages
-
-| Content type | Where | Why |
-|---|---|---|
-| Specs, PRDs, architecture docs | **Wiki** | Reference docs, need freshness tracking, cross-project |
-| Epics, tickets, work items | **Tasks database** | Work items with status/priority lifecycle |
-| Project pages | **Projects database** | Project metadata, links, quick actions |
-| Research/spikes | **Tasks database** (type: Research) | Time-stamped, don't need verification |
-
-## Conventions
-
-- **Every task MUST have a Project relation** — no orphan tasks
-- **Batch-create** — epic first, then sub-tasks in one `notion-create-pages` call (up to 100)
-- **Search before create** — check for duplicates
-- **Defaults**: Features → Not Started + Enhancement tag. Bugs → Not Started. Research → Later. Tech Debt → Later + Refactor tag.
-- **Use `mcp__plugin_Notion_notion__*` tools only** — the plugin Notion MCP, not `mcp__claude_ai_Notion__*`
-
-## Status Lifecycle
-
-```
-Not Started → Ready (groomed, has ACs)
-Not Started → In Planning (being scoped)
-Ready → In progress (work started)
-In progress → In Review / Needs Review (PR up)
-In Review → Done (merged)
-Any → Won't Do (cancelled)
-Any → Later (deferred)
+```text
+.wystack/
+  workspace.md
+  storage.json
+  tasks/
+  docs/
 ```
 
-## Tools
+Read `engineering/docs/storage-contract.md` for the canonical concepts,
+provider capabilities, and local markdown defaults.
 
-Load via ToolSearch before first use:
-- `mcp__plugin_Notion_notion__notion-search` — search workspace
-- `mcp__plugin_Notion_notion__notion-fetch` — fetch page/database details
-- `mcp__plugin_Notion_notion__notion-create-pages` — create pages or database rows
-- `mcp__plugin_Notion_notion__notion-update-page` — update page properties or content
+## Provider Selection
+
+1. Prefer `.wystack/storage.json` in the target repo.
+2. If missing and the user is only brainstorming, reviewing, or reading code,
+   continue without work-item writes.
+3. If missing and the user asks for `next`, `new`, `start`, `groom`,
+   `breakdown`, `swarm`, or `finish`, run or recommend `engineering:setup-agent-kit`.
+4. Do not assume Notion unless the repo's `.wystack/storage.json` or user
+   explicitly selects a Notion adapter.
+
+## What To Return
+
+Return a compact setup summary:
+
+```md
+## Workspace
+Project: {name}
+Task provider: {provider} ({path_or_tool})
+Doc provider: {provider} ({path_or_tool})
+Domain docs: {single-context | multi-context | none}
+
+Capabilities:
+- search work items: {yes/no}
+- create work items: {yes/no}
+- update status: {yes/no}
+- relations: {native/body-links/manual}
+```
+
+If setup is missing, return:
+
+```md
+Blocked: `.wystack/storage.json` is missing.
+Recommendation: run `engineering:setup-agent-kit` and use local markdown unless this repo already has a tracker.
+```
+
+## Local Markdown Defaults
+
+If the provider is `local-markdown`, use these conventions:
+
+```text
+.wystack/tasks/TASK-0001-slug.md
+.wystack/docs/prd-title.md
+```
+
+Work-item frontmatter:
+
+```yaml
+---
+id: TASK-0001
+title: Example task
+status: Backlog
+type: Feature
+priority: Medium
+estimate: M
+created: 2026-05-13
+---
+```
+
+Status lifecycle defaults:
+
+```text
+Backlog -> Ready -> In Progress -> In Review -> Done
+Any -> Later
+Any -> Won't Do
+```
