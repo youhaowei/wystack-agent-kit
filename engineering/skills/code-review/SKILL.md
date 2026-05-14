@@ -97,7 +97,7 @@ Each reviewer gets:
 - Spec-grounding instruction: _"Before flagging a finding, check it against Non-Goals and Decisions. If the behavior matches a stated Non-Goal or Decision, do not flag it — only flag if the implementation diverges from the stated decision."_
 - The output format from [REPORT-FORMAT.md](REPORT-FORMAT.md).
 - A required ship-verdict closing section (also in REPORT-FORMAT.md). The argument forces reviewers to weigh severity × ship-worthiness in their own voice — without it, finding-bias accumulates faster than it converges.
-- Strategic testing instruction: _"Default to no new tests. Apply `docs/testing-philosophy.md`: recommend tests only for hidden edge cases, spec contracts, regressions, or system boundaries. Flag waste tests that only prove existence, glue, UI rendering details, or implementation shape."_
+- Strategic testing instruction: _"Default to no new tests until the risk earns one. Apply `docs/testing-philosophy.md`: recommend tests only for hidden edge cases, spec contracts, regressions, or system boundaries. When a test is earned, prefer TDD. Flag waste tests that only prove existence, glue, UI rendering details, or implementation shape when they add maintenance weight. Bad tests are active harm because they create false confidence and freeze the wrong interface."_
 
 Reviewers should also return one short **Insight** paragraph before findings: what this branch appears to be doing architecturally, which boundary or contract it touches, and the strongest positive pattern or concern. This is not a substitute for findings; it gives the orchestrator raw material for the report's PR narrative.
 

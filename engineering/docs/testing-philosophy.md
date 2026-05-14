@@ -2,7 +2,9 @@
 
 ## Recommendation
 
-Default to **no new automated test** until a concrete risk earns one.
+Default to **no new automated test until a concrete risk earns one**. When a
+test is earned, prefer TDD: write the failing contract first, make it pass, then
+refactor.
 
 Testing is a design tool, not a ceremony. A test should protect a contract that
 could realistically break without the type system, linter, review, or runtime
@@ -19,6 +21,13 @@ Before adding or requesting a test, answer:
 
 If any answer is weak, do not add the test. Prefer type checking, linting,
 runtime verification, screenshots, or a follow-up note.
+
+If the answer is strong, use TDD when practical:
+
+1. Name the contract, spec anchor, bug class, or boundary being protected.
+2. Write the smallest failing test at the stable public seam.
+3. Implement only enough to pass.
+4. Refactor while keeping the contract stable.
 
 ## Write Tests When
 
@@ -50,7 +59,11 @@ Reviewers should flag both missing strategic tests and waste tests.
 - Missing test: only when an unprotected contract matches the "Write Tests
   When" list and is near-term risky.
 - Waste test: when the test only encodes current implementation, proves
-  existence, or would block a different-but-spec-compliant implementation.
+  existence, adds maintenance weight, or would block a
+  different-but-spec-compliant implementation.
+
+A bad test can hurt more than a missing test. Missing tests leave risk visible;
+bad tests create false confidence, freeze the wrong interface, and make future
+refactors look unsafe even when behavior stays correct.
 
 Coverage percentage is not a goal. Confidence is.
-

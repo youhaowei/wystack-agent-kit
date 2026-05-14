@@ -15,9 +15,10 @@ Full rules, lifecycle, and promotion ceremony: `docs/doc-model.md`. Load before 
 
 ## Testing Philosophy
 
-Default to **no new automated test** until a concrete risk earns one. Tests protect
-contracts that type checking, linting, review, or runtime verification would not
-catch cheaply.
+Default to **no new automated test until a concrete risk earns one**. When a
+test is earned, prefer TDD: write the failing contract first, make it pass, then
+refactor. Tests protect contracts that type checking, linting, review, or
+runtime verification would not catch cheaply.
 
 Write tests for hidden edge cases, spec contracts, real regressions, and system
 boundaries. Do not test trivial total mappings, glue with no logic, UI rendering

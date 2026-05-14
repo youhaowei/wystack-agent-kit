@@ -26,6 +26,28 @@ By default, be assertive — challenge assumptions, probe for gaps, don't accept
 - **default** — actively challenge assumptions, question trade-offs, push on unclear scope. Ask until you're confident the design is solid.
 - **`--grill`** — relentlessly question every assumption, walk down every branch of the design tree, resolve dependencies between decisions one by one. Don't stop until there's nothing left to clarify. Inspired by Brooks' *The Design of Design*.
 
+## Hard gate: no implementation
+
+Brainstorm is a thinking and decision skill, not an execution skill.
+
+Until the user explicitly accepts the design and asks to proceed:
+
+- Do not edit source files, production docs, tests, configs, manifests, package files, or generated artifacts.
+- Do not stage, commit, push, open PRs, install packages, run migrations, or deploy.
+- Do not create tickets/tasks unless the user explicitly asks to save the brainstorm output as tasks.
+
+Allowed before acceptance:
+
+- Read/search existing code, docs, tickets, and specs.
+- Run non-mutating inspection commands.
+- Draft recommendations, options, diagrams, and decision artifacts in chat.
+- Identify the exact artifact that should be updated after acceptance.
+
+After acceptance, hand off to the right execution workflow (`prd`, `spec`,
+`breakdown`, `groom`, `start`, or a direct implementation task). Saving a
+decision artifact is allowed only when the accepted output is explicitly a
+document/process artifact, not hidden implementation.
+
 ## Lens detection (run first)
 
 Before interviewing, look at what's in context and pick the right framework lens from [FRAMEWORKS.md](./FRAMEWORKS.md). The lens determines *which questions* to ask, not whether to ask. Lenses compose — apply all that fit.
@@ -45,13 +67,15 @@ Most sessions blend lenses: a new feature on an existing codebase needs idea-val
 2. **Detect lens** — see table above. Pick what's in context.
 3. **Detect mode** — implement vs document-only? Ask if unclear.
 4. **Scope check** — if too large for one spec, decompose into sub-projects first.
-5. **Interview** — ask clarifying questions in the `collaborate` shape: each question has a recommended answer, rationale in one line, user overrides what they disagree with. Use the lens's question set from FRAMEWORKS.md. **Follow collaborate's tier rules: architecture/spec/PRD interview questions are load-bearing by default — use sequential mode (one question per turn).** Only batch when the questions are genuinely grooming-tier (trivial defaults, minor scope). When in doubt, sequential.
+5. **Interview** — ask clarifying questions in the `collaborate` shape: each question has a stable number, recommended answer, rationale, decision impact, and any guardrail to document. User overrides what they disagree with. Use the lens's question set from FRAMEWORKS.md. **Follow collaborate's tier rules: architecture/spec/PRD interview questions are load-bearing by default — use sequential mode (one question per turn).** Only batch when the questions are genuinely grooming-tier (trivial defaults, minor scope). When in doubt, sequential.
 6. **Parallel research** — launch Explore/research agents while interviewing. Use perspective agents (competing framings) for key architectural decisions where trade-offs are non-obvious.
 7. **Propose 2-3 approaches** — synthesize findings, present via `collaborate` (each approach = per-item block with recommendation). Lead with the strongest, push back on smells. For plan-ambition lens: include the "minimal viable" and "ideal architecture" approaches at equal weight (FRAMEWORKS.md §2).
 8. **Present design** — scale detail to complexity. Use `collaborate` for section approval — section block + recommendation + summary table + single confirm. Don't drip-feed section approvals. Include diagrams where they help.
-9. **Update domain docs inline (domain-driven lens only)** — when a term resolves or a decision crystallizes, update `CONTEXT.md` / glossary / ADR right there. Don't batch. See FRAMEWORKS.md §3.
-10. **Save + review** — write spec, dispatch reviewer subagent, user reviews before proceeding.
-11. **Next step** — depending on what was designed:
+9. **Ask for design acceptance** — summarize the recommended design, alternatives rejected, and guardrails. Stop here until the user explicitly accepts or revises it.
+10. **Update decision artifacts only after acceptance** — for domain-driven work, persist accepted terms/decisions into `CONTEXT.md`, glossary, ADR, ticket notes, PRD/spec decision section, or another explicit decision artifact. Do not edit implementation files as part of brainstorm. See FRAMEWORKS.md §3.
+11. **Save decision guardrails** — when a recommendation is accepted, persist the important constraints/pushback into the active artifact. Do this during the session, not as a loose chat-only warning. Phrase guardrails as implementation constraints ("Do not...") instead of re-arguing after the user agrees.
+12. **Save + review** — write spec, dispatch reviewer subagent, user reviews before proceeding.
+13. **Next step** — depending on what was designed:
     - Product features → `/prd` to formalize the behavior spec
     - Architecture → `/spec` to formalize the technical design
     - Ready to build → `/work:breakdown` to create tickets
@@ -63,6 +87,7 @@ Most sessions blend lenses: a new feature on an existing codebase needs idea-val
 - **Interview, don't assume** — ask before proposing.
 - **Parallel research** — don't serialize exploration, launch agents while brainstorming continues.
 - **Push back proactively** — offer your opinion, don't just facilitate. Anti-sycophancy: comfort means you haven't gone deep enough.
+- **Persist pushback** — useful pushback is not a vibe; it is a design constraint. Once accepted, write it into the artifact that will guide implementation.
 - **YAGNI** — cut unnecessary scope from all designs.
 - **Check before creating** — search for existing tasks/specs before duplicating.
 - **Smart-skip** — if earlier answers already cover a later question in the lens framework, skip it. Only ask questions whose answers aren't yet clear.
@@ -70,6 +95,6 @@ Most sessions blend lenses: a new feature on an existing codebase needs idea-val
 
 ## Escape hatches
 
-- **User says "just do it" / impatient** — once: respond "the hard questions are the value, two more then we move." Pick the most critical remaining questions from the active lens, then proceed. If they push back twice, respect it.
+- **User says "just do it" / impatient** — once: respond "the hard questions are the value, two more then we move." Pick the most critical remaining questions from the active lens. If they push back twice, stop brainstorming and ask for explicit permission to switch to the appropriate implementation workflow. Do not implement inside brainstorm.
 - **User provides fully-formed plan with real evidence** — skip the interview phase but still run lens-appropriate review (Phase 3 challenge for ideas, ambition modes for plans).
 - **Vibe shifts mid-session** — builder mode → "this could be a real company" mentions: upgrade lens to idea-validation. Plan-mode → "let me rethink the whole thing": switch to idea-validation.
