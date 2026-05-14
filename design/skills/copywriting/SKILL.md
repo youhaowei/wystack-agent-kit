@@ -2,6 +2,17 @@
 name: copywriting
 description: Write or improve marketing copy for landing pages, homepages, pricing pages, feature pages, about pages, hero sections, value propositions, headlines, subheadlines, CTAs, social proof, comparison pages. Use when the user mentions "write copy", "rewrite this hero", "landing page copy", "value prop", "headline help", "CTA copy", "marketing copy", "improve this copy", "review my copy", "copy feedback", "polish this copy", "edit copy", "proofread", "copy sweep", "marketing page", "pricing page copy", or "about page". Persuasive narrative, brand voice, conversion-focused. For in-product copy (button labels, errors, empty states, microcopy, system messages), see ux-writing.
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 # Copywriting
 

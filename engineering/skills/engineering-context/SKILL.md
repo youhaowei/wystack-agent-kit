@@ -2,6 +2,17 @@
 name: engineering-context
 description: "Gather spec-anchored context for engineering work by delegating to task-manager, wiki-librarian, Explore, and kb in parallel. Use whenever you're about to review, test, fix, plan, or document work that references a ticket, feature, or feature-branch. Invoke this BEFORE reviewers, test-writers, or architects — they produce false-positive findings without Goals, Non-Goals, and Key Decisions in hand. Also use when the user mentions a PRD/Spec URL, a TASK-### ID, or a feature name and you need the surrounding design context before proceeding."
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 <what-to-do>
 

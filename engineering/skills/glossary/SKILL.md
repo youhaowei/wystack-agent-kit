@@ -2,6 +2,17 @@
 name: glossary
 description: "Draft, promote, or update the project glossary — the ubiquitous language (DDD) that names every domain concept in the codebase. Use when defining new domain terms, resolving naming ambiguity, hardening terminology, or when a signed-off glossary draft is ready to promote into the repo. Triggers on: \"glossary\", \"domain model\", \"DDD\", \"ubiquitous language\", \"name this concept\", \"define domain term\", or when PRD/spec work surfaces terminology that needs to be canonicalized."
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 # Glossary
 

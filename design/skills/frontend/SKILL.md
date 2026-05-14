@@ -2,6 +2,17 @@
 name: frontend
 description: Create production-grade frontend interfaces — pages, components, layouts, hero sections, dashboards, marketing surfaces, app UI. Applies project DESIGN.md (tokens, primitives, anti-references), brand-vs-product register, and the named anti-pattern catalog. Use before any UI work — building a new page, component, layout, or screen. Triggers on "build a page", "create a component", "design this UI", "build the frontend", "make a hero section", "design a dashboard", "build the landing page", "redesign this", "the homepage needs", or any request that produces visual frontend code. For polishing functionally complete work, see polish. For per-project design system bootstrap, see establish.
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 # Frontend
 

@@ -2,8 +2,51 @@
 
 The merged-three-lens report this skill produces. Single message — don't drip-feed findings.
 
+## Clarity contract
+
+The report is a decision artifact, not a work log.
+
+- Lead with the recommendation and the user's next decision.
+- Use "current state" language instead of chronological narration.
+- Group multi-repo/submodule work by boundary, with each boundary showing status, evidence, and next action.
+- Put command/test output only in `Verification Evidence`.
+- End with one recommended action, not a loose list of possibilities unless the user explicitly asked for options.
+
 ```
 ## Full Review — TASK-{id}: {title}
+
+### Recommendation
+{READY / BLOCKED / NEEDS INFO} — {one-sentence reason}
+
+### Decision Needed
+{None / the one concrete user choice needed. Example: "Approve pushing libs/wystack first, then committing the DashFrame pointer."}
+
+### PR Summary
+**PR**: {#number + title + URL, or "No open PR found"}
+**Branch**: {branch} → {base} | **Files**: {n} | **Lines**: +{a}/-{r}
+
+- **Intent**: {what PR/ticket says this should do}
+- **Actual diff**: {what changed in code, grouped by module}
+- **User impact**: {what becomes possible/different for the user}
+- **State**: {review decision, merge state, checks, or "local branch only"}
+
+### Current State
+| Boundary | Status | Evidence | Next action |
+|---|---|---|---|
+| {repo/package/submodule} | {clean / blocked / needs commit / needs push} | {check or file evidence} | {specific next step} |
+
+### Architectural Insight
+{1-2 short paragraphs synthesizing the code-review/principal perspective: key boundary or contract touched, whether the design aligns with existing architecture, strongest reusable pattern, and highest architecture risk. Cite modules/files. If no architecture signal exists, say so.}
+
+### Product / Requirement Fit
+- **Delivered value**: {1 sentence}
+- **Scope fit**: {complete / partial / over-scoped, with reason}
+- **Main user-facing gap**: {gap or "none found"}
+
+### Verification Evidence
+- **Automated**: {checks/tests run or reviewed, with pass/fail}
+- **Runtime/QA**: {manual/runtime evidence, screenshots, browser/app checks, or "not run"}
+- **Gaps**: {missing evidence that affects confidence}
 
 ### Status
 Code review: {n MUST} / {n SUGGEST} / {n PATTERNS}
@@ -24,6 +67,9 @@ PM: {n product findings}
 
 ### Merge Readiness
 {READY if zero MUST, else BLOCKED + list of MUSTs}
+
+### Next Action
+{one recommended action, with one sentence explaining why. If approval is required, ask exactly one approval question.}
 ```
 
 The report must be self-contained — copy/paste-able into another session.
@@ -34,7 +80,7 @@ See [SEVERITY.md](../code-review/SEVERITY.md). The orchestrator re-classifies al
 
 ## Action selection prompt
 
-Presented immediately after the report:
+Presented immediately after the report only when the best next action is not obvious or the user asked for options:
 
 ```
 **Actions:**

@@ -2,6 +2,17 @@
 name: establish
 description: Bootstrap a project's visual design system. Produces DESIGN.md at project root with register (brand/product), visual direction, tokens (color OKLCH, type scale, spacing, radii, shadows), @wystack/ui primitive mapping, project-specific anti-patterns, and accessibility targets. Run once per new project, or to refresh when the design system needs to be re-established. Use when the user mentions "set up design system", "design context", "project design", "DESIGN.md", "establish design", "design tokens", "design bootstrap", "set up the design system for this project", or starts a new visual project that needs a system. Reads but does not own product context (audience, brand voice, anti-references) — that lives in PRODUCT.md / PRD owned by engineering:pm.
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 # Establish
 

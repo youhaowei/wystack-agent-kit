@@ -4,9 +4,12 @@ Two formats: the **reviewer brief** (what each reviewer outputs) and the **final
 
 ## Reviewer output (per reviewer)
 
-Each reviewer ends with three sections:
+Each reviewer ends with four sections:
 
 ```
+## Insight
+<3-5 sentences: what this branch changes, the main architectural boundary/contract touched, strongest positive pattern, and most important risk to watch. Use evidence from the diff/context; say "No architectural signal" if the change is too small.>
+
 ## Findings
 - **file:line** — description
   Category: Bug | Design | Security | Coverage | Performance | Style | Maintainability | Doc
@@ -46,14 +49,44 @@ Include the argument even when the verdict is SHIP — _"no findings, ship it"_ 
 
 Single message — don't drip-feed findings.
 
+### Clarity contract
+
+The final report is a decision artifact, not a work log.
+
+- Lead with the recommendation and any decision needed from the user.
+- Prefer state over chronology: say what is true now, not the order you discovered it.
+- Group by ownership/boundary when multiple repos, submodules, packages, or worktrees are involved.
+- Keep process evidence in `Verification Evidence`; do not narrate every command inline.
+- If the next action is obvious, recommend it directly. If user approval is required, ask one concrete question.
+
 ```
 ## Review Summary
 
+### Recommendation
+{SHIP / SHIP-WITH-TICKETS / BLOCK / NEEDS USER DECISION} — {one-sentence reason}
+
+### Decision Needed
+{None / the one concrete user choice needed. Example: "Approve pushing the submodule branch and then the parent repo pointer."}
+
+**PR**: {#number + title + URL, or "No open PR found"}
 **Branch**: {branch} → {base} | **Files**: {n} | **Lines**: +{a}/-{r}
 **Reviewers**: {list}
 
-### Changes
-{2-3 sentences}
+### PR Summary
+{3-5 bullets max, grouped by current state: intent, actual diff, user-facing impact, live PR/check/review state. No chronological narration.}
+
+### Diff Shape
+- **Primary modules**: {module/file clusters touched}
+- **Data/control flow**: {what path changes at runtime}
+- **Tests/docs**: {coverage/doc changes or absence}
+
+### Architectural Insight
+{1-2 short paragraphs. Explain the boundary/contract this PR touches, whether the implementation deepens or muddies that boundary, and any reusable pattern worth carrying forward. Ground this in files/modules, not vibes. If no meaningful architectural change exists, say so.}
+
+### Risk Read
+- **Highest ship risk**: {specific risk or "none found"}
+- **Most fragile assumption**: {assumption from code/context, or "none identified"}
+- **Evidence quality**: {strong/moderate/weak, based on context, tests, and runtime/check evidence}
 
 ### Perspectives
 - **Correctness**: {1 sentence}
@@ -89,6 +122,9 @@ Single message — don't drip-feed findings.
 
 ### Branch recommendation
 {synthesize: if all SHIP or SHIP-WITH-TICKETS → recommend ship; if any BLOCK → lead with the blocker. Do NOT average severity — weigh the arguments. A Critical finding with a compelling "defer-to-ticket" argument from the flagging reviewer is still a SHIP-WITH-TICKETS; a Medium finding with "this changes a documented contract" is a BLOCK.}
+
+### Verification Evidence
+{compact table or bullets: check/runtime evidence, result, scope. If only static review happened, say "Static only" and name the missing confidence signal.}
 
 ---
 

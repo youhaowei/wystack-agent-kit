@@ -19,6 +19,37 @@ Eight roles, each with a clear mandate. In Claude-style harnesses these may map
 to named agents directly; in Codex they serve as canonical role briefs for
 generic subagents or local role simulation.
 
+## Communication Contract
+
+Every agent and skill output should reduce the user's cognitive load while
+preserving the information needed to learn from the work and make important
+decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the "why" behind non-obvious work, but keep process logs out of the
+  main narrative.
+- Group information by ownership boundary (repo, package, submodule, feature,
+  user impact), not by the order commands happened.
+- Ask one concrete question when a user decision is required. Do not dump a
+  loose option list unless the user asked for options.
+- Prefer compact tables for state/evidence/next-action handoffs.
+
+Default handoff shape:
+
+```md
+### Recommendation
+{ready / blocked / needs decision} — {one-sentence reason}
+
+### Decision Needed
+{none / one concrete approval or choice}
+
+### Current State
+| Boundary | Status | Evidence | Next action |
+|---|---|---|---|
+| {repo/package/feature} | {state} | {proof} | {specific next step} |
+```
+
 ## Codex Compatibility
 
 - In Codex, keep these names as the canonical engineering roles.

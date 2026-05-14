@@ -2,6 +2,17 @@
 name: spec
 description: "Write, promote, or update a technical specification — system design, component boundaries, data flow, key decisions (including ADRs). The engineering counterpart to `prd`. Use when architecture needs documenting before implementation, when a signed-off draft is ready to promote into the repo, or when editing an already-promoted spec. Triggers on: \"write a spec\", \"tech spec\", \"design doc\", \"architecture doc\", \"system design\", \"promote the spec\", or after `engineering:brainstorm --grill` produces architecture that needs formal documentation."
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 <what-to-do>
 

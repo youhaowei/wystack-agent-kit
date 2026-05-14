@@ -2,6 +2,17 @@
 name: code-review
 description: "Run a multi-agent static code review with parallel expert reviewers and Notion ticket context. Use when the user asks to review code, review a branch, review changes, check regressions, or get feedback before merge. Also invoked by `engineering:full-review` and `engineering:finish`."
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 <what-to-do>
 
@@ -10,12 +21,13 @@ Static review from multiple expert perspectives. No code written or executed —
 Run the pipeline in order. Each stage gates the next.
 
 1. **Scope.** `git diff --name-only $(git merge-base HEAD main)..HEAD`. Classify against the [roster](#specialist-roster) to pick specialists.
-2. **Context.** Hard gate. Invoke `engineering:engineering-context` (see [Context gathering](#context-gathering) for ticket-ID extraction). Skipping this is the #1 cause of false-positive reviews. Pass the returned block **verbatim** to every reviewer in step 4 — not paraphrased.
-3. **Preflight.** Spawn the `preflight` skill. Any fail → stop. Reviewing broken code produces findings about breakage, not design.
-4. **Parallel reviews.** Single message, all reviewers. Each gets: changed files, branch, base, the verbatim context block, and the [reviewer brief](#reviewer-brief) (output format + spec-grounding rule + ship-verdict requirement).
-5. **Dedup + triage.** Orchestrator's job — re-classify reviewer severities into **MUST** / **SUGGEST** per [SEVERITY.md](SEVERITY.md). Apply the near-term-trigger test before recommending tickets.
-6. **Report** via the `collaborate` skill using the template in [REPORT-FORMAT.md](REPORT-FORMAT.md). Single message — don't drip-feed findings.
-7. **Execute** per user's chosen action (Fix inline / Discuss + fix / Discuss only / Skip). When a fix needs new or updated tests, delegate to `test-writer` or invoke `tdd` — pass the spec anchor explicitly.
+2. **PR snapshot.** If a PR URL/number is provided or the branch has an open PR, capture `gh pr view --json number,url,title,body,headRefName,baseRefName,changedFiles,additions,deletions,author,reviewDecision,mergeStateStatus,statusCheckRollup`. If no PR exists, synthesize the same shape from branch name, commits, and diff stats. This snapshot feeds the report narrative, not severity.
+3. **Context.** Hard gate. Invoke `engineering:engineering-context` (see [Context gathering](#context-gathering) for ticket-ID extraction). Skipping this is the #1 cause of false-positive reviews. Pass the returned block **verbatim** to every reviewer in step 5 — not paraphrased.
+4. **Preflight.** Spawn the `preflight` skill. Any fail → stop. Reviewing broken code produces findings about breakage, not design.
+5. **Parallel reviews.** Single message, all reviewers. Each gets: PR snapshot, changed files, branch, base, the verbatim context block, and the [reviewer brief](#reviewer-brief) (output format + spec-grounding rule + ship-verdict requirement).
+6. **Dedup + triage.** Orchestrator's job — re-classify reviewer severities into **MUST** / **SUGGEST** per [SEVERITY.md](SEVERITY.md). Apply the near-term-trigger test before recommending tickets.
+7. **Report** via the `collaborate` skill using the template in [REPORT-FORMAT.md](REPORT-FORMAT.md). Single message — don't drip-feed findings. Lead with the recommendation, decision needed, informative PR read (summary, architecture, risk, verification), then findings. Do not produce a chronological work log.
+8. **Execute** per user's chosen action (Fix inline / Discuss + fix / Discuss only / Skip). When a fix needs new or updated tests, delegate to `test-writer` or invoke `tdd` — pass the spec anchor explicitly.
 
 Reviewers hunt for findings with maximum recall. **This skill (the orchestrator) owns triage, severity translation, filing discipline, and round termination.** Don't bake scope filters into reviewer prompts.
 
@@ -31,7 +43,7 @@ Reviewers hunt for findings with maximum recall. **This skill (the orchestrator)
 ## Pipeline
 
 ```
-Scope → Context → Preflight → Parallel reviews → Dedup → Walk-through
+Scope → PR snapshot → Context → Preflight → Parallel reviews → Dedup → Walk-through
 ```
 
 ## Specialist roster
@@ -73,23 +85,26 @@ engineering:engineering-context "<branch-name> <id1> <id2> ..." review
 
 If a ticket ID was found, instruct context that task-manager MUST be dispatched with that ID even if the freshness check thinks the ticket is already loaded — title-only freshness is unreliable.
 
-If the engineering-context skill reports gaps (no PRD found, unresolved open questions affecting the diff), pause and ask the user before dispatching reviewers. If the skill is unavailable in the harness, gather the same block manually from ticket/spec links and label it as fallback context — never proceed to step 4 with no context block.
+If the engineering-context skill reports gaps (no PRD found, unresolved open questions affecting the diff), pause and ask the user before dispatching reviewers. If the skill is unavailable in the harness, gather the same block manually from ticket/spec links and label it as fallback context — never proceed to step 5 with no context block.
 
 ## Reviewer brief
 
 Each reviewer gets:
 
 - Changed file list, branch, base.
-- The context block from step 2, verbatim.
+- PR snapshot: title/body if present, diff stats, review/check state.
+- The context block from step 3, verbatim.
 - Spec-grounding instruction: _"Before flagging a finding, check it against Non-Goals and Decisions. If the behavior matches a stated Non-Goal or Decision, do not flag it — only flag if the implementation diverges from the stated decision."_
 - The output format from [REPORT-FORMAT.md](REPORT-FORMAT.md).
 - A required ship-verdict closing section (also in REPORT-FORMAT.md). The argument forces reviewers to weigh severity × ship-worthiness in their own voice — without it, finding-bias accumulates faster than it converges.
+
+Reviewers should also return one short **Insight** paragraph before findings: what this branch appears to be doing architecturally, which boundary or contract it touches, and the strongest positive pattern or concern. This is not a substitute for findings; it gives the orchestrator raw material for the report's PR narrative.
 
 **QA spec-grounding rule (mandatory).** For every test in the diff, the QA reviewer asks _"does this assert a spec contract (PRD user story, Spec decision, edge-case table) — or how the current code behaves?"_ Tests that only encode current behavior become load-bearing for bugs. Flag any test that would pass a different-but-spec-compliant implementation. Test names should reference the spec anchor (`"US-5: dedup by name returns existing"`, `"Decision #8: stale = mtime > indexedAt"`).
 
 When a fix requires modifying an existing test, that's a signal — the test may have been encoding the bug. Check the test's spec anchor before assuming the test is correct and the fix is wrong.
 
-**Reviewers keep using their native severity labels (Critical/High/etc.) as input signal.** The orchestrator re-classifies into MUST/SUGGEST during step 5. Don't force reviewers to pre-triage — it reduces recall.
+**Reviewers keep using their native severity labels (Critical/High/etc.) as input signal.** The orchestrator re-classifies into MUST/SUGGEST during step 6. Don't force reviewers to pre-triage — it reduces recall.
 
 ## Codex compatibility
 
@@ -109,6 +124,7 @@ This workflow runs in both Claude-style harnesses and Codex.
 - **No changes** → stop.
 - **Preflight fails** → stop, report.
 - **Reviewer fails** → continue, note gap.
+- **No open PR** → still include a PR Summary section, labeled "No open PR found"; summarize from branch, commits, and diff.
 - **Zero MUST + all reviewers SHIP** → loop terminates; recommend merge. SUGGEST items don't force another round.
 - **Mixed verdicts** → lead the report with the BLOCK arguments; the disagreement itself is the signal.
 - **Multi-round convergence** — round-agnostic. LLM reviewers sample; a later-round finding is valid on merit, not filtered by round number.

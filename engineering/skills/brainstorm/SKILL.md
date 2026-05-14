@@ -2,6 +2,17 @@
 name: brainstorm
 description: "Gate skill for non-trivial changes. Interview the user to refine requirements, explore approaches, and validate design before implementation. Auto-picks the right framework lens (idea-validation, plan-ambition review, or domain-driven discipline) based on what's in context. Works for features, architecture, process, tooling — anything that benefits from thinking before doing. Skip only for bug fixes, clear-scope refactors, or trivial changes."
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 # Brainstorm
 

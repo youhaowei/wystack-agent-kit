@@ -2,6 +2,17 @@
 name: discoverability
 description: Make a site, product, plugin, or tool findable across all surfaces — Google/Bing search, AI search (ChatGPT, Claude, Perplexity, AI Overviews, AEO/GEO/LLMO), structured data (JSON-LD schema), site architecture (URL structure, IA, internal linking, sitemap), directories (Product Hunt, GitHub topics, npm keywords, AlternativeTo, G2, Capterra, MCP registry, plugin marketplaces), and AI agent discovery (tool catalogs, llms.txt, README parsing). Use when the user mentions "SEO", "schema markup", "structured data", "make this rank", "rank for X", "AI search", "AEO", "GEO", "LLMO", "show up in ChatGPT", "Perplexity citations", "AI Overviews", "Product Hunt launch", "submit to directories", "GitHub topics", "make my plugin discoverable", "MCP registry", "llms.txt", "sitemap", "meta tags", "OG image", "Core Web Vitals", "internal linking", "URL structure", or "site architecture".
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 # Discoverability
 

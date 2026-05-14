@@ -2,6 +2,17 @@
 name: ux-writing
 description: Write or improve in-product copy — button labels, error messages, empty states, form helper text, system messages, tooltips, microcopy, onboarding text, accessibility copy, voice and tone calibration. Use when the user mentions "button label", "CTA copy", "error message", "empty state", "form helper text", "tooltip", "microcopy", "system message", "loading state", "in-product copy", "in-app text", "UX writing", "alt text", "ARIA label", "screen reader copy", or asks to "rewrite this label / button / error / empty state". Functional clarity over persuasion — UX writing serves the task, marketing copy persuades. For landing-page / hero / value-prop / marketing copy, see copywriting.
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 # UX Writing
 

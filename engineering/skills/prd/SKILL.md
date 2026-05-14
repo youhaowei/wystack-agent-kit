@@ -2,6 +2,17 @@
 name: prd
 description: "Write a Product Requirements Document — a formal behavior spec describing what the system should do from the user's perspective. Use when a feature needs documentation before breakdown into tickets. Triggers on: \"write a PRD\", \"document this feature\", \"behavior spec\", \"product requirements\", or after `engineering:brainstorm --grill` produces a design that needs formal documentation."
 ---
+## Skill communication contract
+
+Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+
+- Lead with the recommendation, readiness state, or blocker.
+- Separate facts, evidence, inference, and decisions needed from the user.
+- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
+- Group information by ownership boundary, user impact, or decision area rather than command chronology.
+- Ask one concrete question when user input is required; avoid loose option lists unless requested.
+- Prefer compact state/evidence/next-action tables for handoffs.
+
 
 # PRD
 
