@@ -40,7 +40,7 @@ Code review and QA run in parallel. PM runs after — it benefits from knowing w
 
 4. **Code review + QA (parallel).** Launch both in a single message:
    - `engineering:code-review` — pass PR snapshot, ticket context, review-context block, changed files. Returns PR summary, architectural insight, deduplicated findings, and severity.
-   - `qa` — pass ticket context and the same context block. Returns requirements checklist (PASS/FAIL/UNTESTED), edge cases by severity, runtime verification results.
+   - `qa` — pass ticket context, the same context block, and `docs/testing-philosophy.md`. Returns requirements checklist (PASS/FAIL/UNTESTED), strategic test gaps or waste tests, edge cases by severity, runtime verification results.
 
 5. **PM review (sequential).** Spawn `engineering:pm` with:
    - PR snapshot.

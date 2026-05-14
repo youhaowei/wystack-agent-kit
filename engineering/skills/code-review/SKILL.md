@@ -27,7 +27,7 @@ Run the pipeline in order. Each stage gates the next.
 5. **Parallel reviews.** Single message, all reviewers. Each gets: PR snapshot, changed files, branch, base, the verbatim context block, and the [reviewer brief](#reviewer-brief) (output format + spec-grounding rule + ship-verdict requirement).
 6. **Dedup + triage.** Orchestrator's job — re-classify reviewer severities into **MUST** / **SUGGEST** per [SEVERITY.md](SEVERITY.md). Apply the near-term-trigger test before recommending tickets.
 7. **Report** via the `collaborate` skill using the template in [REPORT-FORMAT.md](REPORT-FORMAT.md). Single message — don't drip-feed findings. Lead with the recommendation, decision needed, informative PR read (summary, architecture, risk, verification), then findings. Do not produce a chronological work log.
-8. **Execute** per user's chosen action (Fix inline / Discuss + fix / Discuss only / Skip). When a fix needs new or updated tests, delegate to `test-writer` or invoke `tdd` — pass the spec anchor explicitly.
+8. **Execute** per user's chosen action (Fix inline / Discuss + fix / Discuss only / Skip). When a fix needs new or updated tests, apply the strategic test gate in `docs/testing-philosophy.md` first. Only delegate to `test-writer` or invoke `tdd` when the test protects a spec contract, regression, hidden edge case, or system boundary; pass the anchor explicitly.
 
 Reviewers hunt for findings with maximum recall. **This skill (the orchestrator) owns triage, severity translation, filing discipline, and round termination.** Don't bake scope filters into reviewer prompts.
 
@@ -97,10 +97,13 @@ Each reviewer gets:
 - Spec-grounding instruction: _"Before flagging a finding, check it against Non-Goals and Decisions. If the behavior matches a stated Non-Goal or Decision, do not flag it — only flag if the implementation diverges from the stated decision."_
 - The output format from [REPORT-FORMAT.md](REPORT-FORMAT.md).
 - A required ship-verdict closing section (also in REPORT-FORMAT.md). The argument forces reviewers to weigh severity × ship-worthiness in their own voice — without it, finding-bias accumulates faster than it converges.
+- Strategic testing instruction: _"Default to no new tests. Apply `docs/testing-philosophy.md`: recommend tests only for hidden edge cases, spec contracts, regressions, or system boundaries. Flag waste tests that only prove existence, glue, UI rendering details, or implementation shape."_
 
 Reviewers should also return one short **Insight** paragraph before findings: what this branch appears to be doing architecturally, which boundary or contract it touches, and the strongest positive pattern or concern. This is not a substitute for findings; it gives the orchestrator raw material for the report's PR narrative.
 
-**QA spec-grounding rule (mandatory).** For every test in the diff, the QA reviewer asks _"does this assert a spec contract (PRD user story, Spec decision, edge-case table) — or how the current code behaves?"_ Tests that only encode current behavior become load-bearing for bugs. Flag any test that would pass a different-but-spec-compliant implementation. Test names should reference the spec anchor (`"US-5: dedup by name returns existing"`, `"Decision #8: stale = mtime > indexedAt"`).
+**QA strategic-test rule (mandatory).** For every test in the diff, the QA reviewer asks _"does this assert a spec contract, real regression, hidden edge case, or system boundary — or just how the current code happens to be shaped?"_ Tests that only encode current behavior become load-bearing for bugs. Flag any test that would pass a different-but-spec-compliant implementation. Test names should reference the spec anchor or bug class (`"US-5: dedup by name returns existing"`, `"Decision #8: stale = mtime > indexedAt"`, `"regression: empty import does not create phantom table"`).
+
+Missing-test findings need the same gate. Do not ask for tests just because code changed. Ask only when the untested behavior has a concrete bug class that type checking, linting, review, or runtime verification would not catch cheaply.
 
 When a fix requires modifying an existing test, that's a signal — the test may have been encoding the bug. Check the test's spec anchor before assuming the test is correct and the fix is wrong.
 

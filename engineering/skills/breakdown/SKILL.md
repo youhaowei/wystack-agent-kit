@@ -73,7 +73,7 @@ Each ticket should be:
 
 - **Vertical, not horizontal** — _"login form → API → DB → response"_, not _"all UI first, then all backend"_.
 - **Thin first** — the first slice should be embarrassingly simple but fully integrated.
-- **Each slice is TDD-ready** — clear enough to write a failing test for.
+- **Each slice is verification-ready** — clear enough to name the right proof: strategic test, runtime check, screenshot, typecheck, or lint.
 - **Reference the PRD** — tickets link back to the behavior spec; don't duplicate it.
 - **Bidirectional traceability** — every created ticket links to its PRD/spec, and the PRD/spec link back to the actual ticket URLs before breakdown is considered complete.
 - **Stories, not tasks** — _"user can see workflow progress"_, not _"build the progress tracking service"_.

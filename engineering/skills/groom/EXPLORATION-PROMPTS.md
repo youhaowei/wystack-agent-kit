@@ -18,7 +18,7 @@ Using the estimation scale (XS through XXL — see engineering:estimation), anal
    - What model/agent tier would execute this?
    - Apply multipliers/reducers from the estimation heuristics.
 4. **Full scope at that estimate tier**:
-   - What tests are required? (unit, integration, edge cases)
+   - What tests are required after applying `docs/testing-philosophy.md`? Default to none unless the task touches a hidden edge case, spec contract, regression, or system boundary.
    - What docs need updating? (CLAUDE.md, inline, API docs)
    - Any migration needed?
 5. **Suggested acceptance criteria** — concrete, testable, referencing actual file paths.
@@ -39,13 +39,13 @@ Status: {status} | Priority: {priority} | Current estimate: {est} | Type: {type}
 - Files: {affected files}
 - Suggested estimate: **{size}** ({model tier, e.g. Sonnet or Opus}) — {reasoning}
 - Full scope at {size}:
-  - Tests: {what's required}
+  - Tests: {what's required after strategic test gate, or "No new automated tests"}
   - Docs: {what needs updating}
   - Migration: {if any}
 
 **Suggested Acceptance Criteria**:
 1. {criterion referencing code}
-2. {test criterion}
+2. {verification criterion: strategic test, runtime check, screenshot, typecheck, or lint}
 3. {doc criterion}
 ```
 
@@ -65,7 +65,7 @@ Create a detailed implementation plan:
    - Existing patterns to follow (cite examples in codebase).
    - Exact insertion points for new code.
    - Design decisions that need user input.
-2. **Test strategy** — what to test, which test files, existing test patterns to follow.
+2. **Test strategy** — apply `docs/testing-philosophy.md`; say "No new automated tests" when the change is glue, trivial mapping, UI rendering detail, or implementation-only refactor.
 3. **Dependencies** — order of operations, what must be done first.
 4. **Risk areas** — parts most likely to need iteration.
 
@@ -80,7 +80,7 @@ Exploration depth: "very thorough"
 **Steps**:
 1. {step with specific file + function + what to change}
 2. {step referencing existing pattern to follow}
-3. {step for tests}
+3. {step for verification; include tests only if the strategic gate warrants them}
 4. {step for docs if needed}
 
 **Test Strategy**: {approach}

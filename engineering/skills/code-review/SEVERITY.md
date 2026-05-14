@@ -13,7 +13,7 @@ Includes:
 - **Correctness bugs** — observed, not speculative.
 - **AC violations**, security holes.
 - **Inaccurate comments or docs** — treat as code.
-- **Test issues** — tests asserting X but claiming Y; 0-expect tests; tests encoding current behavior vs spec contract.
+- **Test issues** — tests asserting X but claiming Y; 0-expect tests; tests encoding current behavior vs spec contract; existence smoke tests that catch no behavioral bug.
 - **Maintainability hazards** — bright-line test: _"will a future engineer reading this cold be wrong about what it does, or need to read unrelated code?"_ If YES → MUST.
 
 Maintainability triggers:

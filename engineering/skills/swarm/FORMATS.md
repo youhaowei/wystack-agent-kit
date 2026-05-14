@@ -33,7 +33,7 @@ Notion: {url}
 
 ### Process
 1. Read project CLAUDE.md for conventions.
-2. Implement. Co-locate tests (Foo.test.ts next to Foo.ts).
+2. Implement. Add tests only after the strategic test gate: hidden edge case, spec contract, regression, or system boundary. Co-locate tests when they are warranted.
 3. Run: bun run type-check && bun run lint && bun run test
 4. Commit on your worktree branch.
 5. Open a PR against master. Do not merge.
@@ -47,9 +47,9 @@ Notion: {url}
 - If stuck >10 min, message the orchestrator.
 
 ### Visual changes (UI tickets only)
-- Playwright tests that verify rendering and interaction.
+- Prefer E2E/Playwright for user-visible behavior; do not add unit tests for rendering details.
 - Before/after screenshots of affected areas, added to PR body under "Visual Changes".
-Both required — tests for CI, screenshots for reviewers.
+Screenshots are required for reviewer confidence. E2E tests are required only when they protect a real user-flow contract or regression.
 ````
 
 ## Merge gate

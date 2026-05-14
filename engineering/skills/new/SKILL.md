@@ -80,7 +80,7 @@ Analyze:
    - L: 4-8 files, architectural decisions, multiple modules
    - XL: 8+ files, cross-cutting, needs spec
    - XXL: Split first
-4. **Suggested acceptance criteria** — concrete, testable, referencing actual file paths
+4. **Suggested acceptance criteria** — concrete and verifiable, referencing actual file paths. Use `docs/testing-philosophy.md`; do not invent a test criterion unless the risk earns one.
 5. **Potential blockers** — dependencies, unknowns, prerequisites
 
 Exploration depth: "quick" for likely S/M, "medium" for likely L+.
@@ -103,7 +103,7 @@ Synthesize the exploration results and present to the user:
 
 **Acceptance Criteria**:
 1. {criterion referencing code}
-2. {test criterion}
+2. {verification criterion: strategic test, runtime check, screenshot, typecheck, or lint}
 3. {doc criterion if M+}
 
 **Affected Files**: {list}

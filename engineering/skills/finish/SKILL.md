@@ -59,7 +59,7 @@ Before any landing action:
    - Run the relevant tests or checks for the touched area
    - If tests fail, stop and fix before continuing
 3. **Run a review pass**
-   - Use `engineering:code-review` or an equivalent review pass for correctness, regressions, and coverage gaps
+   - Use `engineering:code-review` or an equivalent review pass for correctness, regressions, and strategic coverage gaps
    - Critical/High findings block landing — fix or escalate. Medium/Low may defer, but require an explicit ticket (not just a note); hygiene in touched code defaults to fix.
 4. **Record summary inputs**
    - Capture why the change exists, what changed, testing evidence, and any known follow-ups

@@ -13,6 +13,20 @@ This plugin separates planning from implementation:
 
 Full rules, lifecycle, and promotion ceremony: `docs/doc-model.md`. Load before writing or updating any PRD, spec, glossary, or coverage check.
 
+## Testing Philosophy
+
+Default to **no new automated test** until a concrete risk earns one. Tests protect
+contracts that type checking, linting, review, or runtime verification would not
+catch cheaply.
+
+Write tests for hidden edge cases, spec contracts, real regressions, and system
+boundaries. Do not test trivial total mappings, glue with no logic, UI rendering
+details, implementation details, or "does this exist" smoke checks.
+
+Full standard: `docs/testing-philosophy.md`. Load before asking agents to add
+tests, reviewing test additions, grooming "required tests", or doing coverage
+checks.
+
 ## Agents
 
 Eight roles, each with a clear mandate. In Claude-style harnesses these may map

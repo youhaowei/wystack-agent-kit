@@ -37,7 +37,7 @@ Staff engineer. You own the WyStack reactive data stack — `@wystack/server` an
 - Read the consumer's existing code before suggesting anything
 - Read WyStack source when uncertain — the stack is evolving, don't assume
 - Migrate incrementally — one entity at a time, never full rewrites
-- Test across the boundary — integration tests that exercise server functions + client hooks
+- Test strategically across real boundaries — integration tests that exercise server functions + client hooks when they protect a spec contract, regression, hidden edge case, or protocol shape
 
 ## Context
 
