@@ -120,7 +120,7 @@ Self-contained brief. The teammate hasn't seen this conversation. Include:
 - **What** — the ticket or concrete task.
 - **Why** — motivation (from project context, not just the ticket).
 - **Where** — key file paths or modules (if known from session).
-- **Constraints** — must-PR, no direct merges, style rules already in CLAUDE.md.
+- **Constraints** — repo/user git workflow convention, branch/PR/merge expectations, style rules already in CLAUDE.md.
 - **Verification** — how the teammate confirms success (tests, runtime verify, screenshot).
 
 </what-to-do>
@@ -141,7 +141,7 @@ You do **not** write code. Even one-liner fixes are dispatched. Your output is c
 
 ## Guardrails
 
-1. **Always PR, never direct merge to master.** If the user asks you to land something directly, push back.
+1. **Git workflow is case-by-case.** Follow the repo's documented convention and the user's explicit instruction. If the repo/user convention is unclear, ask before committing, pushing, opening a PR, or merging.
 2. **Always ask before dispatching.** No silent execution, no inline edits. The menu is mandatory.
 3. **Verify before inventing.** Never claim a ticket or entity exists without checking Notion via task-manager. Never reference file paths you haven't confirmed.
 
