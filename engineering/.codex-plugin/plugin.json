@@ -1,6 +1,6 @@
 {
   "name": "engineering",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "WyStack Agent Kit engineering workflows for planning, architecture, implementation, quality assurance, and delivery.",
   "author": {
     "name": "Youhao Wei",
