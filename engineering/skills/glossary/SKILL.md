@@ -1,116 +1,62 @@
 ---
 name: glossary
-description: "Draft, promote, or update the project glossary — the ubiquitous language (DDD) that names every domain concept in the codebase. Use when defining new domain terms, resolving naming ambiguity, hardening terminology, or when a signed-off glossary draft is ready to promote into the repo. Triggers on: \"glossary\", \"domain model\", \"DDD\", \"ubiquitous language\", \"name this concept\", \"define domain term\", or when PRD/spec work surfaces terminology that needs to be canonicalized."
+description: "Draft, promote, or update the project glossary — the ubiquitous language (DDD) that names every domain concept. Use when the user wants to define domain terms, resolve naming ambiguity, harden terminology, capture a domain model, or promote a signed-off glossary draft into the repo. Also seeded when PRD or spec work surfaces terms that need canonicalizing."
 ---
-## Skill communication contract
-
-Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
-
-- Lead with the recommendation, readiness state, or blocker.
-- Separate facts, evidence, inference, and decisions needed from the user.
-- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
-- Group information by ownership boundary, user impact, or decision area rather than command chronology.
-- Ask one concrete question when user input is required; avoid loose option lists unless requested.
-- Prefer compact state/evidence/next-action tables for handoffs.
-
-
 # Glossary
 
-Own the project's ubiquitous language — the canonical names for domain concepts, their definitions, aliases to avoid, and the relationships between them. The glossary is shared by PRD, spec, code, and tests; a drift in terminology anywhere becomes a silent bug.
+Own the project's ubiquitous language — canonical names for domain concepts, their definitions, aliases to avoid, and relationships. The glossary is shared by PRD, spec, code, and tests; terminology drift anywhere is a silent bug.
 
-See `docs/doc-model.md` for how the glossary fits the broader plugin doc model. This skill is the counterpart to `spec/` — spec owns architectural DDD (bounded contexts, aggregates); glossary owns lexical DDD (the words themselves).
+Counterpart to `spec`: spec owns architectural DDD (bounded contexts, aggregates), glossary owns lexical DDD (the words). See `docs/doc-model.md` for the broader doc model.
 
-`$ARGUMENTS` — concept to define, glossary title to promote, existing term to revise, or empty (interactive).
+`$ARGUMENTS` — concept to define, glossary title to promote, term to revise, or empty (interactive).
 
-## Lifecycle
+**Prerequisites.** Load `engineering:workspace` — it resolves the document store and the promoted-glossary path (`.claude/glossary.md` by default). If the workspace isn't set up, run `engineering:setup-agent-kit`.
 
-```
-1. draft            — glossary lives in the wiki; terms debated with stakeholders
-2. promote          — stable glossary is exported to .claude/glossary.md
-3. repo-canonical   — glossary lives in the repo; edits happen via PR
-```
+Three phases, picked from current state:
 
-Default behavior: if no glossary exists, `draft`. If a wiki draft has status `approved`/`stable` and no `.claude/glossary.md` exists, `promote`. If `.claude/glossary.md` exists, `repo-canonical`.
+- **Draft** — no glossary, or a draft in the doc store.
+- **Promote** — the doc-store draft is `approved`/`stable`, no promoted file yet.
+- **Repo-canonical** — the promoted file exists.
 
-## What a Glossary Captures
+## What an entry captures
 
-For each term:
+Per term: **canonical name** (the one spelling used in PRD, spec, code, tests) · **one-sentence definition** (tight, domain-specific) · **aliases to avoid** · **conflicts** (when two concepts share a casual name) · **relationships** (contains / contained-by / relates-to, with cardinality when useful) · **code pointer** (optional, for domain entities).
 
-- **Name** — the canonical spelling used everywhere (PRD, spec, code, tests)
-- **One-sentence definition** — tight, unambiguous, domain-specific
-- **Aliases to avoid** — words that mean the same thing but shouldn't be used (e.g., *Applicant*: avoid "candidate", "submitter")
-- **Conflicts** — when two concepts share a name in casual speech; make the distinction explicit
-- **Relationships** — what it contains, what contains it, what it relates to (with cardinality when useful)
-- **Code pointer** — optional; where the term is implemented in the codebase (for domain entities)
+Group entries by domain cluster, not alphabetically — a reader should orient to a subsystem by reading its cluster.
 
-Group terms by domain cluster, not alphabetically. A reader should be able to orient to a subsystem by reading its cluster.
+**Level of detail** — domain-precise, between dictionary and spec:
 
-## Level of Detail
-
-**Too thin (dictionary):**
-> Applicant: A person who applies.
-
-**Right level (domain-precise):**
-> **Applicant** — a person submitting an application to a Listing. Distinct from **User** (who may have an account without applying) and from **Household** (which groups applicants on a single application).
+> **Applicant** — a person submitting an application to a Listing. Distinct from **User** (may have an account without applying) and **Household** (groups applicants on one application).
 > - Aliases to avoid: candidate, submitter
 > - Relationships: belongs_to Household, references one Listing
 > - Code: `src/features/applicant/`
 
-**Too heavy (spec territory):**
-> Applicant entity stores hashed SSN, is soft-deleted via deletedAt column, uses optimistic locking via version field...
-
-Data model and implementation live in the spec, not the glossary.
+Too thin = "a person who applies" (dictionary). Too heavy = hashed-SSN, soft-delete columns, optimistic locking (spec territory).
 
 ## Phase 1 — Draft
 
-Used when terms need to be coined, debated, or consolidated.
+1. **Collect** — scan the conversation, open PRDs/specs, and recent code for domain terms. Note ambiguities (same word, different meaning) and synonyms (different words, same meaning).
+2. **Challenge** — for each ambiguous or conflicting term, propose a canonical name with reasoning; present alternatives and defer to the user. For non-obvious concepts, invoke `Skill("engineering:brainstorm", "--grill")` to force explicitness about concept boundaries — skip obviously-unambiguous terms.
+3. **Write entries** — one per term, grouped by domain cluster, opinionated about canonical names.
+4. **Save + cross-check** — delegate to `wiki-librarian`: save with title `"Glossary — …"`, project, tags, cross-references to related PRDs/specs. Then ask it to scan open PRDs/specs for term uses that don't match the canonical names. Never call doc-store MCP tools directly.
 
-1. **Collect** — scan the current conversation, open PRDs, specs, and recent code changes for domain terms in use. Note ambiguities (same word, different meaning) and synonyms (different words, same meaning).
-2. **Challenge** — for each ambiguous or conflicting term, propose a canonical name with reasoning. Present alternatives and defer to the user.
-3. **Interview** — for non-obvious concepts, MUST invoke the brainstorm skill: call `Skill("engineering:brainstorm", "--grill")`. Use this to force explicitness about boundaries between concepts. Skip for terms that are obviously unambiguous.
-4. **Write entries** — one per term. Group by domain cluster. Be opinionated about canonical names.
-5. **Save draft to wiki** — delegate to the `wiki-librarian` agent. Provide: the page title (prefixed with "Glossary — "), the full content, the project name, suggested Tags, and cross-references to related PRDs/specs. The wiki-librarian handles schema and dedup. Do NOT call wiki MCP tools directly.
-6. **Cross-update related docs** — ask the wiki-librarian to scan open PRDs and specs for uses of the terms and flag any that don't match the glossary's canonical names.
+Draft glossaries stay in the doc store while terminology is debated.
 
-Draft glossaries stay in the wiki while terminology is still being debated.
+## Promote & repo-canonical
 
-## Phase 2 — Promote
+Both follow the shared **promotion ceremony** — see `docs/doc-model.md`. Glossary's parameters:
 
-Used when a glossary draft is stable enough to become canonical. Invoked explicitly ("promote the glossary") or when the wiki draft flips to `approved`/`stable`.
+| Parameter | Value |
+|---|---|
+| Promoted file | the configured glossary path (`.claude/glossary.md` by default), organized by domain cluster |
+| Frontmatter `id` | `GLOSSARY` |
+| Promote triggers | status flips to `approved`/`stable`, or explicit _"promote the glossary"_ |
+| Commit message | `promote glossary` |
 
-1. **Fetch the draft** — delegate to `wiki-librarian` to retrieve the full content.
-2. **Strip tool references** — the promoted file must contain no wiki URLs, page IDs, or tool names. If entries reference specs or PRDs by name, keep those references; if they reference them by wiki URL, convert to name-only.
-3. **Write the file** — create `.claude/glossary.md` with tool-neutral frontmatter:
-   ```yaml
-   ---
-   id: GLOSSARY
-   title: <project> Glossary
-   status: active
-   ---
-   ```
-   Followed by the body, organized by domain cluster.
-4. **Mark wiki page promoted** — delegate to `wiki-librarian` to update the wiki page's status to `promoted` (or equivalent archived state). One-way promotion.
-5. **Commit** — the commit message is the record of provenance: `promote glossary`. Do not add wiki URLs to the commit body.
-6. **Announce completion** — report the `.claude/glossary.md` path. Subsequent term additions happen via PR alongside the code that introduces them.
-
-## Phase 3 — Repo-canonical
-
-Used when the glossary needs to change after promotion — usually because code introduced a new domain concept, renamed an existing one, or clarified a relationship.
-
-1. **Locate `.claude/glossary.md`**.
-2. **Edit directly** — add, revise, or remove entries in place.
-3. **Review downstream** — if a term was renamed, grep the repo for the old name and update specs, code, and test JSDoc. The rename is incomplete until downstream references match.
-4. **Do not sync back to the wiki** — the wiki copy is a historical snapshot. Generate a read-only mirror separately if stakeholders need a current view.
-5. **Commit with code** — glossary changes usually travel in the same PR as the code that enacts them.
+Glossary-specific: in a repo-canonical edit that renames a term, grep the repo for the old name and update specs, code, and test JSDoc — the rename is incomplete until downstream references match.
 
 ## Rules
 
 - **Canonical names are opinionated** — pick one, explain why, list aliases to avoid. Ambivalence defeats the glossary.
-- **One sentence per definition** — tight. If you need more, the concept is probably two concepts.
-- **Draft in the wiki, promote to the repo** — enforced by the lifecycle. Don't mix.
-- **Repo is tool-agnostic** — the promoted glossary never references the wiki.
 - **Code must match the glossary** — rename one, rename the other. Drift between glossary terms and code identifiers is a bug.
-- **Glossary feeds PRD and spec** — both skills reference the glossary when writing. The PRD skill seeds new terms back into the glossary draft.
-- **Skip generic programming terms** — "service", "repository", "controller" belong in architecture discussion, not the glossary. Glossary is for *domain* language.
-- **Use wiki-librarian for all wiki operations** — never call wiki MCP tools directly from this skill.
-- **See `docs/doc-model.md`** for how glossary relates to PRD, spec, and the rest of the plugin doc model.
+- **Domain language only** — skip generic programming terms ("service", "repository", "controller"); those belong in architecture discussion.

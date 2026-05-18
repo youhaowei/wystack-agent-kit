@@ -1,100 +1,89 @@
 ---
 name: brainstorm
-description: "Gate skill for non-trivial changes. Interview the user to refine requirements, explore approaches, and validate design before implementation. Auto-picks the right framework lens (idea-validation, plan-ambition review, or domain-driven discipline) based on what's in context. Works for features, architecture, process, tooling — anything that benefits from thinking before doing. Skip only for bug fixes, clear-scope refactors, or trivial changes."
+description: "Turn a rough idea or vague request into a validated design before implementation. Use when the user wants to brainstorm an idea, design a feature or subsystem, think a problem through, or explore an approach before building anything non-trivial. Skip bug fixes, clear-scope refactors, and trivial changes."
 ---
-## Skill communication contract
-
-Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
-
-- Lead with the recommendation, readiness state, or blocker.
-- Separate facts, evidence, inference, and decisions needed from the user.
-- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
-- Group information by ownership boundary, user impact, or decision area rather than command chronology.
-- Ask one concrete question when user input is required; avoid loose option lists unless requested.
-- Prefer compact state/evidence/next-action tables for handoffs.
-
-
 # Brainstorm
 
-Collaborative interview to refine requirements and produce a design before implementation.
+Turn a rough idea into a validated design. Two acts: **interview → design**. Stop at acceptance — capturing the artifact and handing off belong to other skills.
 
-`/brainstorm [--light | --grill]`
+`/brainstorm [--light | --grill | --no-docs]`
 
-By default, be assertive — challenge assumptions, probe for gaps, don't accept the first answer. The goal is shared understanding, not politeness.
+| Mode | Depth |
+|---|---|
+| `--light` | Fewer questions — small scope, or a clear existing vision. |
+| (default) | Assertive — challenge assumptions, question trade-offs, push on scope. |
+| `--grill` | Relentless — walk every branch, resolve dependencies one by one. |
+| `--no-docs` | Skip the domain layer (deliberate terminology changes). |
 
-- **`--light`** — lighter touch for small scope or when the user already has a clear vision. Fewer questions, faster to design.
-- **default** — actively challenge assumptions, question trade-offs, push on unclear scope. Ask until you're confident the design is solid.
-- **`--grill`** — relentlessly question every assumption, walk down every branch of the design tree, resolve dependencies between decisions one by one. Don't stop until there's nothing left to clarify. Inspired by Brooks' *The Design of Design*.
+Be assertive — comfort means you haven't gone deep enough.
+
+**The pace is the point.** One question per turn — ask, stop, wait for the answer. Never batch ahead. Reaching a design fast is not the goal; reaching the *right* design is. If it feels slow, it's working — rushing is the primary failure mode.
 
 ## Hard gate: no implementation
 
-Brainstorm is a thinking and decision skill, not an execution skill.
+Until the user explicitly accepts the design:
 
-Until the user explicitly accepts the design and asks to proceed:
+- **Don't** edit implementation (source, tests, configs, manifests, production docs), commit/push/PR, install, migrate, deploy, or create tickets.
+- **Do** read/search code, run non-mutating inspection, and draft options, approaches, and diagrams in chat.
 
-- Do not edit source files, production docs, tests, configs, manifests, package files, or generated artifacts.
-- Do not stage, commit, push, open PRs, install packages, run migrations, or deploy.
-- Do not create tickets/tasks unless the user explicitly asks to save the brainstorm output as tasks.
+Brainstorm ends at acceptance — capture and handoff are [a separate phase](#after-acceptance).
 
-Allowed before acceptance:
+## The center: four-axis loop
 
-- Read/search existing code, docs, tickets, and specs.
-- Run non-mutating inspection commands.
-- Draft recommendations, options, diagrams, and decision artifacts in chat.
-- Identify the exact artifact that should be updated after acceptance.
+Every top-level component is tracked across four dimensions; each question aims at the weakest.
 
-After acceptance, hand off to the right execution workflow (`prd`, `spec`,
-`breakdown`, `groom`, `start`, or a direct implementation task). Saving a
-decision artifact is allowed only when the accepted output is explicitly a
-document/process artifact, not hidden implementation.
+| Axis | Measures |
+|---|---|
+| **Goal** | Is the purpose specific? What does success look like? |
+| **Constraints** | What limits the solution — technical, business, time, resource. |
+| **Criteria** | How we know it's good — acceptance, metrics, "done". |
+| **Context** | Surrounding state, prior decisions, background the design depends on. |
 
-## Lens detection (run first)
+After each answer, re-score and aim the next question at the weakest cell across all components — this stops one component soaking up attention while siblings stay vague, and forces constraints/criteria onto the agenda. Scoring is a legibility instrument, not a gate ([SCORING.md](./SCORING.md)); stopping is holistic judgment.
 
-Before interviewing, look at what's in context and pick the right framework lens from [FRAMEWORKS.md](./FRAMEWORKS.md). The lens determines *which questions* to ask, not whether to ask. Lenses compose — apply all that fit.
+## Phases
 
-| Signal in context | Lens | Why |
-|---|---|---|
-| No PRD/spec/design — just an idea or "what if we built X" | **Idea-validation** (FRAMEWORKS.md §1) | Pressure-test demand reality, status quo, narrowest wedge before formalizing |
-| Existing PRD, spec, plan file, or design doc | **Plan-ambition** (FRAMEWORKS.md §2) | Push on scope/ambition: is this the 10-star version, or just acceptable? |
-| Codebase has CONTEXT.md, glossary, or ADRs | **Domain-driven** (FRAMEWORKS.md §3) | Sharpen language against existing model, surface contradictions, update docs inline |
-| Side project / hackathon / "just for fun" | **Builder mode** (FRAMEWORKS.md §4) | Generative not interrogative — surface the most exciting version |
+**Act 1 — Interview**
 
-Most sessions blend lenses: a new feature on an existing codebase needs idea-validation + domain-driven; a plan review needs plan-ambition + domain-driven; etc. Don't announce the lens to the user — just internalize the framework and let it shape the questions.
+0. **Explore first** — anything the code answers doesn't get asked. Check the workspace, `CONTEXT.md`, `docs/adr/`, glossary, tasks, competitor profiles.
+1. **Detect lens** — pick the fitting framework(s) from [FRAMEWORKS.md](./FRAMEWORKS.md); don't announce it.
+2. **Round 0 — topology lock** — enumerate 1-6 top-level components, confirm before deep questioning.
+3. **Four-axis loop** — one question per turn with a recommended answer; target the weakest axis; smart-skip what's clear. Domain layer runs here.
+4. **Readiness check** — holistic judgment the design is clear enough to propose.
 
-## Flow
+**Act 2 — Design**
 
-1. **Explore context** — check files, docs, commits, and existing work items from the configured task system. Know what exists before asking. Look for `.wystack/`, `CONTEXT.md`, `docs/adr/`, `DESIGN.md`, `PRODUCT.md`, project glossary.
-2. **Detect lens** — see table above. Pick what's in context.
-3. **Detect mode** — implement vs document-only? Ask if unclear.
-4. **Scope check** — if too large for one spec, decompose into sub-projects first.
-5. **Interview** — ask clarifying questions in the `collaborate` shape: each question has a stable number, recommended answer, rationale, decision impact, and any guardrail to document. User overrides what they disagree with. Use the lens's question set from FRAMEWORKS.md. **Follow collaborate's tier rules: architecture/spec/PRD interview questions are load-bearing by default — use sequential mode (one question per turn).** Only batch when the questions are genuinely grooming-tier (trivial defaults, minor scope). When in doubt, sequential.
-6. **Parallel research** — launch Explore/research agents while interviewing. Use perspective agents (competing framings) for key architectural decisions where trade-offs are non-obvious.
-7. **Propose 2-3 approaches** — synthesize findings, present via `collaborate` (each approach = per-item block with recommendation). Lead with the strongest, push back on smells. For plan-ambition lens: include the "minimal viable" and "ideal architecture" approaches at equal weight (FRAMEWORKS.md §2).
-8. **Present design** — scale detail to complexity. Use `collaborate` for section approval — section block + recommendation + summary table + single confirm. Don't drip-feed section approvals. Include diagrams where they help.
-9. **Ask for design acceptance** — summarize the recommended design, alternatives rejected, and guardrails. Stop here until the user explicitly accepts or revises it.
-10. **Update decision artifacts only after acceptance** — for domain-driven work, persist accepted terms/decisions into `CONTEXT.md`, glossary, ADR, ticket notes, PRD/spec decision section, or another explicit decision artifact. Do not edit implementation files as part of brainstorm. See FRAMEWORKS.md §3.
-11. **Save decision guardrails** — when a recommendation is accepted, persist the important constraints/pushback into the active artifact. Do this during the session, not as a loose chat-only warning. Phrase guardrails as implementation constraints ("Do not...") instead of re-arguing after the user agrees.
-12. **Save + review** — write spec, dispatch reviewer subagent, user reviews before proceeding.
-13. **Next step** — depending on what was designed:
-    - Product features → `/prd` to formalize the behavior spec
-    - Architecture → `/spec` to formalize the technical design
-    - Ready to build → `/work:breakdown` to create tickets
-    - Process/tooling → decision record with rationale
+5. **Propose 2-3 approaches** — trade-offs, lead with the strongest, push back on smells.
+6. **Present the design** — sections scaled to complexity, per-section approval, diagrams where they help.
+7. **Acceptance gate** — summarize design, rejected alternatives, guardrails. **Stop until the user explicitly accepts.**
+
+## After acceptance
+
+Brainstorm's job ends when the user accepts the design. The accepted design is the deliverable; capturing and verifying it belong to dedicated skills:
+
+- **Capture** — hand the accepted design to `engineering:present`, which writes and delivers the design artifact in the right format.
+- **Verify** — `engineering:ccg` for an advisory alt-model read of that artifact; skip if unavailable.
+- **Domain** — if terms or decisions resolved, update `CONTEXT.md` / glossary / ADRs via `engineering:glossary`. Offer an ADR only when the decision is hard to reverse, surprising, and a real trade-off.
+- **Continue** — one next skill: `prd` / `spec` / `breakdown` / direct implementation.
+
+## Domain layer
+
+Runs inside the four-axis loop when domain context is load-bearing — judgment, not a file-presence rule. If `CONTEXT.md` / glossary / ADRs exist, use them: challenge terms against the glossary, sharpen fuzzy language to canonical names, cross-reference claims with code, update `CONTEXT.md` as terms resolve ([FRAMEWORKS.md §3](./FRAMEWORKS.md)).
 
 ## Principles
 
-- **Think hard** — use extended thinking liberally. Question your own assumptions, stress-test trade-offs, consider second-order effects. Brainstorming is where depth pays off most.
-- **Interview, don't assume** — ask before proposing.
-- **Parallel research** — don't serialize exploration, launch agents while brainstorming continues.
-- **Push back proactively** — offer your opinion, don't just facilitate. Anti-sycophancy: comfort means you haven't gone deep enough.
-- **Persist pushback** — useful pushback is not a vibe; it is a design constraint. Once accepted, write it into the artifact that will guide implementation.
-- **YAGNI** — cut unnecessary scope from all designs.
-- **Check before creating** — search for existing tasks/specs before duplicating.
-- **Smart-skip** — if earlier answers already cover a later question in the lens framework, skip it. Only ask questions whose answers aren't yet clear.
-- **Stop after each question** — wait for the response before asking the next.
+- **Persist pushback** — once a constraint is accepted, write it into the artifact that guides implementation.
+- **Parallel research** — launch Explore agents while the interview continues.
+- **YAGNI** — cut unnecessary scope from every design.
 
 ## Escape hatches
 
-- **User says "just do it" / impatient** — once: respond "the hard questions are the value, two more then we move." Pick the most critical remaining questions from the active lens. If they push back twice, stop brainstorming and ask for explicit permission to switch to the appropriate implementation workflow. Do not implement inside brainstorm.
-- **User provides fully-formed plan with real evidence** — skip the interview phase but still run lens-appropriate review (Phase 3 challenge for ideas, ambition modes for plans).
-- **Vibe shifts mid-session** — builder mode → "this could be a real company" mentions: upgrade lens to idea-validation. Plan-mode → "let me rethink the whole thing": switch to idea-validation.
+- **Impatient / "just do it"** — once: "the hard questions are the value, two more then we move." Pushed twice → stop, ask permission to switch to implementation.
+- **Fully-formed plan with real evidence** — skip the interview, still run lens-appropriate review.
+- **Vibe shift** — builder mode turning serious ("this could be a real company") upgrades to the idea-validation lens.
+
+## Reference
+
+- [FRAMEWORKS.md](./FRAMEWORKS.md) — the four lenses and their question sets.
+- [SCORING.md](./SCORING.md) — the four-axis rubric and how to read scores.
+- [visual-companion.md](./visual-companion.md) — browser mockups for visual questions.

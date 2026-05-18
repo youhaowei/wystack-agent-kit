@@ -17,6 +17,37 @@ Every repo that wants lifecycle workflows should have:
 
 `engineering:setup-agent-kit` creates these files. Users may edit them directly.
 
+## Location and resolution
+
+The workspace location is project-configured, not fixed. One tracked file at the repo root — `.wystack.json` — names where it lives:
+
+```json
+{ "root": ".wystack" }
+```
+
+`.wystack.json` is the **only committed workspace file** — a pointer, not state. Everything under `root` is gitignored local state.
+
+**Location modes** (chosen at init):
+
+| Mode | `root` | Notes |
+|---|---|---|
+| Per-project (default) | `.wystack` | Gitignored workspace in the repo |
+| Global | `~/.wystack/<project>` | Outside the repo — no worktree visibility issue |
+| Custom | any path | Escape hatch |
+
+**Resolving the workspace** — a skill, from any directory including a worktree:
+
+1. **Primary** — read `.wystack.json` (tracked, so present in every worktree); follow `root`.
+2. **Fallback** — if `.wystack.json` is absent, resolve the main worktree with `git rev-parse --path-format=absolute --git-common-dir` and look for `.wystack/` beside it.
+
+Because `.wystack.json` is committed, every worktree carries it — skill-created or harness-created (`orchestrate` execution agents run in harness worktrees). The `engineering:worktree` skill also drops a `.wystack` symlink as ergonomics; the pointer file is the contract.
+
+## Structure and providers
+
+The framework names the **concepts** — task store, doc store, calibration, tuning, artifacts, decisions. The project configures **where each lives** in `storage.json`. Skills ask the config for a location; they never hardcode `.wystack/docs/` or `.wystack/tasks/`.
+
+Stores are **provider-driven** — the task store and doc store are not necessarily filesystem. Providers: `local-markdown`, `notion`, `github`, `kb`, etc. `storage.json` selects the provider and its config (path for filesystem, database ID for Notion, namespace for `kb`). Only operational local data — config, `calibration/`, `artifacts/`, `tuning.json` — is always filesystem under the workspace root.
+
 ## Canonical Concepts
 
 | Concept | Meaning |

@@ -1,77 +1,57 @@
 ---
 name: orchestrate
-description: "Route a broad request to the right specialist(s) and synthesize the results. Use when a request spans multiple roles, when the user wants a second or third opinion from different lenses, or when you're unsure which specialist to engage. For parallel ticket execution in worktrees, use the swarm skill instead."
+description: "Conduct a project from a persistent cockpit thread — survey the work, pick a dispatch strategy, run parallel agents, and gate the results. Use to run a batch of tickets in parallel, to spike a high-stakes or irreversible decision with N independent attempts, or to hold a standing conversation about a project's direction. For a single routine task, use start-task instead."
 ---
-## Skill communication contract
+# Orchestrate
 
-Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
+The cockpit. A persistent thread where you conduct a project: survey the work, dispatch parallel agents to do it, bring the results back. You decide; the agents labor.
 
-- Lead with the recommendation, readiness state, or blocker.
-- Separate facts, evidence, inference, and decisions needed from the user.
-- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
-- Group information by ownership boundary, user impact, or decision area rather than command chronology.
-- Ask one concrete question when user input is required; avoid loose option lists unless requested.
-- Prefer compact state/evidence/next-action tables for handoffs.
+`orchestrate [project]` — project name, or inferred from the working directory.
 
+## Prerequisites
 
-<what-to-do>
+Load `engineering:workspace` (resolves the project, the work-item provider, and the constitution) and `engineering:estimation` (sizes the work — strategy selection reads it).
 
-Route, fan out, synthesize. You stay the conductor — specialists do the work.
+## The cockpit
 
-1. **Read the ask.** What is the user trying to accomplish, which domains does it touch?
-2. **Pick a mode.**
-   - **Single specialist** — maps cleanly to one role → spawn it, done.
-   - **Parallel lenses** — independent angles on the same question → fan out 2–3 subagents with different stances. See [Parallel multi-stance pattern](#parallel-multi-stance-pattern).
-   - **Sequential pipeline** — one agent's output feeds the next → chain them.
-3. **Synthesize.** Collect results, resolve conflicts, present a unified recommendation. Flag disagreements for the user; don't paper over them.
-4. **Ask when ambiguous.** If decomposition isn't obvious, ask. Each question includes your recommended answer.
+You are the conductor — PM and Principal Engineer for this project, strategic and architecture-aware. You hold the thread; agents do the work.
 
-**Subagents vs teammates.** Default to **subagents** (one-shot, auto-isolated context, zero ceremony). Use **teammates** only when the work needs to persist, run in the background, or edit disk in isolation — that's swarm territory, not this skill.
+- **No code in the cockpit.** It decides and dispatches; it never implements. Even a one-line fix is dispatched.
+- **Open with a survey** — in-flight work, what's ready, branch and PR state. Brief, scannable. End with an open question.
+- **Decisions live here.** Grooming, planning, scope, merge approval — resolved with the user in the thread. A dispatched agent never has a decision left to make; if it would have to ask, the cockpit didn't finish its job.
+- **Maintain the thread** — watch dispatched agents, relay completions and failures, gate results with the user.
 
-## Routing
+## Strategy selection
 
-| Signal | Agent |
+Read the work; pick the strategy; recommend it to the user, who confirms. Size and reversibility come from `engineering:estimation`.
+
+| The work is… | Strategy |
 |---|---|
-| requirements / PRD / user stories / prioritization | `pm` |
-| architecture / cross-project design / spec reviews | `principal` |
-| wystack core / database / server / client / subscriptions | `stack-engineer` |
-| CLI / codegen / runtime / logging / DX tooling | `dx-engineer` |
-| stdui / tokens / primitives / component quality | `ui-engineer` |
-| tests / triage / verify / edge cases | `qa` |
-| git / CI / releases / branches / deploy | `devops` |
-| Work-doc CRUD / PRDs / Specs | `wiki-librarian` |
-| positioning / pricing / competitors | `strategist` |
-| copy / editorial / email / social | `content-writer` |
-| SEO / schema / programmatic / organic | `seo-engineer` |
-| conversion / onboarding / signup flow | `cro-analyst` |
-| launches / ads / referral / free tools | `growth-manager` |
-| tracking / measurement / A/B / GA4 | `analytics-engineer` |
-| ambiguous or multi-domain | ask the user, then decompose |
+| Multiple independent items to ship | **Execute** — one agent per item, in parallel |
+| One item a single attempt can't be trusted on — irreversible architecture, or XL | **Diverge** — N independent attempts, synthesized |
 
-</what-to-do>
+## Execute
 
-<supporting-info>
+Ship N independent items in parallel.
 
-## Parallel multi-stance pattern
+1. **Pick the items** — `engineering:next-task`; the user selects. Honor dependencies.
+2. **Resolve every decision first** — for each item, groom and plan with the user in the cockpit (`engineering:groom`) until nothing is left to decide. The dispatched agent must be decision-free.
+3. **Dispatch** — one worktree-isolated agent per item, running the decision-free brief ([references/executor-brief.md](references/executor-brief.md)): run the plan, verify, open a PR. Never merge.
+4. **Maintain the thread** — watch agents, relay results. Each PR is reviewed and calibrated by its own `engineering:finish-task` — the cockpit does not re-review. finish-task's shepherd runs one bounded pass per invocation; when an agent reports Shepherd State `shepherding` (CI handled, awaiting human review), the cockpit owns re-invoking a shepherd pass — dispatch one when a review lands or CI completes — until the PR reaches `ready-to-merge` or `needs-human`.
+5. **Gate merges** — present each ready PR; the user approves the merge. The cockpit never merges autonomously.
 
-For architecture or design decisions where the obvious answer might be wrong, fan out the *same* question to multiple specialists with *opposing* stances.
+## Diverge
 
-Example — _"how should we handle X?"_:
+One item, N independent attempts — when a single attempt is too risky to trust.
 
-- `principal` — minimal change, favor existing patterns.
-- `stack-engineer` — correctness-first, accept more refactor.
-- `dx-engineer` — optimize for future-dev ergonomics.
+1. **Frame one brief** — goal, constraints, acceptance criteria, context. Every attempt receives it verbatim. A vague brief multiplies vagueness; resolve it first.
+2. **Pick N and the variation** — independence is the experiment. Vary the model (default), assign opposing stances, or run spec vs spike. See [references/diverge.md](references/diverge.md).
+3. **Dispatch N independent attempts** — none sees another. Each writes its artifact to the workspace `artifacts/diverge/<slug>/`.
+4. **Synthesize** — convergence (every attempt agreed — near-settled), divergence (attempts differed — a real decision), and a recommended consolidated approach. Advisory, not a verdict.
+5. **Per-decision review** — present each divergence point with the recommendation; the user decides each. Convergence is shown for awareness.
 
-Then synthesize: recommendation + trade-offs + dissents. The point is to surface the strongest version of each position before deciding.
+## References
 
-Don't do this for every task. Reserve it for reversals-would-be-costly decisions.
-
-## Principles
-
-- **Delegate, don't execute** — your value is routing and synthesis.
-- **Parallel when independent, sequential when dependent.**
-- **Staff engineers have veto power** — `stack-engineer`, `dx-engineer`, `ui-engineer` own their domains. When they push back on API, DX, or primitive-usage issues, take it seriously. Resolve with `principal`, not by overriding.
-- **Resolve conflicts** — present both sides with your pick; let the user override.
-- **Stay minimal** — one-specialist tasks don't need ceremony.
-
-</supporting-info>
+- [references/executor-brief.md](references/executor-brief.md) — the decision-free brief a dispatched execution agent runs.
+- [references/diverge.md](references/diverge.md) — model-spread ladder, spec vs spike modes, storage layout.
+- [references/formats.md](references/formats.md) — survey, launch gate, merge gate, sprint summary.

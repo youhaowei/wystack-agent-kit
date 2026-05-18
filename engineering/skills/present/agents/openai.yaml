@@ -1,0 +1,3 @@
+interface:
+  display_name: "Present"
+  short_description: "Pick the delivery format for a result — inline, question, markdown, or HTML report"

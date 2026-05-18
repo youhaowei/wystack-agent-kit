@@ -1,157 +1,54 @@
 ---
 name: setup-agent-kit
-description: "Set up a repo-local .wystack workspace so WyStack Agent Kit lifecycle skills know this project's task tracker, document store, status vocabulary, and domain-doc layout. Run before first use of next, new, start, groom, breakdown, swarm, or finish in a repo."
+description: "Set up a WyStack workspace (per-project or global, tracked via .wystack.json) so Agent Kit lifecycle skills know this project's task tracker, document store, status vocabulary, and domain-doc layout. Run before first use of next-task, new-task, start-task, groom, breakdown, orchestrate, or finish-task in a repo."
 ---
-
-## Skill communication contract
-
-Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
-
-- Lead with the recommendation, readiness state, or blocker.
-- Separate facts, evidence, inference, and decisions needed from the user.
-- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
-- Group information by ownership boundary, user impact, or decision area rather than command chronology.
-- Ask one concrete question when user input is required; avoid loose option lists unless requested.
-- Prefer compact state/evidence/next-action tables for handoffs.
-
 # Setup Agent Kit
 
-Create or update the repo-local `.wystack/` setup consumed by WyStack Agent Kit
-lifecycle skills.
-
-## Goal
-
-The engineering workflows should not depend on any private workspace. Each repo
-must define its own task system and document store before lifecycle skills write
-or update work records.
+Create or update the WyStack workspace that lifecycle skills read — location, task system, document store, domain-doc layout. Each repo defines its own; no private workspace dependency.
 
 ## Files
 
-Create or update:
-
 ```text
-.wystack/
-  workspace.md
-  storage.json
-  tasks/
-  docs/
+.wystack.json          tracked, repo root — pointer: { "root": ".wystack" }
+<workspace root>/      gitignored
+  workspace.md         project identity, conventions, worktree setup
+  storage.json         task + doc provider mappings
+  verify.json          optional — runtime config; created later by engineering:verify
+  tasks/  docs/        filesystem providers only — may instead be Notion, kb, etc.
 ```
 
-Do not overwrite existing user content. If files already exist, read them first,
-summarize the current setup, and ask before changing provider mappings.
+`.wystack.json` is the only tracked file. Don't overwrite existing user content — read it first, summarize, and ask before changing mappings. Full schema: `docs/storage-contract.md`; rationale: `.wystack/decisions/workspace-model.md`.
 
 ## Process
 
 ### 1. Explore
 
-Inspect the repo before asking:
+Before asking: `git remote -v`; root `AGENTS.md` / `CLAUDE.md` / `README.md` / `CONTEXT.md`; `docs/`, `docs/adr/`, `.github/ISSUE_TEMPLATE/`; existing `.wystack/`; signs of a task system (GitHub/GitLab Issues, Linear, Jira, Notion, local markdown).
 
-- `git remote -v` and `.git/config`
-- root `AGENTS.md`, `CLAUDE.md`, `README.md`, `CONTEXT.md`, `CONTEXT-MAP.md`
-- `docs/`, `docs/adr/`, `.github/ISSUE_TEMPLATE/`
-- existing `.wystack/`
-- signs of task systems: GitHub Issues, GitLab, Linear, Jira, Notion, local markdown
+### 2. Interview
 
-### 2. Recommend Defaults
+One question at a time, each led by a recommendation.
 
-Lead with one recommendation. Defaults:
+- **Location** — per-project `.wystack/` (recommended) / global `~/.wystack/<project>/` / custom path.
+- **Task system** — local markdown (recommended when no tracker is evident) / GitHub Issues (when the repo has a GitHub remote with issues) / other. For "other", get a paragraph: where items live, how to create and search them, relation support.
+- **Status vocabulary** — the status names this project uses (e.g. `Todo / In Progress / In Review / Done`, or GitHub's `open / closed` + labels). Skills map roles like "ready" and "in review" onto these. Default: infer from the task system; confirm.
+- **Document store** — local markdown under the workspace `docs/` / repo `docs/` or `.claude/specs/` / Notion / kb / other. Docs need not be files.
+- **Requirement-ID format** — how PRD user-story IDs are namespaced so they stay unique across multiple PRDs. Default `<PRD-KEY>-US-<group>.<item>` (e.g. `MEM-US-1.2`); short form `US-1.2` inside its own PRD. Recommend matching the task/doc system's existing ID style.
+- **Domain docs** — single `CONTEXT.md` / multi-context `CONTEXT-MAP.md` / none yet (starter section in `workspace.md`).
 
-- If the repo has a GitHub remote and issues appear enabled or referenced, recommend GitHub Issues.
-- If the repo has GitLab remote, recommend GitLab Issues.
-- If there is existing `.wystack/` or `.scratch/` task content, recommend local markdown.
-- Otherwise recommend local markdown under `.wystack/tasks`.
+### 3. Write
 
-### 3. Confirm Task System
+- `.wystack.json` at the repo root — `{ "root": <chosen> }`.
+- `workspace.md` in the workspace root — sections: Project (name, root, repo), Task System and Document Store (→ `storage.json`), Conventions (requirement-ID format), Domain Docs, Worktree Setup (install/build/baseline commands), Workflow Notes.
+- `storage.json` per `docs/storage-contract.md` — valid JSON, provider-neutral, no secrets. Records the status vocabulary alongside the task-provider mapping.
+- Filesystem providers — create `tasks/.gitkeep`, `docs/.gitkeep`. Prose-only provider quirks → `adapters/<provider>.md`.
 
-Ask one question at a time.
+### 4. Report
 
-Question A: Which task system should Agent Kit use?
-
-Recommended options:
-
-- Local markdown — no external account, stores work items under `.wystack/tasks`.
-- GitHub Issues — use the repo's GitHub Issues and `gh` CLI.
-- Other — user describes Linear, Jira, Notion, or another workflow in prose.
-
-If user chooses Other, ask for one paragraph covering:
-
-- where work items live
-- how to create one
-- how to search/list them
-- how statuses are represented
-- whether relations/blockers are supported
-
-### 4. Confirm Document Store
-
-Question B: Where should planning docs live?
-
-Recommended options:
-
-- Local markdown — store PRDs/specs/notes under `.wystack/docs`.
-- Repo docs — use existing `docs/` or `.claude/specs/`.
-- Other — user describes Notion, Linear docs, Google Docs, or another store.
-
-### 5. Confirm Domain Docs
-
-Question C: How should agents learn this project's language?
-
-Recommended options:
-
-- Single context — one `CONTEXT.md` at repo root plus optional `docs/adr/`.
-- Multi-context — root `CONTEXT-MAP.md` points to package-specific context docs.
-- None yet — create a starter section in `.wystack/workspace.md`.
-
-### 6. Write
-
-Create directories as needed.
-
-Write `.wystack/workspace.md` with:
-
-```md
-# WyStack Agent Kit Workspace
-
-## Project
-
-- Name:
-- Root:
-- Primary repo:
-
-## Task System
-
-See `.wystack/storage.json`.
-
-## Document Store
-
-See `.wystack/storage.json`.
-
-## Domain Docs
-
-## Workflow Notes
-```
-
-Write `.wystack/storage.json` using the contract in
-`engineering/docs/storage-contract.md`. Keep it valid JSON.
-
-For local markdown task setup, create `.wystack/tasks/.gitkeep` and
-`.wystack/docs/.gitkeep`.
-
-For provider setup, create `.wystack/adapters/<provider>.md` if the provider
-needs prose instructions that do not fit in JSON.
-
-### 7. Report
-
-Return:
-
-- configured task provider
-- configured doc provider
-- files created/updated
-- lifecycle skills that are now ready
-- any manual authentication required
+Workspace location, task and doc providers, files created/updated, lifecycle skills now ready, any manual authentication required.
 
 ## Guardrails
 
-- Do not create provider-specific external records during setup.
-- Do not assume Notion, GitHub, Linear, or Jira unless the repo or user points there.
-- Do not put private page IDs, database IDs, or API tokens into public docs.
-- Prefer local markdown when unsure.
-- Keep `.wystack/storage.json` provider-neutral enough for agents to read without secrets.
+- Don't create external provider records during setup.
+- Don't assume a tracker the repo or user didn't point to — prefer local markdown when unsure.
+- No private page IDs, database IDs, or tokens in tracked files.

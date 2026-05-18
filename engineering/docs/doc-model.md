@@ -22,23 +22,22 @@ How WyStack Agent Kit treats product and engineering documentation.
 | **Tasks, initiatives** | Work-item store | Ops-layer. Cross-repo, cross-functional, includes non-code work. |
 | **Requirement IDs (F-X.Y)** | Authored in PRD, referenced in repo test JSDoc | The only requirement trace in the repo. |
 
-## Spec lifecycle
+## Promotion ceremony
 
-```
-1. Draft      — write in the configured doc store via the `spec` skill. Iterate with stakeholders.
-2. Approve    — status flips to "active / implementing".
-3. Promote    — the `spec` skill exports content to .claude/specs/NNNN-slug.md,
-                strips tool references, marks the wiki page as archived/promoted.
-4. Repo-canonical — all subsequent edits happen via PR alongside code.
-5. Optional mirror — a read-only doc-store view can be generated for stakeholders
-                     who prefer browsing there. Repo stays canonical.
-```
+Spec and glossary share one lifecycle: **draft → promote → repo-canonical**. The `spec` and `glossary` skills run it; each supplies its own parameters — artifact name, promoted-file path, frontmatter `id`, and the approve-status values that trigger promotion.
 
-The promote step is **once per spec**, not a continuous sync. After promotion, the doc-store copy is a historical snapshot of the initial design — not a live view.
+**Draft** — authored in the configured doc store via the skill, iterated with stakeholders. Stays there while the design or terminology is debated.
 
-## Glossary lifecycle
+**Promote** — once the draft's status flips to approved, the skill:
 
-Same shape as spec. Draft in the configured doc store for collaborative term debate; promote to `.claude/glossary.md` once stable. Subsequent term additions happen via PR alongside the code that introduces them.
+1. Fetches the full draft via `wiki-librarian`.
+2. Writes the promoted file to its configured repo location (`.claude/specs/NNNN-slug.md` and `.claude/glossary.md` by default). Frontmatter is tool-neutral; all tool references are stripped — no doc-store URLs, page IDs, or tool names; cross-references become name-only.
+3. Marks the doc-store page `promoted` — one-way.
+4. Commits — the message is the provenance record; no doc-store URLs in the body.
+
+Promotion is **once per artifact**, not a continuous sync. Afterward the doc-store copy is a frozen snapshot of the initial design. A read-only mirror can be generated separately if stakeholders want a live view; the repo stays canonical.
+
+**Repo-canonical** — all subsequent edits happen in the repo file via PR, alongside the code that enacts them. Never sync changes back to the doc store.
 
 ## Requirements in the repo
 
@@ -126,4 +125,4 @@ Flow: glossary seeds canonical terms → PRD and spec both use them → code and
 - `glossary/` — owns the ubiquitous language lifecycle (draft → promote), mirrors `spec/`'s structure
 - `qa` agent — runs coverage verification on demand
 - `wiki-librarian` agent — document-store CRUD; plugin skills delegate here
-- `breakdown/`, `groom/`, `start/` — read promoted specs from `.claude/specs/` and glossary from `.claude/glossary.md` when present; fall back to configured doc store via `wiki-librarian` for drafts
+- `breakdown/`, `groom/`, `start-task/` — read promoted specs from `.claude/specs/` and glossary from `.claude/glossary.md` when present; fall back to configured doc store via `wiki-librarian` for drafts

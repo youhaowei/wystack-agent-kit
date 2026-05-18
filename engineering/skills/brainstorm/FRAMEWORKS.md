@@ -194,11 +194,13 @@ These shape perspective during ambition review. Don't list them at the user — 
 
 ---
 
-## §3. Domain-Driven Lens
+## §3. Domain-Driven Lens (and the domain layer)
 
 **When**: codebase has `CONTEXT.md`, glossary, `ADRs`, `DESIGN.md`, `PRODUCT.md`, or any artifact that captures domain language and prior decisions.
 
 **Goal**: don't drift from the existing model. Sharpen language, surface contradictions with code, update domain docs inline as decisions crystallize.
+
+> **The operations below are the brainstorm's domain layer — not gated to this lens.** They run inside the four-axis loop (phase 3) whenever domain context is load-bearing for the conversation, under any lens. Activation is judgment about relevance, not a file-presence rule: if domain docs exist, use them; if a conversation is domain-heavy without docs yet, the operations still apply. `--no-docs` skips the layer entirely.
 
 ### File structure to look for
 

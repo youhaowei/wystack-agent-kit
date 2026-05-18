@@ -1,20 +1,9 @@
 ---
 name: engineering-context
-description: "Gather spec-anchored context for engineering work by delegating to task-manager, wiki-librarian, Explore, and kb in parallel. Use whenever you're about to review, test, fix, plan, or document work that references a ticket, feature, or feature-branch. Invoke this BEFORE reviewers, test-writers, or architects — they produce false-positive findings without Goals, Non-Goals, and Key Decisions in hand. Also use when the user mentions a PRD/Spec URL, a TASK-### ID, or a feature name and you need the surrounding design context before proceeding."
+description: "Gather spec-anchored context for engineering work by delegating to task-manager, wiki-librarian, Explore, and a knowledge-base search in parallel. Use whenever you're about to review, test, fix, plan, or document work that references a ticket, feature, or feature-branch. Invoke this BEFORE reviewers, test-writers, or architects — they produce false-positive findings without Goals, Non-Goals, and Key Decisions in hand. Also use when the user mentions a PRD/Spec URL, a TASK-### ID, or a feature name and you need the surrounding design context before proceeding."
 ---
-## Skill communication contract
 
-Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
-
-- Lead with the recommendation, readiness state, or blocker.
-- Separate facts, evidence, inference, and decisions needed from the user.
-- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
-- Group information by ownership boundary, user impact, or decision area rather than command chronology.
-- Ask one concrete question when user input is required; avoid loose option lists unless requested.
-- Prefer compact state/evidence/next-action tables for handoffs.
-
-
-<what-to-do>
+# Engineering Context
 
 Return a spec-anchored context block so downstream work (reviews, tests, fixes, breakdowns, design decisions) measures code against intent, not guesswork.
 
@@ -31,6 +20,10 @@ When a ticket ID is detected (from args, branch, or commits), `task-manager` MUS
 
 **Mode** (optional, second arg): `review` | `test` | `plan` | `fix`. Adjusts what `Explore` returns. If omitted, infer; explicit always wins. See [mode auto-detection](#mode-auto-detection) for inference rules.
 
+## Load the constitution
+
+This is the entrance for review and analysis work. Before gathering context, read `docs/constitution.md` (plugin root) — the WyStack Agent's behavioral constitution: a core principle and three tenets every skill operates under. It stays in effect for the rest of the session; this is the runtime delivery point for review-side skills — no skill restates it.
+
 ## Pipeline
 
 `Freshness check → Parallel fetch (4 specialists) → Synthesize → Return structured block`
@@ -44,7 +37,7 @@ Scan the current conversation for context already loaded — re-fetching wastes 
 | `task-manager` (ticket) | A `TASK-###` with ACs, a work-item URL/path fetched this session, or the user pasted the ticket body |
 | `wiki-librarian` (PRD/Spec) | Text containing `## Goals`, `## Non-Goals`, `Decision #`, user stories like `US-5`, or a doc URL/path fetched |
 | `Explore` (repo) | A recent `Explore` agent report, or substantial reads of `CLAUDE.md` / `DESIGN.md` + multiple files in the affected modules |
-| `kb` (prior decisions) | Recent `kb search` output, or loaded project memory files beyond `MEMORY.md` |
+| Knowledge base (prior decisions) | Recent knowledge-base search output, or loaded project memory files |
 
 State what you found inline so the user can override: _"Freshness check: PRD is already in context from the earlier fetch. Skipping wiki-librarian. Dispatching task-manager + Explore + kb."_
 
@@ -68,7 +61,7 @@ Pass:
 - Feature/phase name for title-search if URLs aren't available.
 - Instruction: return **full content** of PRDs/Specs + one hop of Related/Prior-art links. Not summaries — downstream consumers quote from it.
 
-The librarian is the right agent for reads, not just writes — it knows the Wiki schema and finds docs the task-manager can't.
+The librarian is the right agent for reads, not just writes — it knows the doc-store schema and finds docs the task-manager can't.
 
 #### c. `Explore` (medium thoroughness) → codebase
 
@@ -83,18 +76,18 @@ Scope based on mode:
 
 Cap the report at ≤400 words. Reviewers don't need a tour — they need the load-bearing conventions.
 
-#### d. `kb` search → prior decisions (via Bash)
+#### d. Knowledge-base search → prior decisions (via Bash)
 
-Two passes:
+If the project has a knowledge-base CLI, search it for prior decisions and retro findings — two passes, one general and one over retrospective records. With the `kb` CLI this is:
 
 ```bash
 kb search "<feature-name / task-title keywords>" --ns default --limit 20 --json
 kb search "<same keywords>" --ns retro --limit 10 --json
 ```
 
-Returns memories/edges that captured prior decisions (_"we rejected Redux"_, _"Bun segfaults on `lbug.close()`"_) and retro findings (known bugs in the area). These often explain _"why is the code like this?"_ better than PRDs do.
+It returns memories that captured prior decisions (_"we rejected Redux"_) and retro findings (known bugs in the area). These often explain _"why is the code like this?"_ better than PRDs do.
 
-If `kb` CLI fails (Ollama down, DB issues), note it and continue. Not critical path.
+If there is no knowledge-base CLI, or it fails, note it and continue. Not critical path.
 
 ### 3. Synthesize and return
 
@@ -110,7 +103,7 @@ If anything critical is missing — no PRD found and no user-provided fallback, 
 
 Infer from, in priority order:
 
-1. **The invoking skill.** `engineering:code-review` / `:full-review` → `review`. `tdd` / `test-writer` / `qa` → `test`. `engineering:prd` / `:spec` / `:breakdown` / `:groom` / `:new` / `:start` → `plan`. `fix` / `triage` → `fix`.
+1. **The invoking skill.** `engineering:code-review` / `:full-review` → `review`. `tdd` / `test-writer` / `qa` → `test`. `engineering:prd` / `:spec` / `:breakdown` / `:groom` / `:new-task` / `:start-task` → `plan`. `fix` / `triage` → `fix`.
 2. **Recent tool output.** A fresh `git diff` / changed file list / `gh pr` → `review`. Failing test output, stack traces, error logs → `fix`. Running `bun test` / `vitest` / reading `test/*.ts` files → `test`. Drafting docs with no repo diff → `plan`.
 3. **User's latest message verbs.** _"review", "findings", "check this branch"_ → `review`. _"write tests", "coverage"_ → `test`. _"why is this broken", "failing", "regression"_ → `fix`. _"plan", "break down", "estimate", "groom"_ → `plan`.
 4. **Ambiguous or no signal** → default to `review`. It's the widest mode; the others are narrower subsets.
@@ -121,10 +114,6 @@ State the detection inline so the caller can redirect:
 
 Never silently categorize. If signals disagree (invoking skill says `review` but the conversation reads as a bug hunt), surface that: _"Invoked from code-review but conversation reads like a fix — going with `review` since it's broader; say `fix` if you want the narrower Explore."_ Let the user break the tie once; don't ping on every inference.
 
-</what-to-do>
-
-<supporting-info>
-
 ## Reference
 
 - [CONTEXT-BLOCK.md](CONTEXT-BLOCK.md) — the synthesized output template returned in step 3.
@@ -133,8 +122,8 @@ Never silently categorize. If signals disagree (invoking skill says `review` but
 
 If `task-manager` or `wiki-librarian` reports the configured provider is unavailable:
 
-1. Check `.wystack/storage.json` and any `.wystack/adapters/<provider>.md` instructions.
-2. Re-dispatch the specialist once the tool is available. Specialists know the Wiki/Tasks schema; raw MCP calls don't.
+1. Check the workspace's `storage.json` and any `adapters/<provider>.md` instructions.
+2. Re-dispatch the specialist once the tool is available. Specialists know the doc-store and task schemas; raw MCP calls don't.
 3. `WebFetch` as last resort for public pages.
 
 A subagent's _"unavailable"_ reply is never terminal — the question is *how* to hand them the tool, not whether to use them.
@@ -145,17 +134,3 @@ A subagent's _"unavailable"_ reply is never terminal — the question is *how* t
 - Exploratory prototyping (throwaway work).
 - The conversation already ran this skill earlier in the session and the scope hasn't changed — the freshness check would return _"all four sources fresh"_ and skip the whole thing anyway.
 
-## Callers
-
-This skill is designed to be invoked by other engineering skills before they do substantive work:
-
-- `engineering:code-review` — before dispatching reviewers.
-- `engineering:full-review` — passes the block to `code-review`, `qa`, and `pm` lenses.
-- `qa` — before verifying acceptance criteria.
-- `tdd` / `test-writer` agent — before writing the first failing test.
-- `engineering:prd` / `:spec` / `:breakdown` / `:groom` — before drafting.
-- `fix` / `triage` — before investigating.
-
-Each caller invokes with the mode that matches their downstream work.
-
-</supporting-info>

@@ -2,47 +2,44 @@
 name: workspace
 description: "Load repo-local WyStack Agent Kit workspace context, including .wystack storage mappings, project identity, provider capabilities, and local conventions. Use before planning, prioritization, task creation, or documentation workflows."
 ---
-## Skill communication contract
-
-Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
-
-- Lead with the recommendation, readiness state, or blocker.
-- Separate facts, evidence, inference, and decisions needed from the user.
-- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
-- Group information by ownership boundary, user impact, or decision area rather than command chronology.
-- Ask one concrete question when user input is required; avoid loose option lists unless requested.
-- Prefer compact state/evidence/next-action tables for handoffs.
-
-
 # Workspace Context
 
-Load the repo-local `.wystack/` setup first. If `.wystack/storage.json` does not
-exist, tell the caller to run `engineering:setup-agent-kit` before lifecycle
-skills that read or write work items.
+Resolve and load the WyStack workspace first. This skill owns workspace resolution — other lifecycle skills load it rather than locating the workspace themselves.
+
+## Load the constitution
+
+Loading the workspace loads the charter. Read `docs/constitution.md` (plugin root) — the WyStack Agent's behavioral constitution: a core principle and three tenets every skill operates under. It stays in effect for the rest of the session; this is the runtime delivery point — no skill restates it.
+
+## Resolve the workspace
+
+1. Read `.wystack.json` at the repo root (tracked — present in every worktree); follow its `root`.
+2. If `.wystack.json` is absent, fall back to `git rev-parse --git-common-dir` → the main worktree, and look for `.wystack/` there.
+3. If neither resolves, tell the caller to run `engineering:setup-agent-kit`.
+
+All workspace paths below (`storage.json`, `tasks/`, etc.) are relative to the resolved `root` — never assume `./.wystack`.
 
 ## Public Contract
 
-Expected setup:
+Expected workspace contents:
 
 ```text
-.wystack/
+<root>/
   workspace.md
   storage.json
-  tasks/
-  docs/
+  tasks/  docs/   (filesystem providers only — may be Notion, kb, etc.)
 ```
 
-Read `engineering/docs/storage-contract.md` for the canonical concepts,
-provider capabilities, and local markdown defaults.
+Read `engineering/docs/storage-contract.md` for the canonical concepts, location modes, provider capabilities, and local markdown defaults.
 
 ## Provider Selection
 
-1. Prefer `.wystack/storage.json` in the target repo.
+1. Prefer the resolved workspace's `storage.json`.
 2. If missing and the user is only brainstorming, reviewing, or reading code,
    continue without work-item writes.
-3. If missing and the user asks for `next`, `new`, `start`, `groom`,
-   `breakdown`, `swarm`, or `finish`, run or recommend `engineering:setup-agent-kit`.
-4. Do not assume Notion unless the repo's `.wystack/storage.json` or user
+3. If missing and the user asks for `next-task`, `new-task`, `start-task`,
+   `groom`, `breakdown`, `orchestrate`, or `finish-task`, run or recommend
+   `engineering:setup-agent-kit`.
+4. Do not assume Notion unless `storage.json` or the user
    explicitly selects a Notion adapter.
 
 ## What To Return
@@ -66,7 +63,7 @@ Capabilities:
 If setup is missing, return:
 
 ```md
-Blocked: `.wystack/storage.json` is missing.
+Blocked: the workspace's `storage.json` is missing.
 Recommendation: run `engineering:setup-agent-kit` and use local markdown unless this repo already has a tracker.
 ```
 
@@ -75,8 +72,8 @@ Recommendation: run `engineering:setup-agent-kit` and use local markdown unless 
 If the provider is `local-markdown`, use these conventions:
 
 ```text
-.wystack/tasks/TASK-0001-slug.md
-.wystack/docs/prd-title.md
+<root>/tasks/TASK-0001-slug.md
+<root>/docs/prd-title.md
 ```
 
 Work-item frontmatter:

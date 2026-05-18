@@ -2,17 +2,6 @@
 name: estimation
 description: "Size engineering work using a shared relative scale anchored at 3/M. Use during grooming, task creation, and planning when the user asks how big work is or how much agent oversight it needs."
 ---
-## Skill communication contract
-
-Every skill output should reduce the user's cognitive load while preserving enough information to learn from the work and make important decisions.
-
-- Lead with the recommendation, readiness state, or blocker.
-- Separate facts, evidence, inference, and decisions needed from the user.
-- Explain the useful why behind non-obvious work; keep process logs out of the main narrative.
-- Group information by ownership boundary, user impact, or decision area rather than command chronology.
-- Ask one concrete question when user input is required; avoid loose option lists unless requested.
-- Prefer compact state/evidence/next-action tables for handoffs.
-
 
 # Estimation
 
@@ -22,7 +11,11 @@ Relative sizing for engineering tasks. Everything is compared to the anchor: **"
 
 **"Can I hand this to a strong coding agent and mostly walk away?"**
 
-If yes, it is a 3 or below. This is the standard `engineering:groom` and `engineering:new` should target.
+If yes, it is a 3 or below. This is the standard `engineering:groom` and `engineering:new-task` should target.
+
+## Project calibration
+
+The anchor and scale are the **seed** — fixed framework. The per-project adjustment lives in the workspace `tuning.json`, resolved via `engineering:workspace` (callers load it first). If `tuning.json` has an `estimation` entry, read it first — `engineering:retro` writes it from predicted-vs-actual data, and it tells you whether this project's 3/M anchor has been running optimistic or conservative. Adjust your read of the scale accordingly.
 
 ## Scale
 
@@ -39,7 +32,7 @@ If yes, it is a 3 or below. This is the standard `engineering:groom` and `engine
 
 ## How to Size
 
-Compare the task to the anchor and to recent completed work. Consider:
+Compare the task to the anchor. Consider:
 
 - Scope breadth
 - Clarity of acceptance criteria
@@ -48,11 +41,11 @@ Compare the task to the anchor and to recent completed work. Consider:
 - Reasoning complexity
 - Required test, doc, and migration work
 
-There is no formula. Use judgment and explain the reasoning.
+There is no formula. Use judgment and explain the reasoning. State the size *and* what it implies for oversight — the execution model from the scale — as the takeaway; the number alone isn't the answer.
 
 ## Rules
 
 - Estimates include the whole job: implementation, tests, docs, cleanup, and migration work
 - Prefer splitting XXL work before execution
 - If a task depends on major unknowns, size the uncertainty, not just the code delta
-- Use this scale consistently across `engineering:new`, `engineering:groom`, and `engineering:next`
+- Use this scale consistently across `engineering:new-task`, `engineering:groom`, and `engineering:next-task`

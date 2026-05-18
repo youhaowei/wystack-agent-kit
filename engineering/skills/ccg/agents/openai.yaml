@@ -1,0 +1,3 @@
+interface:
+  display_name: "CCG"
+  short_description: "Multi-model advisory review — Codex + Gemini + Claude"
