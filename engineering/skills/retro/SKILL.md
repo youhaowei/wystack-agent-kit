@@ -1,6 +1,6 @@
 ---
 name: retro
-description: "Run a project retrospective from accumulated calibration data — read the workspace calibration records, surface where the workflow is miscalibrated (size→regime fit, estimation accuracy, ccg credibility, agent breakdown), and propose updated workflow tuning for the user to accept. Use periodically after a batch of tickets closes, or when the user asks to refine the workflow, recalibrate estimation, or review how the team pipeline is performing."
+description: "Run a project retrospective from accumulated calibration data — read the workspace calibration records, surface where the workflow is miscalibrated (estimation accuracy, ccg credibility, outcome by size), and propose updated workflow tuning for the user to accept. Use periodically after a batch of tickets closes, or when the user asks to refine the workflow, recalibrate estimation, or review how the team pipeline is performing."
 ---
 
 # Retro
@@ -33,7 +33,7 @@ Reconstruct **estimation-accuracy records only** from already-closed tickets. As
 
 For each closed ticket: take the predicted size from grooming, and an actual-effort proxy from git and PR data — commit count, diff stat, rework commits, review rounds, time on branch. Write one record per ticket to `calibration/`, marked `"source": "reconstructed"`.
 
-Backfill does **not** reconstruct the other signals — trust regime, ccg verdicts, and agent breakdown aren't recoverable from history. Those rows stay orchestrate-fed.
+Backfill does **not** reconstruct the other signals — ccg verdicts and per-ticket outcomes aren't recoverable from history. Those rows stay fed by live `ccg` and `finish-task` records.
 
 If there aren't enough closed tickets to backfill either, say so plainly and stop.
 
@@ -43,12 +43,11 @@ Look for where the seed policy and reality diverge:
 
 | Signal | Question | Evidence in calibration data |
 |---|---|---|
-| **Size → regime fit** | Is each size in the right trust regime? | review rounds, scope violations, override counts grouped by size |
 | **Estimation accuracy** | Are sizes predicting effort? | review rounds / rework as a proxy for "harder than sized" |
 | **ccg credibility** | Is ccg's advice worth following? | how often `findings` were acted on vs overridden |
-| **Agent breakdown** | Which ticket sizes/shapes run clean vs need rework? | outcome by size |
+| **Outcome by size** | Which ticket sizes/shapes run clean vs need rework? | merged-vs-reworked outcome grouped by size |
 
-Records marked `"source": "reconstructed"` are proxy data — feed them only into **Estimation accuracy**, never the other three rows. They are enough to catch a systematically optimistic or conservative anchor, not enough for fine adjustment.
+Records marked `"source": "reconstructed"` are proxy data — feed them only into **Estimation accuracy**, never the other two rows. They are enough to catch a systematically optimistic or conservative anchor, not enough for fine adjustment.
 
 ### 3. Surface findings
 
@@ -62,9 +61,6 @@ Recommend a `tuning.json` — **deltas from the seed defaults only**, never a fu
 {
   "updated": "2026-05-15",
   "tickets_analyzed": 14,
-  "size_regime": {
-    "S": { "regime": "full", "why": "S tickets averaged 2.3 review rounds — skim too loose" }
-  },
   "estimation": {
     "why": "M tickets consistently needed check-ins — the 3/M anchor reads optimistic for this project"
   },
