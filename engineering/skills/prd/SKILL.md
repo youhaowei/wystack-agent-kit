@@ -15,7 +15,7 @@ A behavior spec: what the system should do, in user language. The source of trut
 - **Purpose** — why this exists, what pain it solves.
 - **Users** — who uses it, what they care about.
 - **Goals / non-goals** — what we optimize for, what we explicitly won't do.
-- **User stories** — one sentence each: "As a [role], I want [goal], so that [value]." Grouped by concern, each with a stable ID (`F-1.2`) that tests and code trace to — the ID never changes. Detailed acceptance criteria live on tickets.
+- **User stories** — one sentence each: "As a [role], I want [goal], so that [value]." Grouped by concern, each with a stable requirement ID that tests and code trace to — the ID never changes. The format follows the workspace's `conventions.requirementIdFormat` (default `<PRD-KEY>-US-<group>.<item>`, e.g. `MEM-US-1.2`; short form `US-1.2` within its own PRD). Detailed acceptance criteria live on tickets.
 - **Scenarios + edge cases** — concrete examples, and a what-if / expected-behavior table.
 - **Dependencies** — what must exist first.
 

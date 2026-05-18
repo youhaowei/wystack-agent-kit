@@ -20,7 +20,7 @@ How WyStack Agent Kit treats product and engineering documentation.
 | **Glossary (cross-product)** | Work doc store | Only if terms genuinely span products. Most codebases don't need this. |
 | **ADR** | Inside spec (in repo) | Decision records travel with the code that enacts them. Not a separate folder. |
 | **Tasks, initiatives** | Work-item store | Ops-layer. Cross-repo, cross-functional, includes non-code work. |
-| **Requirement IDs (F-X.Y)** | Authored in PRD, referenced in repo test JSDoc | The only requirement trace in the repo. |
+| **Requirement IDs** | Authored in PRD, referenced in repo test JSDoc | Format per `conventions.requirementIdFormat` (default `<PRD-KEY>-US-<group>.<item>`). The only requirement trace in the repo. |
 
 ## Promotion ceremony
 
@@ -45,7 +45,7 @@ No mirrored PRD file. Requirements reach the repo through E2E test documentation
 
 ```ts
 /**
- * F-1.2: Draft application save
+ * BLOSSOM-US-1.2: Draft application save
  *
  * User story: Applicant starts form, leaves, returns later — draft persists.
  * Success: Applicant resumes where they left off.
@@ -59,9 +59,9 @@ test("applicant can save draft and resume", async () => {
 
 Why this beats a mirrored PRD:
 - **Zero drift**: can't document a requirement without a test demonstrating it.
-- **Tight traceability**: `F-1.2` → test → implementation code, no intermediate doc.
+- **Tight traceability**: `BLOSSOM-US-1.2` → test → implementation code, no intermediate doc.
 - **Executable**: tests can't lie about what shipped. A mirrored PRD can.
-- **Tool-agnostic**: repo says nothing about where the `F-1.2` ID originated.
+- **Tool-agnostic**: repo says nothing about where the `BLOSSOM-US-1.2` ID originated.
 
 ## Repo layout
 
