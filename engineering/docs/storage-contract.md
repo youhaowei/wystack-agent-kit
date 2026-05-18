@@ -96,15 +96,60 @@ act safely.
   "docs": {
     "provider": "local-markdown",
     "path": ".wystack/docs",
+    "promotedRoot": ".claude",
     "capabilities": {
       "search": true,
       "create": true,
       "update": true,
       "crossLink": true
     }
+  },
+  "conventions": {
+    "requirementIdFormat": "{PRD-KEY}-US-{group}.{item}"
+  },
+  "worktree": {
+    "preference": "ask",
+    "directory": ".worktrees"
+  },
+  "agents": {
+    "specialists": [
+      {
+        "name": "backend-engineer",
+        "domain": "server, data layer, APIs",
+        "brief": ".wystack/agents/backend-engineer.md"
+      }
+    ]
   }
 }
 ```
+
+## Workflow Conventions
+
+Beyond provider wiring, `storage.json` records project-wide conventions that
+lifecycle skills read instead of hardcoding:
+
+| Field | Read by | Meaning |
+|---|---|---|
+| `tasks.statuses` | every status-aware skill | The **status vocabulary** — maps the seven lifecycle roles (`backlog`, `ready`, `inProgress`, `inReview`, `done`, `deferred`, `cancelled`) to this project's status names. Skills resolve roles through it; they never write a literal status. |
+| `docs.promotedRoot` | `spec`, `glossary`, `doc-model` | Where promoted specs and glossaries land — specs under `<promotedRoot>/specs/`, glossary at `<promotedRoot>/glossary.md`. Default `.claude`. |
+| `conventions.requirementIdFormat` | `prd`, `breakdown`, `spec`, `code-review` | Template for PRD requirement IDs — `{PRD-KEY}-US-{group}.{item}` yields `MEM-US-1.2`; short form `US-1.2` inside its own PRD. Keeps IDs unique across PRDs. |
+| `worktree.preference` | `start-task`, `orchestrate`, `worktree` | Whether task work is isolated in a git worktree: `worktree` (always), `cwd` (never), `ask` (decide per task). |
+| `worktree.directory` | `worktree` | Where worktree directories are created. Default `.worktrees` (gitignored). |
+| `agents.specialists` | `code-review`, `full-review` | The project's domain reviewer roster — see below. |
+
+### Agent roster
+
+The framework ships **universal roles** every project shares — `pm`,
+`principal`, `qa`, `devops`, `task-manager`, `wiki-librarian`. These are fixed
+plugin assets; they are not configured.
+
+**Specialists** are domain reviewers a project adds for its own stack — a
+backend reviewer, a UI reviewer, a data-layer reviewer. They are project
+instance, not framework: `agents.specialists` declares each one with a `name`,
+a one-line `domain`, and a `brief` path to its persona. Specialist briefs live
+in the workspace (`.wystack/agents/` by default), so a published plugin carries
+no project-specific reviewers. `code-review` assembles its panel from the
+universal roles plus the configured specialists.
 
 ## Local Markdown Defaults
 
