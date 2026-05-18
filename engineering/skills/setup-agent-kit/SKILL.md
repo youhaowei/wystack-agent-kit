@@ -17,7 +17,7 @@ Create or update the WyStack workspace that lifecycle skills read — location, 
   tasks/  docs/        filesystem providers only — may instead be Notion, kb, etc.
 ```
 
-`.wystack.json` is the only tracked file. Don't overwrite existing user content — read it first, summarize, and ask before changing mappings. Full schema: `docs/storage-contract.md`; rationale: `.wystack/decisions/workspace-model.md`.
+`.wystack.json` is the only tracked file. Don't overwrite existing user content — read it first, summarize, and ask before changing mappings. Full schema: `docs/storage-contract.md`; rationale: `docs/workspace-model.md`.
 
 ## Process
 
