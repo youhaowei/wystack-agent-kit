@@ -131,7 +131,7 @@ Per-page-type structural guidance. Same six-principle baseline; different emphas
 
 **Strategy**: Honest. Acknowledge competitor strengths. Be explicit about who each is best for.
 
-(Detailed treatment in engineering plugin's `competitor-analysis/COMPARISON-PAGES.md` — owned by PM. Designer + copywriter execute the page based on PM's competitor profiles.)
+Four formats by search intent (alternative · alternatives · you-vs-competitor · competitor-vs-competitor), with full structure and SEO guidance: [COMPARISON-PAGES.md](COMPARISON-PAGES.md). These pages need facts — work from competitor profiles produced by `engineering:competitor-analysis`, not guesses.
 
 ---
 

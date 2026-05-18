@@ -1,6 +1,6 @@
 # Comparison & Alternative Pages
 
-Four formats, each matching a different search intent. Use after profiling is complete — these pages need facts to be honest.
+Four formats, each matching a different search intent. Use after profiling is complete — work from the competitor profiles produced by `engineering:competitor-analysis`; these pages need facts to be honest.
 
 ## Principles
 
