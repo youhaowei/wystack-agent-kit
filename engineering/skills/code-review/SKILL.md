@@ -32,7 +32,7 @@ Composition scales with change type:
 | Polish, docs, comments | `code-reviewer` alone |
 | Security-sensitive | Full composition + run reviews twice (LLM sampling insurance) |
 
-**Domain specialists** join when the diff touches their area — judge the domain from the changed files. In a WyStack project the roster is `ui-engineer` (client/UI), `stack-engineer` (server/data/reactivity), `dx-engineer` (runtime/CLI/logging), `devops` (CI/CD, deploy); other projects map their own specialists onto these domains. Multiple join when the diff spans domains; skip if `principal` already covers the only domain touched.
+**Domain specialists** are project-configured. Read the workspace's `agents.specialists` from `storage.json` — each entry declares a `name`, a `domain`, and a `brief` path. Pick the specialists whose `domain` matches the changed files; multiple join when the diff spans domains, none if `principal` already covers the only domain touched. A specialist runs as a general-purpose reviewer spawned with its brief as the role prompt — the universal roles (`principal`, `qa`) are subagents, specialists are brief-driven. With no specialists configured, `principal` carries the domain perspective alone.
 
 `engineering:ccg` runs as an alt-model reviewer on every composition (when alt-model CLIs are present) — not a Claude subagent, doesn't replace one. The orchestrator triages its Codex + Gemini findings alongside the rest.
 
@@ -57,7 +57,7 @@ Reviewers keep their native severity labels (Critical/High/…) as input signal 
 
 ## Codex compatibility
 
-Reviewer role names (`code-reviewer`, `principal`, `ui-engineer`, …) belong in the prompt, not the transport. In Codex, spawn a generic subagent (`explorer` for read-only analysis) with the role brief from `engineering/agents/*.md`, or the nearest installed standalone skill. Don't claim plugin parity unless engineering skills are actually exposed; if `engineering:engineering-context` is unavailable, say so and fall back.
+Reviewer role names (`code-reviewer`, `principal`, a domain specialist, …) belong in the prompt, not the transport. In Codex, spawn a generic subagent (`explorer` for read-only analysis) with the role brief — universal roles from `engineering/agents/*.md`, specialists from their configured `agents.specialists` brief path — or the nearest installed standalone skill. Don't claim plugin parity unless engineering skills are actually exposed; if `engineering:engineering-context` is unavailable, say so and fall back.
 
 ## Reference
 

@@ -11,7 +11,7 @@ Portable engineering-workflow plugin — requirements through shipped code. This
   - `storage-contract.md` — the `.wystack/` workspace contract and provider model.
   - `workspace-model.md` — ADR behind the workspace model: the `.wystack.json` pointer, location modes, provider-driven stores.
   - `review-loop.md`, `testing-philosophy.md`, `communication-contract.md` — convergence, test strategy, output shape.
-- `agents/` — role briefs: pm, principal, qa, devops, the WyStack-domain engineers, wiki-librarian, task-manager.
+- `agents/` — universal role briefs every project shares: pm, principal, qa, devops, task-manager, wiki-librarian. Domain specialists are project-configured (`agents.specialists` in the workspace `storage.json`), not shipped here.
 
 ## Framework and instance
 

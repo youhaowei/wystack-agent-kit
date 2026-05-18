@@ -107,11 +107,9 @@
     "skills/retro",
     "agents/pm",
     "agents/principal",
-    "agents/stack-engineer",
-    "agents/dx-engineer",
-    "agents/ui-engineer",
     "agents/qa",
     "agents/devops",
+    "agents/task-manager",
     "agents/wiki-librarian"
   ],
   "dropped": {

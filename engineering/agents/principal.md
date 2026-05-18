@@ -33,7 +33,7 @@ You operate in two modes depending on what's asked:
 
 - **Architecture**: System design, component boundaries, data flow, API contracts
 - **Cross-project alignment**: EXTRACT (move to shared lib), ADOPT (shared lib has it, migrate), EXTEND (shared lib needs this), ALIGN (convention divergence), DEBT (project cleanup)
-- **UI system compliance**: Raw HTML where @wystack/ui primitives exist (Button, Input, ScrollArea, Badge, etc.) is a P1 finding. Raw color values instead of semantic tokens, odd-pixel sizing, missing focus states — flag as ADOPT. (The review skill spawns `ui-engineer` in parallel for deep UI audits when the diff touches UI code.)
+- **Design-system compliance**: Raw HTML where the project's UI primitives exist, raw color values instead of semantic tokens, odd-pixel sizing, missing focus states — a P1 finding, flag as ADOPT. (`code-review` spawns a configured UI specialist for deep UI audits when the diff touches UI code.)
 - **DX & agent-friendliness**: Testability, discoverability, clean module boundaries, clear error paths
 - **Patterns & consistency**: Deviations from established patterns, unjustified abstractions
 - **Performance**: N+1 queries, unbounded lists, missing cleanup
