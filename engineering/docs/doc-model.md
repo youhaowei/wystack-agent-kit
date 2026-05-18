@@ -8,7 +8,7 @@ How WyStack Agent Kit treats product and engineering documentation.
 - **Implementation truth lives in the repo.** Spec, glossary, ADR, code, tests. Once an artifact becomes implementation-level, the repo is canonical.
 - **Requirements enter the repo through E2E tests**, not through mirrored PRD files. The test is the executable proof of the requirement.
 - **The repo is tool-agnostic.** No wiki URLs, page IDs, or tool names in committed artifacts. Provenance lives in git history, not in frontmatter.
-- **`.wystack/` declares storage.** Lifecycle skills read `.wystack/storage.json` before assuming where tasks or docs live.
+- **The workspace declares storage.** Lifecycle skills resolve the workspace via the tracked `.wystack.json` pointer and read its `storage.json` before assuming where tasks or docs live.
 
 ## Where things live
 
@@ -31,7 +31,7 @@ Spec and glossary share one lifecycle: **draft → promote → repo-canonical**.
 **Promote** — once the draft's status flips to approved, the skill:
 
 1. Fetches the full draft via `wiki-librarian`.
-2. Writes the promoted file to its configured repo location (`.claude/specs/NNNN-slug.md` and `.claude/glossary.md` by default). Frontmatter is tool-neutral; all tool references are stripped — no doc-store URLs, page IDs, or tool names; cross-references become name-only.
+2. Writes the promoted file under the configured `docs.promotedRoot` — `<promotedRoot>/specs/NNNN-slug.md` and `<promotedRoot>/glossary.md`, with `.claude` as the default root. Frontmatter is tool-neutral; all tool references are stripped — no doc-store URLs, page IDs, or tool names; cross-references become name-only.
 3. Marks the doc-store page `promoted` — one-way.
 4. Commits — the message is the provenance record; no doc-store URLs in the body.
 
@@ -66,11 +66,11 @@ Why this beats a mirrored PRD:
 ## Repo layout
 
 ```
-.claude/
+<docs.promotedRoot>/             # .claude by default
   specs/
-    0001-feature-name.md        # promoted from wiki, canonical
+    0001-feature-name.md         # promoted from the doc store, canonical
     0002-other-feature.md
-  glossary.md                    # promoted from wiki, canonical
+  glossary.md                    # promoted from the doc store, canonical
 ```
 
 Frontmatter is tool-neutral:
@@ -98,9 +98,9 @@ Run pre-release, pre-demo, during QA passes. Not every PR.
 
 ## Why this shape
 
-1. **Agent-friendly**: agents reading the repo get spec + glossary + tests without wiki round-trips. Coverage grep works across the whole traceability chain.
+1. **Agent-friendly**: agents reading the repo get spec + glossary + tests without doc-store round-trips. Coverage grep works across the whole traceability chain.
 2. **Drift-resistant**: implementation artifacts evolve with the code that enacts them. PR reviews catch spec drift naturally.
-3. **Tool-portable**: the repo doesn't assume a specific doc or task tool. Swap providers tomorrow — only `.wystack/` and adapter instructions change, not committed artifacts.
+3. **Tool-portable**: the repo doesn't assume a specific doc or task tool. Swap providers tomorrow — only the workspace config and adapter instructions change, not committed artifacts.
 4. **Stakeholder-friendly**: teams keep their preferred collaboration surface for non-engineers.
 
 ## DDD awareness
@@ -125,4 +125,4 @@ Flow: glossary seeds canonical terms → PRD and spec both use them → code and
 - `glossary/` — owns the ubiquitous language lifecycle (draft → promote), mirrors `spec/`'s structure
 - `qa` agent — runs coverage verification on demand
 - `wiki-librarian` agent — document-store CRUD; plugin skills delegate here
-- `breakdown/`, `groom/`, `start-task/` — read promoted specs from `.claude/specs/` and glossary from `.claude/glossary.md` when present; fall back to configured doc store via `wiki-librarian` for drafts
+- `breakdown/`, `groom/`, `start-task/` — read promoted specs and glossary from the configured `docs.promotedRoot` when present; fall back to configured doc store via `wiki-librarian` for drafts
