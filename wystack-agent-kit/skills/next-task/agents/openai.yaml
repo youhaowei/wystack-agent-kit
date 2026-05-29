@@ -1,0 +1,3 @@
+interface:
+  display_name: "Next Task"
+  short_description: "Recommend the best work item to pick up next"

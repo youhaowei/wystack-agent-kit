@@ -1,0 +1,44 @@
+{
+  "name": "@wystack/agent-kit",
+  "version": "0.10.0",
+  "description": "Portable agent workflows for planning, delivery, design, verification, and discoverability.",
+  "private": false,
+  "keywords": [
+    "agent-kit",
+    "ai-agents",
+    "claude-plugin",
+    "codex-plugin",
+    "pi-package",
+    "skills"
+  ],
+  "files": [
+    "README.md",
+    "UPSTREAM.md",
+    "wystack-agent-kit",
+    "pi",
+    "scripts/build-dist.sh",
+    "scripts/deploy.sh",
+    "scripts/sync_codex_plugin_cache.js",
+    "scripts/sync_cc_plugin_cache.js",
+    "scripts/sync_cursor_plugin_cache.js",
+    "scripts/watch-deploy.sh",
+    ".claude-plugin/marketplace.json"
+  ],
+  "pi": {
+    "extensions": [
+      "pi/extensions/wystack-agents.ts",
+      "pi/extensions/agent-browser.ts"
+    ],
+    "skills": [
+      "wystack-agent-kit/skills"
+    ]
+  },
+  "scripts": {
+    "deploy": "./scripts/deploy.sh",
+    "deploy:dry-run": "./scripts/deploy.sh --dry-run",
+    "deploy:codex": "bun scripts/sync_codex_plugin_cache.js --force --apply",
+    "deploy:claude": "./scripts/build-dist.sh --deploy --no-zip",
+    "deploy:cc": "bun scripts/sync_cc_plugin_cache.js --apply",
+    "deploy:cursor": "bun scripts/sync_cursor_plugin_cache.js --apply"
+  }
+}

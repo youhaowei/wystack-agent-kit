@@ -1,0 +1,3 @@
+interface:
+  display_name: "Frontend"
+  short_description: "Create production-grade frontend UI applying project design context and anti-pattern catalog"

@@ -1,0 +1,14 @@
+{
+  "name": "wystack-agent-kit",
+  "owner": {
+    "name": "Youhao Wei",
+    "email": "wei@youhao.me"
+  },
+  "plugins": [
+    {
+      "name": "wystack-agent-kit",
+      "description": "Portable agent workflows for planning, implementation, review, verification, frontend design, UX writing, copywriting, and discoverability.",
+      "source": "./wystack-agent-kit"
+    }
+  ]
+}

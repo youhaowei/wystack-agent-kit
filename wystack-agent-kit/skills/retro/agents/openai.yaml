@@ -1,0 +1,3 @@
+interface:
+  display_name: "Retro"
+  short_description: "Project retrospective — turn calibration data into tuning.json"
