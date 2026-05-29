@@ -1,19 +1,37 @@
 {
   "name": "@wystack/agent-kit",
   "version": "0.10.0",
-  "description": "Portable agent workflows for planning, delivery, design, verification, and discoverability.",
+  "description": "One portable agent-workflow kit — plan, build, review, verify, design, and ship — running identically on Claude Code, Codex, Cursor, and Pi.",
   "private": false,
+  "license": "MIT",
+  "author": {
+    "name": "Youhao Wei",
+    "email": "wei@youhao.me"
+  },
+  "homepage": "https://github.com/youhaowei/wystack-agent-kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/youhaowei/wystack-agent-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/youhaowei/wystack-agent-kit/issues"
+  },
   "keywords": [
     "agent-kit",
     "ai-agents",
+    "claude-code",
     "claude-plugin",
     "codex-plugin",
+    "cursor",
     "pi-package",
-    "skills"
+    "skills",
+    "agentic-workflows",
+    "llm-tools"
   ],
   "files": [
     "README.md",
     "UPSTREAM.md",
+    "LICENSE",
     "wystack-agent-kit",
     "pi",
     "scripts/build-dist.sh",
