@@ -112,9 +112,6 @@ truth can disclose weaker evidence.
   convergence loop when HEAD already carries a `ship` verdict (`diff_sha` +
   `verdict` only).
 - **Perspective verdicts** — `.wystack/perspective/`, one record per advisory consult. Planned.
-- **Arch-overview map-run** — a summary of what an architecture-overview pass
-  mapped. Write through `record.write`, with `.wystack/arch-map-runs/` as
-  fallback/cache; build it as a typed record from the start.
 - **Extension records** — normalized facts, claims, decisions, events,
   snapshots, and relations from configured extensions. May live in `.wystack/`
   local JSON or in a graph-store extension such as Knowledgebase.

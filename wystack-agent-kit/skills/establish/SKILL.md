@@ -57,7 +57,7 @@ If product context is missing, redirect — don't fabricate.
 # Design — [Project Name]
 
 > Established: [YYYY-MM-DD]
-> Loaded by: Agent Kit plugin skills (frontend, polish, design-review, copywriting, ux-writing, discoverability)
+> Loaded by: Agent Kit plugin skills (frontend, polish, copywriting, ux-writing, discoverability)
 
 ## Register
 
