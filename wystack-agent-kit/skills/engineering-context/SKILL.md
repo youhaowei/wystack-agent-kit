@@ -35,7 +35,7 @@ Scan the current conversation for context already loaded — re-fetching wastes 
 | Source                           | Already-loaded signals                                                                                                      |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `task-manager` (ticket)          | A `TASK-###` with ACs, a work-item URL/path fetched this session, or the user pasted the ticket body                        |
-| `wiki-librarian` (PRD/Spec)      | Text containing `## Goals`, `## Non-Goals`, `Decision #`, user stories like `US-5`, or a doc URL/path fetched               |
+| `wiki-librarian` (PRD/Spec/Story) | Text containing `## Goals`, `## Non-Goals`, `Decision #`, a requirement ID like `ST-42`, or a doc URL/path fetched          |
 | `Explore` (repo)                 | A recent `Explore` agent report, or substantial reads of `CLAUDE.md` / `DESIGN.md` + multiple files in the affected modules |
 | Knowledge base (prior decisions) | Recent knowledge-base search output, or loaded project memory files                                                         |
 
@@ -59,9 +59,9 @@ Pass:
 
 Pass:
 
-- Task's linked PRD/Spec URLs (if known upfront — pass through, don't make it search).
+- Task's linked PRD/Spec/Story URLs (if known upfront — pass through, don't make it search).
 - Feature/phase name for title-search if URLs aren't available.
-- Instruction: return **full content** of PRDs/Specs + one hop of Related/Prior-art links. Not summaries — downstream consumers quote from it.
+- Instruction: return **full content** of PRDs/Specs + Stories (when `storyHome = docs`, stories are docs here; when `storyHome = tasks`, stories arrive via task-manager) + one hop of Related/Prior-art links. Not summaries — downstream consumers quote from it.
 
 The librarian is the right agent for reads, not just writes — it knows the doc-store schema and finds docs the task-manager can't.
 

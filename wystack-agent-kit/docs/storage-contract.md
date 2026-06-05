@@ -107,7 +107,9 @@ act safely.
         "path": ".wystack/docs",
         "statuses": {
             "draft": "Draft",
-            "active": "Active",
+            "proposed": "Proposed",
+            "accepted": "Accepted",
+            "implemented": "Implemented",
             "superseded": "Superseded",
             "archived": "Archived"
         },
@@ -118,8 +120,11 @@ act safely.
             "crossLink": true
         }
     },
+    "requirements": {
+        "storyHome": "docs"
+    },
     "conventions": {
-        "requirementIdFormat": "{PRD-KEY}-US-{group}.{item}"
+        "requirementIdFormat": "{storyHome.id}"
     },
     "worktree": {
         "preference": "ask"
@@ -205,10 +210,11 @@ lifecycle skills read instead of hardcoding:
 | Field                             | Read by                                     | Meaning                                                                                                                                                                                                                                                                                                              |
 | --------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `tasks.statuses`                  | every status-aware skill                    | The **work-item status vocabulary** — maps the seven lifecycle roles (`backlog`, `ready`, `inProgress`, `inReview`, `done`, `deferred`, `cancelled`) to this project's status names. Skills resolve roles through it; they never write a literal status.                                                            |
-| `docs.statuses`                   | `prd`, `spec`, `doc-model` | The **doc status vocabulary** — one shared workflow for every doc type (PRD/Spec), since they share a store. Maps roles (`draft`, `active`, `superseded`, `archived`) to this project's status names. `superseded` is how a whole-doc supersession is recorded (alongside a `supersedes:` link); skills resolve roles, never write a literal status. |
-| `docs.path`                       | `wiki-librarian`, doc skills                | Canonical home for docs (the store is canonical — no promote-to-repo). Default `.wystack/docs`; local layout is `<path>/{prds,specs}/`. Remote providers hold the same artifacts as native pages.                                                                                              |
+| `docs.statuses`                   | `prd`, `spec`, `story`, `doc-model` | The **doc status vocabulary** — one shared workflow ladder for every doc type (PRD/Spec/Story), since they share a store. Maps roles (`draft`, `proposed`, `accepted`, `implemented`, `superseded`, `archived`) to this project's status names. `accepted` = committed but not necessarily built; `implemented` = built and verified (derived from verifying tests where a trace exists). `superseded` records a whole-doc supersession (alongside a `supersedes:` link). Skills resolve roles, never write a literal status. |
+| `docs.path`                       | `wiki-librarian`, doc skills                | Canonical home for docs (the store is canonical — no promote-to-repo). Default `.wystack/docs`; local layout is `<path>/{prds,specs,stories}/`. Remote providers hold the same artifacts as native pages.                                                                                              |
 | `docs.specTemplate`               | `spec`                                      | Optional ordered list of section names a spec should follow, e.g. `["Purpose","Component boundaries","Data flow","Decisions"]`. When set, the `spec` skill uses it as the section skeleton; when unset, the skill chooses sections per spec (agent judgment). The cite-in-context and level-of-detail rules apply either way — the template governs structure only.                                                                                              |
-| `conventions.requirementIdFormat` | `prd`, `breakdown`, `spec`, `code-review`   | Template for PRD requirement IDs — `{PRD-KEY}-US-{group}.{item}` yields `MEM-US-1.2`; short form `US-1.2` inside its own PRD. Keeps IDs unique across PRDs.                                                                                                                                                          |
+| `requirements.storyHome`          | `prd`, `story`, `breakdown`, `qa`           | The **canonical home for stories** — `docs` (default; story is a doc, kit owns status and derives Implemented from tests) or `tasks` (story is a work-item, the tracker owns status, kit maps it to the ladder for display and never overrides). One story, one home, one status authority. No mixed mode. |
+| `conventions.requirementIdFormat` | `prd`, `story`, `breakdown`, `spec`, `code-review`   | Template for requirement IDs. The story's canonical home provides the stable ID — the kit never mints it (the adapter allocates: local-markdown `ST-{n}`, a tracker issue `ENG-{n}`). `{storyHome.id}` means "use whatever the home calls this record"; a project may still pin an explicit template (e.g. `ST-{n}`) for a neutral local form. Tool-neutrality is a provider-selection property, not a kit guarantee. |
 | `worktree.preference`             | `start-task`, `orchestrate`, `worktree`     | Whether task work is isolated in a git worktree: `worktree` (always), `cwd` (never), `ask` (decide per task).                                                                                                                                                                                                        |
 | `worktree.directory`              | `worktree`                                  | Optional override for where worktree directories are created. When unset, falls back to `~/worktrees/<project>/<branch>` — outside the working tree, so file watchers, editor pickers, and `node_modules` resolution don't recurse into them. Set this field only to override the global default with a custom path. |
 | `quality.preflight`               | `code-review`, `finish-task`, `full-review` | Project-defined commands that must pass before review/finish flows treat the branch as ready for judgment. Empty means "no configured preflight", not "invent a broad test sweep".                                                                                                                                   |
@@ -388,6 +394,45 @@ Provider-specific adapters should live outside the core contract:
 
 Adapters own provider quirks: API names, schema IDs, label mappings, relation
 limits, auth requirements, and verification steps.
+
+## Migrations
+
+The kit is versioned (`plugin.json` `version`). A project records which kit
+version its workspace was reconciled to, so the `upgrade` skill knows which
+migration steps are outstanding.
+
+**Manifest** — each release that changes a contract (doc model, config schema,
+shipped skill behavior) ships migration steps in a per-version manifest. The
+manifest is a **framework asset**, versioned with the plugin: it lives at
+`migrations/MIGRATIONS.json` in the plugin root (beside `docs/`), and the
+`upgrade` skill loads it from there. A step is declarative, never a script the
+agent reverse-engineers:
+
+| Field         | Meaning                                                                                  |
+| ------------- | ---------------------------------------------------------------------------------------- |
+| `id`          | Stable unique step ID, recorded in the ledger once applied.                              |
+| `version`     | The release this step belongs to.                                                        |
+| `description` | What it changes and why — the agent explains this to the user.                           |
+| `type`        | `structural` (config/skill files), `data` (mutates store contents), or `manual`.         |
+| `target`      | `config`, `skill`, `doc-store`, or `task-store` — what it touches.                       |
+| `applyMode`   | `auto` (kit owns it — apply with a summary) or `guided` (outward write to a store the kit doesn't own — per-step, human-in-the-loop). The release author declares this, because they know whether the step writes a live store. |
+
+**Ledger** — `<workspace>/migrations.json` records the set of applied step IDs
+(plus outcome: applied / skipped / deferred). Outstanding = declared steps −
+ledger. Skipped and deferred steps stay outstanding and are re-offered next
+upgrade. Cold start (no ledger): treat as nothing applied and replay from the
+manifest baseline — steps are idempotent / `skipIfPresent`, so already-satisfied
+changes no-op. `.wystack.json` carries a coarse `kitVersion` for display, but the
+ledger is the truth for what has been applied.
+
+```json
+// .wystack.json — pointer plus the version this workspace was reconciled to
+{ "root": "~/.wystack/example", "kitVersion": "0.11.0" }
+```
+
+The `upgrade` skill never downloads the plugin — the host owns that. It detects
+when the installed kit is ahead of `kitVersion`, guides the user to update
+through their host if needed, then replays outstanding steps by `applyMode`.
 
 ## Runtime Adapters
 
