@@ -206,7 +206,7 @@ These shape perspective during ambition review. Don't list them at the user — 
 
 Domain artifacts live in the configured doc store (resolve via `wystack-agent-kit:workspace`; default local home `.wystack/docs`), not a fixed repo folder:
 
-- **Ubiquitous language** — technical and shared domain terms live in the relevant spec's Key concepts section (`wystack-agent-kit:spec`); pure product terms are defined inline in the PRD. There is no separate glossary doc. Some repos also keep a root `CONTEXT.md` / `CONTEXT-MAP.md` for quick domain orientation.
+- **Ubiquitous language** — technical and shared domain terms live in the relevant spec's Key concepts section (`wystack-agent-kit:spec`); pure product terms are defined inline in the PRD. Some repos also keep a root `CONTEXT.md` / `CONTEXT-MAP.md` for quick domain orientation.
 - **Prior decisions** — recorded in the Decisions section of the relevant spec (`wystack-agent-kit:spec`), or in the PRD for product-level decisions. Read them to avoid re-litigating settled trade-offs.
 
 Create lazily — only when you have something to write. No term defined yet? Add it when the first one resolves — to the spec's Key concepts, or the PRD if it's a pure product term. A decision worth keeping lands in the spec's (or PRD's) Decisions section (see "Record decisions sparingly" below).

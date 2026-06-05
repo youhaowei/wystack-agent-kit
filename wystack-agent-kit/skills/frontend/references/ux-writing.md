@@ -38,7 +38,7 @@ Voice is consistent (brand personality). Tone adapts: celebratory for success, e
 - Icon buttons need `aria-label`
 
 ## Translation
-Plan for 30% text expansion (German, Finnish). Keep numbers separate. Full sentences as single strings. Avoid abbreviations. Build terminology glossary — one term per concept, enforced consistently.
+Plan for 30% text expansion (German, Finnish). Keep numbers separate. Full sentences as single strings. Avoid abbreviations. Use one canonical term per concept.
 
 ## Consistency
 Pick one and stick with it: Delete (not Remove/Trash), Settings (not Preferences/Options), Sign in (not Log in). Say it once, say it well — if the heading explains it, the intro is redundant.

@@ -6,10 +6,21 @@ How WyStack Agent Kit treats product and engineering documentation.
 
 - **Docs live in the configured doc store.** PRD, Spec, tasks, initiatives, and stakeholder-facing artifacts live wherever the workspace declares — local markdown (default `.wystack/docs`), GitHub/GitLab/Linear/Jira, Notion, or another adapter. The store is canonical for docs; there is no promote-to-repo ceremony.
 - **The repo holds code, tests, and requirement-ID traces** — not docs. Requirements enter the repo through E2E tests, not mirrored PRD files. The test is the executable proof of the requirement.
-- **Two doc types, terms defined inline.** PRD says what, Spec says how. Domain terms live where they're used — product terms in the PRD, technical and shared terms in the Spec's Key concepts section. There is no separate glossary artifact. See [Terms](#terms-and-ubiquitous-language).
+- **Two doc types, terms defined inline.** PRD says what, Spec says how. Domain terms live where they're used — product terms in the PRD, technical and shared terms in the Spec's Key concepts section. Terms are not a standalone artifact. See [Terms](#terms-and-ubiquitous-language).
 - **Docs reference each other.** A doc is single-purpose; links are the connective tissue. See [Cross-linking](#cross-linking).
 - **The repo is tool-agnostic.** No wiki URLs, page IDs, or tool names in committed code or tests. Provenance lives in git history.
 - **The workspace declares storage.** Lifecycle skills resolve the workspace via the tracked `.wystack.json` pointer and read its `storage.json` before assuming where tasks or docs live.
+
+## Write the artifact, not the document
+
+A doc's job is to convey the thing it documents — the architecture, the behavior — not to describe itself. Every doc skill inherits these rules; they are stated once here and referenced, never restated.
+
+- **Architecture, not meta.** No sentences about the doc, its conventions, its provenance, or where other docs live. The reader wants the system, not a tour of the page. "This spec records its decisions inline", "neutral package depended on by both X and Y", "What this is / isn't" as a heading — all meta. Cut them. Navigation out to another doc is a bare cross-link at most, never a paragraph (see [Cite in context](#cite-in-context)).
+- **First line is the thing.** Open with what the thing *is*, in one sentence. Readers judge the doc on its first paragraph; a preamble of links or process fails that test. "A concurrency pool that…" not "This document describes…".
+- **Decisions default to one-liners.** A decision is `**X:** chose A over B because C`. Expand to the full _what / alternatives / why_ block *only* when the choice is load-bearing and was genuinely contested. The ceremony is the exception, not the default — "delivery is async, here's why" is one line, not a four-part block.
+- **Earn the page (ownership test).** Before writing a doc, ask: *could you delete it and lose nothing that isn't already elsewhere — in code, or another doc?* If yes, don't write it, or fold it into the doc that owns the content. Each doc type applies this in its own skill (the spec skill, for instance, uses it to decide whether a small package gets a standalone spec or folds into its consumer).
+
+These are about *what not to put in*. What each doc type *does* own — PRD intent, spec design + decisions + terms — is below.
 
 ## Where things live
 
@@ -97,7 +108,7 @@ Run pre-release, pre-demo, during QA passes. Not every PR.
 
 ## Terms and ubiquitous language
 
-There is no separate glossary artifact. Domain terms — the project's ubiquitous language — are defined **where they're used**, in the doc that owns them:
+Domain terms — the project's ubiquitous language — are defined **where they're used**, in the doc that owns them:
 
 | Term kind | Defined in | Example |
 |---|---|---|

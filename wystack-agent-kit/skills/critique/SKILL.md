@@ -33,6 +33,14 @@ Then the adversarial pass:
 - **Scope creep** — what is in the design that the stated goal does not need? (YAGNI.)
 - **The rejected turn** — the obvious alternative the doc dismissed or never considered. Is the rejection actually justified?
 
+When the artifact is a spec or PRD, also attack its **doc discipline** (`docs/doc-model.md` § Write the artifact, not the document) — authoring sets the rule, review catches what authoring missed:
+
+- **Doc-meta narration** — sentences about the doc itself, its conventions, or its provenance instead of the architecture/behavior.
+- **Non-overview opening** — a first paragraph that frames the section or links out instead of stating what the thing *is*.
+- **Over-ceremonied decisions** — a small uncontested choice expanded into a full what/alternatives/why block.
+- **Restated code** — interfaces, message shapes, or types prose-copied from the codebase (drift-magnet).
+- **A doc that hasn't earned its existence** — could it be deleted with no loss because its content lives in code or another doc? Then it should fold.
+
 ## Rules
 
 - **Findings only — never rewrite.** Critique surfaces holes; fixing belongs to the artifact's owner. Findings-only keeps critique safe by construction — it edits nothing.

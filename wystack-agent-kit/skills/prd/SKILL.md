@@ -6,6 +6,8 @@ description: "Write a Product Requirements Document — a behavior spec of what 
 
 A behavior spec: what the system should do, in user language. The source of truth tickets reference — it outlives individual tasks.
 
+**Write the product, not the document** — the shared doc discipline (architecture-not-meta, first-line-is-the-thing, one-line decisions, earn-the-page) lives in `docs/doc-model.md` § Write the artifact, not the document. A PRD inherits all of it: open with what the feature *does* for the user, never "this PRD describes…"; product-level decisions default to one-liners; and before writing, ask whether this feature earns its own PRD or folds into a parent one.
+
 `$ARGUMENTS` — feature description, brainstorm output, or empty (interactive).
 
 **Prerequisite.** Load `wystack-agent-kit:workspace` for the configured doc store and provider mappings. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
