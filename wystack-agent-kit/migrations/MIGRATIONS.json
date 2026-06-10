@@ -3,6 +3,21 @@
   "manifestVersion": 1,
   "releases": [
     {
+      "version": "0.12.0",
+      "summary": "Doc types become a two-tier registry: core PRD/Spec/Story always on, optional ADR/Glossary opt-in via docs.types.",
+      "steps": [
+        {
+          "id": "0.12.0-docs-types-registry",
+          "version": "0.12.0",
+          "description": "Introduces docs.types — an optional array enabling ADR and/or Glossary doc types beyond the always-on core. Purely additive and opt-in: a project that doesn't set docs.types keeps core-only behavior with no loss, so there is nothing to migrate. This step records that the registry capability is available; it does not enable any type or write any doc. To adopt a type, set docs.types (e.g. [\"adr\",\"glossary\"]) in storage.json — re-run setup-agent-kit's optional-doc-types question, or edit the file directly — and the kit creates its local subdir on first use.",
+          "type": "structural",
+          "target": "config",
+          "applyMode": "auto",
+          "skipIfPresent": "always idempotent — records availability only, enables nothing"
+        }
+      ]
+    },
+    {
       "version": "0.11.0",
       "summary": "Story becomes a first-class requirement artifact; doc status ladder gains Proposed/Accepted/Implemented.",
       "steps": [
