@@ -157,13 +157,14 @@ supersedes: ADR-0004       # when it replaces an earlier decision (append-only)
 
 ## Coverage verification
 
-A requirement without a matching test is a coverage gap. Checking this is the `qa` agent's job — on-demand, not continuous.
+A requirement without a matching test — or a domain term without a glossary note — is a coverage gap. Checking both is the `qa` agent's job — on-demand, not continuous.
 
 `qa` reads requirement IDs from the **canonical story home** (the doc store via `wiki-librarian`, or the work-item store when `storyHome = tasks`), greps the repo for each, and reports:
 - Orphan requirements (story with no verifying test)
 - Orphan tests (requirement ID not backed by a story)
 - Specs missing referenced requirement IDs
 - In `tasks` mode, a story-issue marked done with no verifying test — a coverage gap, surfaced without touching the tracker's status (the tracker owns status).
+- Undefined terms (a domain term used in a spec, PRD, story, or code identifier with no glossary note) — the vocabulary loop closes at the glossary the way the requirement loop closes at the Story.
 
 Run pre-release, pre-demo, during QA passes. Not every PR.
 

@@ -26,6 +26,9 @@ The structured output this skill returns. Pass **verbatim** to downstream consum
 {verbatim — especially decisions that look like bugs but are intentional, e.g. "losing the graph loses nothing", "forgetEdge is graph-only"}
 {when `adr` enabled: append the expanded rationale from any ADR the spec links via `expands:` — the contested decision's alternatives and trade-offs, so reviewers don't re-litigate it}
 
+### Terms (from the glossary)
+{the canonical definition of each domain term the changed area uses — verbatim from its glossary note (`[[term-slug]]`). Reviewers measure code against these meanings; a term used in code/docs with no glossary note is flagged here as a coverage gap.}
+
 ### Open questions (from Spec)
 {verbatim. Findings that hit an open question are labeled "Spec Open Q", not bugs.}
 

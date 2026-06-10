@@ -42,5 +42,6 @@ Requirements live on Stories — the canonical requirement artifacts — not in 
 - **Orphan tests** — a test citing a requirement ID not backed by a Story in the canonical home.
 - **Specs missing referenced IDs** — a spec references a requirement ID that does not resolve to a Story.
 - **Done with no proof** (`storyHome=tasks` only) — a story-issue the tracker marks done but with no verifying test. Surface the gap; do not touch the tracker's status. The tracker owns status; you read it and report.
+- **Undefined terms** — a domain term used in a spec, PRD, story, or code identifier with no glossary note. The vocabulary loop closes at the glossary the way the requirement loop closes at the Story; a used-but-undefined term is a coverage gap.
 
 Run this check pre-release, pre-demo, or during a QA pass — not on every PR. See `docs/doc-model.md` § Coverage verification.
