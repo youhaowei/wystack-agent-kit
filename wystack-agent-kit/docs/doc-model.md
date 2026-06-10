@@ -60,7 +60,7 @@ A skill reads `docs.types` and adapts **only when an optional type is enabled** 
 - **Implemented** — built and verified. Where a verifying-test trace exists (Stories especially), the Accepted→Implemented flip is **justified by those tests** — derived, self-correcting. Where no trace exists (a spec with no direct tests), it is settable by hand.
 - **Superseded** — replaced by a successor (see [Supersession](#supersession)). **Archived** — retired.
 
-One ladder, every type: an *Accepted* PRD is committed intent; an *Accepted* spec is agreed design; an *Accepted* story is a committed requirement. None implies built until *Implemented*.
+One ladder, every type: an *Accepted* PRD is committed intent; an *Accepted* spec is agreed design; an *Accepted* story is a committed requirement. None implies built until *Implemented*. A **glossary note** uses the same ladder but rests at *Accepted* — a term is `draft` while its name is being resolved, `accepted` once canonical and in use; it has no "built" state, so the *Implemented* rung simply isn't exercised (a renamed or retired term moves to *Superseded*/*Archived*). The ladder is shared; not every type travels every rung, just as a spec with no test trace reaches *Implemented* only by hand.
 
 ## Supersession
 
