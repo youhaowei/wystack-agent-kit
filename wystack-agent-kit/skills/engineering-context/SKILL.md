@@ -61,7 +61,7 @@ Pass:
 
 - Task's linked PRD/Spec/Story URLs (if known upfront — pass through, don't make it search).
 - Feature/phase name for title-search if URLs aren't available.
-- Instruction: return **full content** of PRDs/Specs + Stories (when `storyHome = docs`, stories are docs here; when `storyHome = tasks`, stories arrive via task-manager) + one hop of Related/Prior-art links. Not summaries — downstream consumers quote from it.
+- Instruction: return **full content** of PRDs/Specs + Stories (when `storyHome = docs`, stories are docs here; when `storyHome = tasks`, stories arrive via task-manager) + one hop of Related/Prior-art links. Not summaries — downstream consumers quote from it. When `adr` is enabled (`docs.types`), pull ADRs the spec links via `expands:` as part of that one hop — they carry the contested-decision rationale the spec one-liner compresses, the context that stops a reviewer re-litigating a settled call.
 
 The librarian is the right agent for reads, not just writes — it knows the doc-store schema and finds docs the task-manager can't.
 

@@ -23,10 +23,10 @@ The spec owns the project's **ubiquitous language** — technical and shared dom
 3. **Draft the spec** — decisions over descriptions, document WHY; cross-reference the PRD, don't duplicate it. Follow `docs.specTemplate` if the workspace sets one; otherwise the default structure (drop what a given spec doesn't need, add a Domain Model section for DDD-committed projects):
 
    - **Overview** — open with what the system *is*, in the first sentence (the first-line rule). One paragraph; scope it by what it does, not by framing the section.
-   - **Key concepts** — the project's ubiquitous language: technical terms and shared domain terms (the ones that also shape architecture). One per term — canonical name, a one-sentence domain-precise definition, aliases to avoid, relationships when useful. Between dictionary and detail: "**Applicant** — a person submitting an application to a Listing; distinct from User (account without applying)" not "a person who applies" and not the column layout. The spec owns these terms; the PRD cites them in context. See `docs/doc-model.md` § Terms.
+   - **Key concepts** — the project's ubiquitous language: technical terms and shared domain terms (the ones that also shape architecture). One per term — canonical name, a one-sentence domain-precise definition, aliases to avoid, relationships when useful. Between dictionary and detail: "**Applicant** — a person submitting an application to a Listing; distinct from User (account without applying)" not "a person who applies" and not the column layout. The spec owns these terms; the PRD cites them in context. When `glossary` is enabled (`docs.types`), a **cross-cutting** term no single spec owns lives in a glossary note instead — cite it here as `[[term-slug]]` (use + link), don't redefine it; define only the terms this spec owns. See `docs/doc-model.md` § Terms.
    - **Boundaries** — the modules/components, what each owns, how they communicate. Diagram if it helps.
    - **Data flow** — how data moves through the system, end to end.
-   - **Decisions** — the load-bearing choices, each as _what we chose / the alternatives / why_. Record only real decisions (a genuine alternative existed); skip the obvious. Edit these in place as the design evolves — the section reflects current thinking, not a history of every choice ever made.
+   - **Decisions** — the load-bearing choices, each as _what we chose / the alternatives / why_. Record only real decisions (a genuine alternative existed); skip the obvious. Edit these in place as the design evolves — the section reflects current thinking, not a history of every choice ever made. **When `adr` is enabled** (`docs.types`) and a decision was genuinely *contested* — real alternatives weighed, trade-offs that a one-liner would flatten — offer to capture the full deliberation as an ADR via `wystack-agent-kit:adr`. Keep the one-line decision here with an `expands:` link down to it; the ADR is depth-on-demand, the spec still reads complete without it. Don't reach for an ADR for an obvious or uncontested choice — the one-liner is the default.
    - **Integration** — what this touches; dependencies.
    - **Open questions** — what's unresolved or deferred.
 
@@ -39,6 +39,8 @@ The spec lives in the doc store and is edited there as the design evolves — no
 ## Changing a decision
 
 When a design change overturns a prior decision, **edit the Decisions section in place** — update the choice and its reasoning to reflect current thinking. The spec is the living design; it shows what's true now, not a log of what changed. If a superseded choice is still worth warning future readers about ("we tried X, it failed because Y — don't revisit"), keep a one-line note in the entry's _why_; otherwise just replace it.
+
+When `adr` is enabled and the overturned decision had an ADR, the ADR is **append-only** — don't edit it. Write a new ADR that `supersedes:` the old one, flip the old to `superseded`, and re-point the spec's one-liner `expands:` to the new ADR. The in-place edit governs the spec's one-liner; the supersession governs the ADR trail.
 
 ## Rules
 

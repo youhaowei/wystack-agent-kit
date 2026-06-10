@@ -24,6 +24,7 @@ The structured output this skill returns. Pass **verbatim** to downstream consum
 
 ### Key decisions (from Spec)
 {verbatim — especially decisions that look like bugs but are intentional, e.g. "losing the graph loses nothing", "forgetEdge is graph-only"}
+{when `adr` enabled: append the expanded rationale from any ADR the spec links via `expands:` — the contested decision's alternatives and trade-offs, so reviewers don't re-litigate it}
 
 ### Open questions (from Spec)
 {verbatim. Findings that hit an open question are labeled "Spec Open Q", not bugs.}
