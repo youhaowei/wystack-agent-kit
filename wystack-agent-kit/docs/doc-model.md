@@ -6,7 +6,7 @@ How WyStack Agent Kit treats product and engineering documentation.
 
 - **Docs live in the configured doc store.** PRD, Spec, tasks, initiatives, and stakeholder-facing artifacts live wherever the workspace declares — local markdown (default `.wystack/docs`), GitHub/GitLab/Linear/Jira, Notion, or another adapter. The store is canonical for docs; there is no promote-to-repo ceremony.
 - **The repo holds code, tests, and requirement-ID traces** — not docs. Requirements enter the repo through E2E tests, not mirrored PRD files. The test is the executable proof of the requirement.
-- **Two doc types, terms defined inline.** PRD says what, Spec says how. Domain terms live where they're used — product terms in the PRD, technical and shared terms in the Spec's Key concepts section. Terms are not a standalone artifact. See [Terms](#terms-and-ubiquitous-language).
+- **The glossary is the term spine.** Every domain term lives in exactly one place — a glossary note (`glossary/<term>.md`) — and every other doc *cites* it (`[[term-slug]]`), never redefines it. PRD says what, Spec says how, and both draw their vocabulary from the glossary. The glossary is core: without it the ubiquitous language has no canonical home and the docs drift. See [Terms](#terms-and-ubiquitous-language).
 - **Docs reference each other.** A doc is single-purpose; links are the connective tissue. See [Cross-linking](#cross-linking).
 - **The repo trace is the canonical home's stable ID.** A test cites the story's requirement ID — whatever its canonical home provides as a stable identifier. Tool-neutrality is a **provider-selection property**, not a kit guarantee: the default local-markdown home yields neutral IDs (`ST-42`); a team that makes a tracker the story home has chosen tracker-shaped IDs (`ENG-128`) in its test traces, knowingly. No other tool identity — wiki URLs, page IDs, provider names beyond the requirement ID — belongs in committed code. Provenance lives in git history.
 - **The workspace declares storage.** Lifecycle skills resolve the workspace via the tracked `.wystack.json` pointer and read its `storage.json` before assuming where tasks or docs live.
@@ -24,30 +24,29 @@ These are about *what not to put in*. What each doc type *does* own — PRD inte
 
 ## Where things live
 
-PRD, Spec, and Story live in the configured doc store. They share one **status vocabulary** (`docs.statuses`, see `storage-contract.md`) — one store runs one workflow. What differs per type is *purpose*, not lifecycle. PRD/Spec/Story are the **always-on core**; ADR and Glossary are **optional** types a project opts into (see [Doc-type registry](#doc-type-registry)).
+PRD, Spec, Story, and Glossary live in the configured doc store. They share one **status vocabulary** (`docs.statuses`, see `storage-contract.md`) — one store runs one workflow. What differs per type is *purpose*, not lifecycle. PRD/Spec/Story/Glossary are the **always-on core**; ADR is the one **optional** type a project opts into (see [Doc-type registry](#doc-type-registry)).
 
 | Doc | Home | Notes |
 |---|---|---|
-| **PRD** | Doc store | Planning/commitment artifact. Stakeholder-editable. Captures intent, not implementation. Holds purpose, users, goals/non-goals, dependencies, and a **story index** — a link per story, not the story bodies. Defines product terms inline next to their use. References the specs that design it. Product-level decisions live in the PRD itself, as _what / alternatives / why_. |
-| **Spec** | Doc store | Living design document — current-state architecture and the decisions behind it, edited freely. Carries the **Key concepts** section that defines technical and shared domain terms (the project's ubiquitous language). Records its own load-bearing decisions inline (a Decisions section: _what / alternatives / why_, edited in place as the design evolves). References the PRD it implements and the tickets that carry it. |
+| **PRD** | Doc store | Planning/commitment artifact. Stakeholder-editable. Captures intent, not implementation. Holds purpose, users, goals/non-goals, dependencies, and a **story index** — a link per story, not the story bodies. Cites domain terms as `[[term-slug]]` into the glossary, never re-defining them. References the specs that design it. Product-level decisions live in the PRD itself, as _what / alternatives / why_. |
+| **Spec** | Doc store | Living design document — current-state architecture and the decisions behind it, edited freely. Its **Key concepts** section is a per-spec *index* into the glossary — the terms this spec leans on, each cited as `[[term-slug]]`, not redefined. Records its own load-bearing decisions inline (a Decisions section: _what / alternatives / why_, edited in place as the design evolves). References the PRD it implements and the tickets that carry it. |
 | **Story** | Canonical home (doc store by default, work-item store if configured) | The canonical requirement artifact: one requirement's goal and acceptance bar in user language. Owns its body (sentence, details, scenarios, edge cases), acceptance criteria, status, and the links to delivery tasks, verifying tests, and specs. States the *what*, not the *how* — see [Story](#story). |
+| **Glossary** | Doc store, `glossary/<term>.md` | The **term spine**: the single canonical home for *every* domain term, one atomic note per term — never a monolith. Each note defines the canonical name; every other doc (PRD, Spec, Story) cites it as `[[term-slug]]`. A domain term used anywhere with no glossary note is a coverage gap. See [Terms](#terms-and-ubiquitous-language). |
 | **ADR** _(optional)_ | Doc store, `adrs/` | Dated record of a **contested** decision — the deliberation a one-liner can't hold: alternatives, trade-offs, the moment in time. **Append-only.** Points UP to the spec it expands (`serves:` link); the spec's inline one-liner points down (`expands:`). Written *only* when full deliberation would bloat the spec's Decisions section. Does not replace inline one-line decisions — it is their optional expanded home. See [Doc-type registry](#doc-type-registry). |
-| **Glossary** _(optional)_ | Doc store, `glossary/<term>.md` | A **directory of atomic term-notes**, one file per term — never a monolith. Owns **cross-cutting / shared-kernel terms no single spec owns**. Each note is the term's single canonical home, cited everywhere as `[[term-slug]]`. Spec-local terms stay in Spec Key concepts, which cite glossary terms (use + link), never redefine. See [Doc-type registry](#doc-type-registry). |
 | **Tasks, initiatives** | Work-item store | Ops-layer. Cross-repo, cross-functional, includes non-code work. |
 | **Requirement IDs** | Provided by the story's canonical home, referenced in repo test JSDoc | The canonical home's own stable ID is the requirement ID. The kit never mints it — the adapter allocates (local-markdown `ST-42`, a tracker issue `ENG-128`). Format per `conventions.requirementIdFormat`. The only requirement trace in the repo. |
 
 ### Doc-type registry
 
-Doc types are a two-tier registry. **Core types are always on** — PRD, Spec, Story — because skills hard-depend on them: `breakdown` slices tickets off a Story, and the `qa` coverage loop closes at the Story (its ID is the requirement ID). Remove a core type and those skills lose their anchor, so core types are never opt-out.
+Doc types are a two-tier registry. **Core types are always on** — PRD, Spec, Story, Glossary — because skills hard-depend on them: `breakdown` slices tickets off a Story, the `qa` coverage loop closes at the Story (its ID is the requirement ID), and every doc draws its vocabulary from the Glossary (the term spine — without it there's no canonical home for the ubiquitous language and the docs drift). Remove a core type and those skills lose their anchor, so core types are never opt-out.
 
-**Optional types are opt-in** via `docs.types` (see `storage-contract.md`): a project that lists `adr` or `glossary` gains that type; one that doesn't loses nothing. Absent is the floor, not a gap — a contested decision absent an ADR stays a one-line decision in the spec; a cross-cutting term absent a glossary falls back to the most-architectural spec's Key concepts. The same "earn the page" discipline that keeps a small package from getting a standalone spec keeps a project from carrying types it won't use. New optional types register by adding a descriptor and an ID; the core three never appear in `docs.types`.
+**Optional types are opt-in** via `docs.types` (see `storage-contract.md`): a project that lists `adr` gains it; one that doesn't loses nothing — a contested decision absent an ADR stays a one-line decision in the spec. The "earn the page" discipline that keeps a small package from getting a standalone spec keeps a project from carrying a type it won't use. New optional types register by adding a descriptor and an ID; core types never appear in `docs.types`.
 
-A skill reads `docs.types` and adapts **only when a type is enabled** — a project with no `docs.types` sees no new prose. The optional types and their participating skills:
+A skill reads `docs.types` and adapts **only when an optional type is enabled** — a project with no `docs.types` sees no new prose for it. The optional types and their participating skills:
 
 | Type | ID | Owns | Cited / expanded by |
 |---|---|---|---|
 | **ADR** | `adr` | A contested decision's full deliberation, append-only, dated. | Spec Decisions one-liner links down (`expands:`); the ADR points up (`serves:`). |
-| **Glossary** | `glossary` | A cross-cutting term no single spec owns, one note per term. | Spec Key concepts, PRD, and Story cite the note as `[[term-slug]]`; none redefine it. |
 
 ### The shared status ladder
 
@@ -123,10 +122,11 @@ Docs live where the configured doc provider declares (`docs.path`). For the defa
     0002-other-feature.md
   stories/                       # when storyHome = docs
     ST-42-resume-draft.md
+  glossary/                      # core — the term spine, one note per term
+    tenant.md
+    applicant.md
   adrs/                          # when docs.types includes "adr"
     0007-co-locate-wire-and-channel.md
-  glossary/                      # when docs.types includes "glossary"
-    tenant.md
 ```
 
 A remote provider (Notion, Linear, …) holds the same artifacts as native pages; the layout above is the local form. Skills resolve the path through `wiki-librarian` and never assume `.wystack/docs` directly. (With `storyHome = tasks`, stories live in the work-item store instead, not here.)
@@ -176,36 +176,37 @@ Run pre-release, pre-demo, during QA passes. Not every PR.
 
 ## Terms and ubiquitous language
 
-Domain terms — the project's ubiquitous language — are defined **where they're used**, in the doc that owns them:
+Domain terms — the project's ubiquitous language — live in **one place**: the glossary. Each term is an atomic note (`glossary/<term>.md`); every other doc *cites* it, never redefines it. The glossary is the spine the rest of the documentation hangs off.
 
-| Term kind | Defined in | Example |
-|---|---|---|
-| **Product term** — a concept a stakeholder reasons about | PRD, inline next to its first use | "**Applicant** — a person submitting an application to a Listing." |
-| **Technical / shared term** — structure, or a domain term that also shapes architecture | Spec, in the **Key concepts** section | "**Pipe** — the WebSocket message frame for one connection." · "**Applicant**" when it's also an aggregate root |
-| **Cross-cutting term** — a shared-kernel concept no single spec owns _(only when `glossary` is enabled)_ | Glossary note, `glossary/<term>.md` | "**Tenant**" when it spans billing, auth, and provisioning specs equally |
+**One owner per term, one home for all terms.** A term lives in exactly one note, which defines the canonical name, a one-sentence domain-precise definition, aliases to avoid, and relationships when useful — between dictionary ("a person who applies") and spec detail (hashed-SSN columns, soft-delete). Every doc that uses the term cites the note (`[[term-slug]]` + link):
 
-**One owner per term.** A term lives in exactly one place. The product-vs-technical split is a heuristic, not a partition — many domain entities (Applicant, Order) appear in *both* product stories and architecture. The tie-breaker ladder: **a term owned by one spec lives in that spec's Key concepts** (and the PRD cites it in context — a one-clause use + link — never re-defining it); **a product-only term lives inline in the PRD**; **a term shared across specs with no single owner lives in a glossary note** when `glossary` is enabled, and every spec that uses it cites the note (`[[term-slug]]` + link), never redefines it. A term defines the canonical name, a one-sentence domain-precise definition, aliases to avoid, and relationships when useful — between dictionary ("a person who applies") and spec detail (hashed-SSN columns, soft-delete).
+| Doc | How it uses a term |
+|---|---|
+| **Glossary note** | *Defines* it — the single canonical home. |
+| **Spec** | Its **Key concepts** section is an *index*: the terms this spec leans on, each cited `[[term-slug]]`. No definitions. |
+| **PRD** | Cites `[[term-slug]]` where a product term shapes intent. No definitions. |
+| **Story** | Pure consumer — cites `[[term-slug]]` in user-language requirements. Owns none. |
 
-**A Story is a pure term-consumer** — it cites canonical names from all three homes (spec Key concepts, PRD inline, glossary note) and owns none. A requirement is user-language; it never defines a cross-cutting term (that's the glossary note's job). Without `glossary`, a cross-cutting term has no dedicated home and falls back to the most-architectural spec's Key concepts — the citing pattern is identical, only the target moves.
+**Why a single spine.** The distributed model (terms defined next to first use, in whichever doc) was tried and drifted: the same entity defined twice, two specs disagreeing on a boundary, code identifiers matching neither. One note per term, cited everywhere, makes drift impossible to introduce silently — a definition change is one edit, propagated by every citation. The cost is that every project carries a glossary; the spine earns it by being the thing that holds the vocabulary together.
 
-**Strategic / tactical DDD** — bounded contexts, aggregates, domain events, context maps, anti-corruption layers — lives in the Spec's optional Domain Model section. Projects that don't do DDD skip it with no loss; its terms come from the Spec's Key concepts.
+**Coverage.** A domain term used in a spec, PRD, story, or code identifier with **no glossary note** is a coverage gap — surfaced the same way an orphan requirement is. The vocabulary loop closes at the glossary: glossary note → cited by docs → used by code and tests → coverage check verifies every used term has a note.
 
-Flow: spec Key concepts + PRD product terms seed canonical names → PRD and spec use them → code and tests use them → coverage check verifies the loop closes.
+**Strategic / tactical DDD** — bounded contexts, aggregates, domain events, context maps, anti-corruption layers — lives in the Spec's optional Domain Model section. Projects that don't do DDD skip it with no loss; its terms are glossary notes like any other, cited from the Domain Model section.
 
 ## Cross-linking
 
 Docs reference related docs **as part of their content** — links are the connective tissue that lets each doc stay single-purpose. There is no fixed link matrix; link whatever the content calls for. In practice:
 
-- A **spec** links to the PRD it implements and the tickets that carry it.
-- A **PRD** links to the specs that design it, and cites spec-owned terms in context where it uses them.
+- A **spec** links to the PRD it implements and the tickets that carry it, and cites glossary terms (`[[term-slug]]`) in its Key concepts index.
+- A **PRD** links to the specs that design it, and cites glossary terms in context where it uses them.
 
 This is **mandatory and verified**: a doc skill creates the links and confirms backlinks resolve before reporting done. If a link can't be written automatically, report it as a setup gap with a concrete fix — never hand the edits over as a chore.
 
 ### Cite in context
 
-When a doc references another doc — a spec citing the PRD it implements, or a PRD using a term the spec defines — the reference is **a one-clause reason inline + a link to the full record**, placed where it shapes the surrounding text, not gathered into a standalone list. The inline clause carries the tie-breaker (the constraint or requirement that makes the text read sensibly here); the link is for the full detail. This holds for the authoritative records: the PRD (the intent), and a term's owning doc (the definition — spec Key concepts, or PRD for a product term).
+When a doc references another doc — a spec citing the PRD it implements, or any doc using a glossary term — the reference is **a one-clause reason inline + a link to the full record**, placed where it shapes the surrounding text, not gathered into a standalone list. The inline clause carries the tie-breaker (the constraint or requirement that makes the text read sensibly here); the link is for the full detail. This holds for the authoritative records: the PRD (the intent), and the glossary note (the term's definition).
 
-(A spec's own design decisions and term definitions are *not* cross-references — they live directly in the spec, in its Decisions and Key concepts sections. Cite-in-context governs links *out* to records another doc owns, not a doc's own content.)
+(A spec's own design decisions are *not* cross-references — they live directly in the spec's Decisions section. But its terms *are*: even a term this spec alone uses is defined in a glossary note and cited from Key concepts, never defined inline. Cite-in-context governs links *out* to records another doc owns — and every term is owned by the glossary.)
 
 The reader should follow the text *without clicking*, and click only for depth. Two symmetric failures to avoid:
 
@@ -219,16 +220,16 @@ The reader should follow the text *without clicking*, and click only for depth. 
 > "This serves the goal that memories persist across sessions so a user returning after a week sees their full history, which matters because the product's core promise is continuity and… (MEM-US-2)" — the spec just copied the PRD.
 >
 > **Good (tie-breaker clause + link):**
-> "…serves the offline-first goal ([MEM-US-2](#))." · "…a **Pipe** ([Key concepts](#)) per connection."
+> "…serves the offline-first goal ([MEM-US-2](#))." · "…a [[pipe]] per connection."
 
 ## Skills that participate
 
 - `setup-agent-kit/` — creates `.wystack/` workspace and storage setup for a repo
-- `prd/` — writes PRDs in the configured doc store; holds a story index (links, not bodies); defines product terms inline; cites spec-owned terms in context; references designing specs; records product-level decisions inline
-- `story/` — writes/updates Story artifacts in the configured canonical home; owns the requirement body, acceptance criteria, status, and traceability links; cites terms (`[[term-slug]]` when `glossary` is enabled), owns none
-- `spec/` — writes the living design doc in the doc store, including its Key concepts section (the ubiquitous language) and Decisions section; references the PRD and tickets; carries optional Domain Model section for DDD-committed projects; when `adr` is enabled, offers an ADR for a contested decision and links it `expands:`; when `glossary` is enabled, cites cross-cutting terms as `[[term-slug]]`
+- `prd/` — writes PRDs in the configured doc store; holds a story index (links, not bodies); cites glossary terms (`[[term-slug]]`), never defines; references designing specs; records product-level decisions inline
+- `story/` — writes/updates Story artifacts in the configured canonical home; owns the requirement body, acceptance criteria, status, and traceability links; cites glossary terms (`[[term-slug]]`), owns none
+- `spec/` — writes the living design doc in the doc store; its Key concepts section is a glossary index (terms cited `[[term-slug]]`, not defined); Decisions section; references the PRD and tickets; carries optional Domain Model section for DDD-committed projects; when `adr` is enabled, offers an ADR for a contested decision and links it `expands:`
+- `glossary/` — writes one atomic term-note per domain term (`glossary/<term>.md`); the single canonical home for the project's ubiquitous language, cited everywhere as `[[term-slug]]`
 - `adr/` _(when `adr` enabled)_ — writes append-only decision records in the doc store, each `serves:` the spec it expands; owns ADR-to-ADR supersession at decision granularity
-- `glossary/` _(when `glossary` enabled)_ — writes one atomic term-note per cross-cutting term (`glossary/<term>.md`); the canonical home for terms no single spec owns, cited everywhere as `[[term-slug]]`
 - `breakdown/` — slices tickets off stories; tickets reference the story's ACs and add delivery checks; reads linked ADRs for decision context when `adr` is enabled
 - `qa` agent — runs coverage verification on demand, reading requirement IDs from the canonical story home
 - `wiki-librarian` agent — document-store CRUD; plugin skills delegate here
