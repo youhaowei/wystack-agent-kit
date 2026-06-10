@@ -4,16 +4,34 @@
   "releases": [
     {
       "version": "0.12.0",
-      "summary": "Doc types become a two-tier registry: core PRD/Spec/Story always on, optional ADR/Glossary opt-in via docs.types.",
+      "summary": "Glossary becomes the core term spine (single canonical home for every domain term); ADR is the one optional doc type via docs.types.",
       "steps": [
         {
           "id": "0.12.0-docs-types-registry",
           "version": "0.12.0",
-          "description": "Introduces docs.types — an optional array enabling ADR and/or Glossary doc types beyond the always-on core. Purely additive and opt-in: a project that doesn't set docs.types keeps core-only behavior with no loss, so there is nothing to migrate. This step records that the registry capability is available; it does not enable any type or write any doc. To adopt a type, set docs.types (e.g. [\"adr\",\"glossary\"]) in storage.json — re-run setup-agent-kit's optional-doc-types question, or edit the file directly — and the kit creates its local subdir on first use.",
+          "description": "Introduces docs.types — an optional array enabling the ADR doc type beyond the always-on core (PRD/Spec/Story/Glossary). Additive and opt-in for ADR: a project that doesn't set docs.types keeps core behavior with no loss. Records that the registry capability is available; enables nothing. To adopt ADR, set docs.types to [\"adr\"] in storage.json (re-run setup-agent-kit's optional-doc-types question, or edit directly) and the kit creates the adrs/ subdir on first use.",
           "type": "structural",
           "target": "config",
           "applyMode": "auto",
           "skipIfPresent": "always idempotent — records availability only, enables nothing"
+        },
+        {
+          "id": "0.12.0-glossary-core-subdir",
+          "version": "0.12.0",
+          "description": "Glossary is now a core doc type — the single canonical home for every domain term. For filesystem doc providers, ensure the glossary/ subdir exists under docs.path. No-op for remote providers (the type is native) and for workspaces that already have a glossary dir.",
+          "type": "structural",
+          "target": "doc-store",
+          "applyMode": "auto",
+          "skipIfPresent": "glossary subdir (or remote glossary type) already present under docs.path"
+        },
+        {
+          "id": "0.12.0-extract-terms-to-glossary",
+          "version": "0.12.0",
+          "description": "Migrate the distributed terms model to the glossary spine. For each domain term currently defined inline — in a Spec's Key concepts section or a PRD's inline product-term definitions — create a glossary note (glossary/<slug>.md) holding the canonical definition, then replace the inline definition with a [[term-slug]] citation. Spec Key concepts becomes an index of citations; the PRD cites. One owner per term: if the same term is defined in two places, reconcile to a single note and cite from both. This rewrites live doc-store content, so it is guided — per-term, human-in-the-loop, surfacing each proposed note and the citations that will replace the inline text before writing. Skip generic programming terms (they were never glossary material).",
+          "type": "data",
+          "target": "doc-store",
+          "applyMode": "guided",
+          "skipIfPresent": "no Spec Key concepts or PRD inline term definitions remain (all terms already live as glossary notes)"
         }
       ]
     },
