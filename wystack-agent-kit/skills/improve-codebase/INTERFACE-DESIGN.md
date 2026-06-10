@@ -27,7 +27,7 @@ Prompt each sub-agent with a separate technical brief — file paths, coupling d
 - Agent 3: _"Optimise for the most common caller — make the default case trivial."_
 - Agent 4 (if cross-seam): _"Design around ports & adapters for cross-seam dependencies."_
 
-Include both [LANGUAGE.md](LANGUAGE.md) vocabulary and the project's domain terms (the spec's Key concepts, from `wystack-agent-kit:spec`) in the brief so each sub-agent names things consistently.
+Include both [LANGUAGE.md](LANGUAGE.md) vocabulary and the project's domain terms (the glossary, from `wystack-agent-kit:glossary`) in the brief so each sub-agent names things consistently.
 
 Each sub-agent outputs:
 

@@ -196,7 +196,7 @@ These shape perspective during ambition review. Don't list them at the user — 
 
 ## §3. Domain-Driven Lens (and the domain layer)
 
-**When**: codebase has `CONTEXT.md`, specs (with their Key concepts and Decisions sections), `DESIGN.md`, `PRODUCT.md`, or any artifact that captures domain language and prior decisions.
+**When**: codebase has a glossary, `CONTEXT.md`, specs (with their Key concepts index and Decisions sections), `DESIGN.md`, `PRODUCT.md`, or any artifact that captures domain language and prior decisions.
 
 **Goal**: don't drift from the existing model. Sharpen language, surface contradictions with code, update domain docs inline as decisions crystallize.
 
@@ -206,17 +206,17 @@ These shape perspective during ambition review. Don't list them at the user — 
 
 Domain artifacts live in the configured doc store (resolve via `wystack-agent-kit:workspace`; default local home `.wystack/docs`), not a fixed repo folder:
 
-- **Ubiquitous language** — technical and shared domain terms live in the relevant spec's Key concepts section (`wystack-agent-kit:spec`); pure product terms are defined inline in the PRD. Some repos also keep a root `CONTEXT.md` / `CONTEXT-MAP.md` for quick domain orientation.
+- **Ubiquitous language** — every domain term lives in a glossary note (`wystack-agent-kit:glossary`), cited from specs (their Key concepts index), PRD, and stories. Some repos also keep a root `CONTEXT.md` / `CONTEXT-MAP.md` for quick domain orientation.
 - **Prior decisions** — recorded in the Decisions section of the relevant spec (`wystack-agent-kit:spec`), or in the PRD for product-level decisions. Read them to avoid re-litigating settled trade-offs.
 
-Create lazily — only when you have something to write. No term defined yet? Add it when the first one resolves — to the spec's Key concepts, or the PRD if it's a pure product term. A decision worth keeping lands in the spec's (or PRD's) Decisions section (see "Record decisions sparingly" below).
+Create lazily — only when you have something to write. No term defined yet? Add it when the first one resolves — as a glossary note via `wystack-agent-kit:glossary`. A decision worth keeping lands in the spec's (or PRD's) Decisions section (see "Record decisions sparingly" below).
 
 ### During the session
 
 **Challenge against the defined terms**
 
 When the user uses a term that conflicts with existing language, call it out immediately:
-> "Your spec's Key concepts define 'cancellation' as X, but you seem to mean Y — which is it?"
+> "The glossary defines 'cancellation' as X, but you seem to mean Y — which is it?"
 
 **Sharpen fuzzy language**
 
@@ -234,7 +234,7 @@ When the user states how something works, check whether the code agrees. If you 
 
 **Update terms inline**
 
-When a term resolves, capture it *right there* — in the spec's Key concepts (technical/shared) or the PRD (pure product), and `CONTEXT.md` if the repo keeps one. Don't batch. Only include terms meaningful to domain experts — don't couple to implementation details.
+When a term resolves, capture it *right there* — as a glossary note via `wystack-agent-kit:glossary`, and `CONTEXT.md` if the repo keeps one. Don't batch. Only include terms meaningful to domain experts — don't couple to implementation details.
 
 **Record decisions sparingly**
 
