@@ -1,5 +1,7 @@
 dist/
 __pycache__/
 .DS_Store
+# WyStack Agent Kit workspace (.wystack.json pointer is tracked; the rest is local state)
 .wystack/
+.wystack.*-bak/
 .claude/
