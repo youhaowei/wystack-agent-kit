@@ -73,7 +73,7 @@
         "zoom-out skill (perspective-shift skill we don't have)",
         "grill-with-docs (interrogate library docs before integrating)",
         "diagnose (lightweight bug diagnosis, distinct from full triage)",
-        "CONTEXT.md per-skill convention (domain glossary co-located with skills — similar to our glossary skill)",
+        "CONTEXT.md per-skill convention worth watching",
         "structured `<what-to-do>` / `<supporting-info>` skill body pattern (validates our own format)"
       ],
       "sync_policy": "Concept-port only. Already-covered skills (improve-codebase, tdd, triage, prd) don't need re-porting unless his version has a meaningfully different angle. Net-new skills (zoom-out, grill-with-docs, diagnose) are the candidates."
