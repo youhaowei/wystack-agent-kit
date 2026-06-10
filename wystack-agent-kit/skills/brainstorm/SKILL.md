@@ -45,7 +45,7 @@ After each answer, re-score and aim the next question at the weakest cell across
 
 **Act 1 — Interview**
 
-0. **Explore first** — anything the code answers doesn't get asked. Check the workspace, `CONTEXT.md`, existing specs (their Key concepts and Decisions sections), tasks, competitor profiles.
+0. **Explore first** — anything the code answers doesn't get asked. Check the workspace, `CONTEXT.md`, the glossary (the project's terms), existing specs (their Key concepts index and Decisions sections), tasks, competitor profiles.
 1. **Detect lens** — pick the fitting framework(s) from [FRAMEWORKS.md](./FRAMEWORKS.md); don't announce it.
 2. **Four-axis loop** — one question per turn with a recommended answer; target the weakest axis; smart-skip what's clear. Domain layer runs here.
 3. **Readiness check** — holistic judgment the design is clear enough to propose.
