@@ -14,7 +14,7 @@ Functional in-product copy. Clarity > persuasion. Terse, action-oriented, system
 2. **Identify the moment.** Success, error, neutral, destructive, onboarding? Tone shifts per moment.
 3. **Apply the relevant pattern** from the references — don't invent from scratch. Microcopy has well-established patterns; deviation usually means reinventing badly.
 4. **Test against the three error questions** when writing errors: What happened? Why? How to fix it?
-5. **Check terminology consistency** with rest of product. Build/maintain a project terminology glossary; flag drift.
+5. **Check terminology consistency** with the rest of the product. Use the canonical terms where they already exist; flag drift.
 6. **Apply accessibility checks**: link text standalone-meaningful, alt text describes information, icon buttons labeled, status changes announced.
 7. **Account for translation expansion** if the product is or might be translated.
 
@@ -42,11 +42,9 @@ UX writing serves the user task. It is not the place for:
 
 If the surface is a marketing landing page or a hero block, hand off to `wystack-agent-kit:copywriting`. The line: in-app, in-flow, mid-task → ux-writing. On the marketing site, pre-conversion → copywriting.
 
-## Terminology glossary
+## Terminology consistency
 
 When writing for a project that already has terminology choices (Sign in vs Log in, Settings vs Preferences, Delete vs Remove vs Trash), mirror what's there. If terminology is inconsistent across the product, flag it — variety is confusion, not richness.
-
-If the project has no glossary yet, propose one in DESIGN.md or alongside it.
 
 ## Voice anchor
 

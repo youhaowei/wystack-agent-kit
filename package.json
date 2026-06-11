@@ -1,6 +1,6 @@
 {
   "name": "@wystack/agent-kit",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "One portable agent-workflow kit — plan, build, review, verify, design, and ship — running identically on Claude Code, Codex, Cursor, and Pi.",
   "private": false,
   "license": "MIT",

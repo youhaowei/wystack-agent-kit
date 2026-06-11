@@ -32,7 +32,7 @@ Each kind of session residue belongs in a durable store. Propose the full set of
 |---|---|---|
 | In-flight task context | the task body, made context-complete | `wystack-agent-kit:task-manager` |
 | Loose ends | a new task each | `wystack-agent-kit:new-task` — one invocation per loose end |
-| Terms (ubiquitous language) | the spec's Key concepts (technical/shared), or the PRD inline (pure product) | `wystack-agent-kit:spec` / `wystack-agent-kit:prd` |
+| Terms (ubiquitous language) | a glossary note per term — the single canonical home; specs and PRD cite it | `wystack-agent-kit:glossary` |
 | Design decisions (real alternatives, worth keeping) | the spec's Decisions section, or the PRD for product-level | `wystack-agent-kit:spec` / `wystack-agent-kit:prd` |
 | Stale methodology / domain docs | the doc itself | `wystack-agent-kit:wiki-librarian` — or the doc's typed-doc skill (`prd`, `spec`) |
 | Priority shifts | named in the kickstart prompt | none — surfaced as a signal, never mutated here |

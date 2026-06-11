@@ -45,7 +45,7 @@ After each answer, re-score and aim the next question at the weakest cell across
 
 **Act 1 — Interview**
 
-0. **Explore first** — anything the code answers doesn't get asked. Check the workspace, `CONTEXT.md`, existing specs (their Key concepts and Decisions sections), tasks, competitor profiles.
+0. **Explore first** — anything the code answers doesn't get asked. Check the workspace, `CONTEXT.md`, the glossary (the project's terms), existing specs (their Key concepts index and Decisions sections), tasks, competitor profiles.
 1. **Detect lens** — pick the fitting framework(s) from [FRAMEWORKS.md](./FRAMEWORKS.md); don't announce it.
 2. **Four-axis loop** — one question per turn with a recommended answer; target the weakest axis; smart-skip what's clear. Domain layer runs here.
 3. **Readiness check** — holistic judgment the design is clear enough to propose.
@@ -62,14 +62,14 @@ Brainstorm's job ends when the user accepts the design. The accepted design is t
 
 - **Capture** — write and deliver the design as the artifact it earns.
 - **Verify** — `wystack-agent-kit:perspective` for an advisory decision/read of that artifact; skip if unavailable.
-- **Domain** — if terms resolved, capture them where they're owned: the spec's Key concepts (technical/shared) via `wystack-agent-kit:spec`, or inline in the PRD for pure product terms (and `CONTEXT.md` if the repo keeps one). If a decision resolved, it lands in the spec's Decisions section or, for a product-level decision, the PRD — recorded as _what / alternatives / why_ where it shapes the design.
+- **Domain** — if terms resolved, capture each as a glossary note via `wystack-agent-kit:glossary` — the single canonical home for every domain term (and `CONTEXT.md` if the repo keeps one for quick orientation). The spec's Key concepts and the PRD then *cite* the note, never redefine it. If a decision resolved, it lands in the spec's Decisions section or, for a product-level decision, the PRD — recorded as _what / alternatives / why_ where it shapes the design. When `adr` is enabled and that decision was genuinely *contested* (real alternatives, live trade-offs), its expanded home is an ADR via `wystack-agent-kit:spec`/`:adr`; the spec keeps the one-liner, the ADR holds the deliberation.
 - **Continue** — one next skill: `prd` / `spec` / `breakdown` / direct implementation.
 
 If the session ran long and the work continues in a fresh session, consider `wystack-agent-kit:handoff` to consolidate it into durable homes and emit a kickstart prompt.
 
 ## Domain layer
 
-Runs inside the four-axis loop when domain context is load-bearing — judgment, not a file-presence rule. If `CONTEXT.md` / existing specs exist, use them: challenge terms against the spec's Key concepts, sharpen fuzzy language to canonical names, cross-reference claims with code and prior design decisions, capture terms where they're owned (spec Key concepts, or the PRD) as they resolve ([FRAMEWORKS.md §3](./FRAMEWORKS.md)).
+Runs inside the four-axis loop when domain context is load-bearing — judgment, not a file-presence rule. If `CONTEXT.md` / existing specs / the glossary exist, use them: challenge terms against their glossary notes, sharpen fuzzy language to canonical names, cross-reference claims with code and prior design decisions, capture each resolved term as a glossary note ([FRAMEWORKS.md §3](./FRAMEWORKS.md)).
 
 ## Principles
 
