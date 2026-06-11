@@ -1,7 +1,7 @@
 {
   "name": "wystack-agent-kit",
   "description": "Portable agent workflows for planning, implementation, review, verification, frontend design, UX writing, copywriting, and discoverability.",
-  "version": "0.10.2",
+  "version": "0.12.0",
   "author": {
     "name": "Youhao Wei"
   }
