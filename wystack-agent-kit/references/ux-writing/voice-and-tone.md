@@ -34,7 +34,7 @@ A brand voice is not a vocabulary list — it's the *shape* of how the brand spe
 
 ## Calibrating per project
 
-`establish` should capture brand voice in DESIGN.md (or pull from PM's PRODUCT.md). Voice notes belong in *examples*, not adjective lists:
+`establish-design` should capture brand voice in DESIGN.md (or pull from PM's PRODUCT.md). Voice notes belong in *examples*, not adjective lists:
 
 ```markdown
 ## Voice

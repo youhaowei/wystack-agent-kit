@@ -26,7 +26,7 @@ Compact and comfortable density use the same components with different `--space-
 
 WCAG AA contrast minimum. Visible focus rings on all interactives. Reduced-motion respected. Screen-reader labels on icon buttons. Keyboard parity with mouse.
 
-These are validated in `polish` and `design-review`, not optional polish-passes.
+These are validated in `polish-design` and `design-review`, not optional polish-passes.
 
 ## 6. Performance is part of design
 
@@ -37,7 +37,7 @@ These are validated in `polish` and `design-review`, not optional polish-passes.
 
 ## 7. Brand vs product register, but with a default
 
-The register split (impeccable concept) applies. Default to **product** when ambiguous — most WyStack consumer surfaces are app UI, not marketing. `establish` confirms per-project.
+The register split (impeccable concept) applies. Default to **product** when ambiguous — most WyStack consumer surfaces are app UI, not marketing. `establish-design` confirms per-project.
 
 ## 8. Composition over inheritance for variants
 

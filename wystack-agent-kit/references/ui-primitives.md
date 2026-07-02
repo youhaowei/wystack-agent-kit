@@ -1,6 +1,6 @@
 # @wystack/ui Primitive Mapping
 
-What to compose from when building. Loaded by `frontend`, `polish`, `establish`.
+What to compose from when building. Loaded by `frontend-design`, `polish-design`, `establish-design`.
 
 > **Rule**: never raw `<button>` / `<input>` / `<dialog>` in feature components. Always compose from primitives. If a primitive is missing, fix upstream — don't fork inline.
 

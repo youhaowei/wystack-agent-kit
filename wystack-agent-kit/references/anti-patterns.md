@@ -4,7 +4,7 @@ Named patterns of generic AI-generated frontend work. Detect and avoid.
 
 > **The slop test**: If you showed this interface to someone and said "AI made this," would they believe you immediately? If yes, that's the problem. A distinctive interface should make someone ask "how was this made?" — not "which AI made this?"
 
-Loaded by `frontend`, `polish`, `design-review`. Adapted from impeccable v1.3.0 with our additions.
+Loaded by `frontend-design`, `polish-design`, `design-review`. Adapted from impeccable v1.3.0 with our additions.
 
 ---
 
@@ -85,7 +85,7 @@ Loaded by `frontend`, `polish`, `design-review`. Adapted from impeccable v1.3.0 
 
 ## Detection workflow
 
-When using `polish` or `design-review`:
+When using `polish-design` or `design-review`:
 
 1. Walk the interface section by section.
 2. Per section, scan against the categories above.

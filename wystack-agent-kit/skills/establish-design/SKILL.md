@@ -43,7 +43,7 @@ Per-project visual design system bootstrap. Outputs `DESIGN.md` at the project r
 
 ## Boundary: design ≠ product
 
-`establish` owns the **visual** system. It does not own:
+`establish-design` owns the **visual** system. It does not own:
 
 - **Audience** — who uses it, jobs-to-be-done — owned by `wystack-agent-kit:pm` via `wystack-agent-kit:prd`, captured in `PRODUCT.md` / PRD.
 - **Brand voice / personality** — copywriter and ux-writer reference this from PRODUCT.md or DESIGN.md's voice section (whichever the project uses).
