@@ -1,5 +1,5 @@
 ---
-name: polish
+name: polish-design
 description: Final quality pass — alignment, spacing, states, copy, responsiveness. Fixes the small things that separate good from great. Only for functionally complete work.
 ---
 # Polish
@@ -8,7 +8,7 @@ Systematic final pass. Don't polish incomplete work.
 
 ## Prerequisites
 
-Load `wystack-agent-kit:frontend` for the design principles, token rules, and anti-pattern catalog.
+Load `wystack-agent-kit:frontend-design` for the design principles, token rules, and anti-pattern catalog.
 
 ## Checklist
 

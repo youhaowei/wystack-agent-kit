@@ -1,5 +1,5 @@
 ---
-name: establish
+name: establish-design
 description: Bootstrap a project's visual design system. Produces DESIGN.md at project root with register (brand/product), visual direction, tokens (color OKLCH, type scale, spacing, radii, shadows), @wystack/ui primitive mapping, project-specific anti-patterns, and accessibility targets. Run once per new project, or to refresh when the design system needs to be re-established. Use when the user mentions "set up design system", "design context", "project design", "DESIGN.md", "establish design", "design tokens", "design bootstrap", "set up the design system for this project", or starts a new visual project that needs a system. Reads but does not own product context (audience, brand voice, anti-references) — that lives in PRODUCT.md / PRD owned by wystack-agent-kit:pm.
 ---
 # Establish

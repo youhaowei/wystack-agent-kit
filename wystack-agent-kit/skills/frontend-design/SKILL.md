@@ -1,6 +1,6 @@
 ---
-name: frontend
-description: Create production-grade frontend interfaces — pages, components, layouts, hero sections, dashboards, marketing surfaces, app UI. Applies project DESIGN.md (tokens, primitives, anti-references), brand-vs-product register, and the named anti-pattern catalog. Use before any UI work — building a new page, component, layout, or screen. Triggers on "build a page", "create a component", "design this UI", "build the frontend", "make a hero section", "design a dashboard", "build the landing page", "redesign this", "the homepage needs", or any request that produces visual frontend code. For polishing functionally complete work, see wystack-agent-kit:polish. For per-project design system bootstrap, see wystack-agent-kit:establish.
+name: frontend-design
+description: Create production-grade frontend interfaces — pages, components, layouts, hero sections, dashboards, marketing surfaces, app UI. Applies project DESIGN.md (tokens, primitives, anti-references), brand-vs-product register, and the named anti-pattern catalog. Use before any UI work — building a new page, component, layout, or screen. Triggers on "build a page", "create a component", "design this UI", "build the frontend", "make a hero section", "design a dashboard", "build the landing page", "redesign this", "the homepage needs", or any request that produces visual frontend code. For polishing functionally complete work, see wystack-agent-kit:polish-design. For per-project design system bootstrap, see wystack-agent-kit:establish-design.
 ---
 # Frontend
 
@@ -10,7 +10,7 @@ Primary skill for creating distinctive frontend interfaces that avoid generic AI
 
 <what-to-do>
 
-1. **Load project context.** Read `DESIGN.md` if present (tokens, register, primitives mapping, project-specific anti-refs). If missing, recommend running `wystack-agent-kit:establish` first — but proceed if the user wants greenfield exploration.
+1. **Load project context.** Read `DESIGN.md` if present (tokens, register, primitives mapping, project-specific anti-refs). If missing, recommend running `wystack-agent-kit:establish-design` first — but proceed if the user wants greenfield exploration.
 2. **Confirm register** for the surface — brand mode (marketing/landing/editorial) vs product mode (app/dashboard/admin). Different rules.
 3. **Commit to a bold aesthetic direction** before writing code. Indecision in the middle reads as templated.
 4. **Compose from `@wystack/ui` primitives.** No raw `<button>` / `<input>` / `<dialog>` in feature code. See [`references/ui-primitives.md`](../../references/ui-primitives.md).
@@ -27,7 +27,7 @@ Primary skill for creating distinctive frontend interfaces that avoid generic AI
 | **Brand** | Marketing pages, landing, portfolios, editorial | Bold visual statement, asymmetry, distinctive type, hero typography, scroll choreography |
 | **Product** | App UI, dashboards, admin tools, settings, forms | Density, scannability, predictable affordances, restraint, system fidelity |
 
-A landing page and a dashboard can't follow the same playbook. `wystack-agent-kit:establish` records register in `DESIGN.md`. Confirm if ambiguous.
+A landing page and a dashboard can't follow the same playbook. `wystack-agent-kit:establish-design` records register in `DESIGN.md`. Confirm if ambiguous.
 
 ## Bold aesthetic direction
 

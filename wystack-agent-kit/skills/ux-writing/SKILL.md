@@ -48,7 +48,7 @@ When writing for a project that already has terminology choices (Sign in vs Log 
 
 ## Voice anchor
 
-`wystack-agent-kit:establish` writes the brand voice to `DESIGN.md` when run for a project. Read it before writing — voice is project-defined, not generic.
+`wystack-agent-kit:establish-design` writes the brand voice to `DESIGN.md` when run for a project. Read it before writing — voice is project-defined, not generic.
 
 If `DESIGN.md` is missing or has no voice section, ask the user to define voice in 2 examples (one positive, one to avoid) before drafting.
 
