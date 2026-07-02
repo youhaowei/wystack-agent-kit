@@ -5,7 +5,7 @@ description: "Load repo-local WyStack Agent Kit workspace context, including .wy
 
 # Workspace Context
 
-Resolve and load the WyStack workspace first. This skill owns workspace resolution — other lifecycle skills load it rather than locating the workspace themselves.
+Resolve and load the WyStack workspace first. This skill owns the resolved-workspace *contract* — other lifecycle skills load it rather than re-deriving the project's conventions. Two skills self-resolve because they run before the workspace is loadable: `setup-agent-kit` (it creates the workspace) and `worktree` (its `.wystack` is gitignored). They execute the same canonical procedure — `docs/storage-contract.md` § Location and resolution — never a private variant.
 
 ## Load the constitution
 
@@ -13,9 +13,11 @@ Loading the workspace loads the charter. Read `docs/constitution.md` (plugin roo
 
 ## Resolve the workspace
 
-1. Run `git rev-parse --show-toplevel` to get the repo root. Read `.wystack.json` at that path (tracked — present in every worktree); resolve its `root` **relative to the repo root**, not relative to `cwd`. In a worktree, `cwd` is the worktree directory — resolving `.wystack` relative to `cwd` lands on an empty worktree path, which is the most common cause of agents creating a fresh workspace instead of finding the existing one.
-2. If `.wystack.json` is absent, fall back to `git rev-parse --git-common-dir` → the main worktree, and look for `.wystack/` there.
+1. Run `git rev-parse --show-toplevel` for the repo root; read `.wystack.json` there (tracked — present in every worktree); resolve its `root` **relative to the repo root** (or expand `~`), never relative to `cwd`.
+2. If `.wystack.json` is absent, fall back to `git rev-parse --path-format=absolute --git-common-dir` → the main worktree, and look for `.wystack/` there.
 3. If neither resolves, tell the caller to run `wystack-agent-kit:setup-agent-kit`.
+
+Resolving relative to `cwd` is the top cause of agents forking a fresh workspace instead of finding the existing one; `docs/storage-contract.md` § Location and resolution carries the full rationale and the worktree pitfall.
 
 All workspace paths below (`storage.json`, `tasks/`, etc.) are relative to the resolved `root` — never assume `./.wystack`.
 

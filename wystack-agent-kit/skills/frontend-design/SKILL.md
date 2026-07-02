@@ -35,40 +35,19 @@ Pick an extreme — *brutally minimal*, *maximalist chaos*, *retro-futuristic*, 
 
 ## References
 
-- [`references/anti-patterns.md`](../../references/anti-patterns.md) — named slop catalog
+Shared design context (plugin-root, also used by `polish-design`):
+- [`references/anti-patterns.md`](../../references/anti-patterns.md) — named AI-slop catalog; the DON'Ts to detect and avoid
 - [`references/ui-primitives.md`](../../references/ui-primitives.md) — `@wystack/ui` mapping
 - [`references/philosophies/`](../../references/philosophies/) — impeccable, anthropic-frontend, wystack tenets
 - [`references/ux-writing/`](../../references/ux-writing/) — in-product copy, errors, empty states, accessibility copy
 
-## DOs / DON'Ts cheat sheet
-
-### Typography
-- **DO**: Modular type scale with fluid sizing (`clamp`). Vary weights and sizes for hierarchy.
-- **DON'T**: Inter/Roboto/Arial/system defaults. Monospace as "developer" theater. Large rounded-corner icons above every heading.
-
-### Color
-- **DO**: OKLCH for perceptually uniform palettes. Tint neutrals toward brand hue. Dominant + sharp accents.
-- **DON'T**: Cyan-on-dark. Purple-to-blue gradients. Gradient text. Pure black/white. Gray text on colored backgrounds. Default to dark + glow.
-
-### Layout
-- **DO**: Visual rhythm through varied spacing. Asymmetry. Break the grid intentionally. Fluid spacing with `clamp()`.
-- **DON'T**: Cards around everything. Nested cards. Identical card grids. Hero metric template. Center everything. Same spacing everywhere.
-
-### Visual details
-- **DO**: Intentional decorative elements that reinforce brand.
-- **DON'T**: Glassmorphism everywhere. Thick colored border on one side. Decorative sparklines. Generic drop shadows. Modals when not needed.
-
-### Motion
-- **DO**: Exponential easing (ease-out-quart/quint/expo). Staggered page-load reveals. `grid-template-rows` for height animations.
-- **DON'T**: Bounce/elastic. Animate layout properties. Animation for its own sake.
-
-### Interaction
-- **DO**: Progressive disclosure. Empty states that teach. Every interactive responsive.
-- **DON'T**: Redundant info. Every button primary. Missing hover/focus/active/disabled states.
-
-### Responsive
-- **DO**: Container queries for components. Adapt for different contexts.
-- **DON'T**: Hide critical functionality on mobile. Desktop-first design.
+Craft detail (reach for the dimension you're composing):
+- [`references/color.md`](references/color.md) — OKLCH palettes, tinted neutrals, 60-30-10, WCAG contrast, dark mode
+- [`references/typography.md`](references/typography.md) — type scale, weights, fluid sizing
+- [`references/spatial.md`](references/spatial.md) — spacing system, grids, visual hierarchy, container queries
+- [`references/motion.md`](references/motion.md) — duration, exponential easing, staggering, reduced-motion
+- [`references/interaction.md`](references/interaction.md) — states, progressive disclosure, affordances
+- [`references/responsive.md`](references/responsive.md) — container queries, context adaptation
 
 ## The AI Slop Test
 
@@ -76,7 +55,7 @@ Pick an extreme — *brutally minimal*, *maximalist chaos*, *retro-futuristic*, 
 
 A distinctive interface should make someone ask "how was this made?" — not "which AI made this?"
 
-Review the DON'Ts above. They are the fingerprints of AI-generated work from 2024–2025.
+Review the anti-pattern catalog ([`references/anti-patterns.md`](../../references/anti-patterns.md)) — those DON'Ts are the fingerprints of AI-generated work from 2024–2025.
 
 ## Implementation
 

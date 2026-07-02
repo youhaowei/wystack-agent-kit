@@ -28,7 +28,7 @@ defines its own; no private workspace dependency.
 
 **Workspace detection — always resolve via the repo root, never via `cwd`.**
 
-Run `git rev-parse --show-toplevel` to get the repo root. Read `.wystack.json` there. If found, resolve its `root` **relative to the repo root** (for relative paths like `.wystack`) or expand `~` for home-relative paths like `~/.wystack/<project>`. Never resolve `root` relative to `cwd` — in a worktree, `cwd` is the worktree directory and a relative `.wystack` would land on an empty path, causing setup to create a fresh workspace instead of finding the existing one.
+Run `git rev-parse --show-toplevel` for the repo root; read `.wystack.json` there and resolve its `root` **relative to the repo root** (or expand `~`), never relative to `cwd`. This is the canonical resolution procedure — `docs/storage-contract.md` § Location and resolution — including the worktree/`cwd` pitfall and the `--git-common-dir` fallback.
 
 After resolving the workspace root, check whether `storage.json` exists there before treating this as a fresh setup.
 

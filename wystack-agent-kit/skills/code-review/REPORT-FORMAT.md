@@ -59,13 +59,7 @@ Single message — don't drip-feed findings.
 
 ### Clarity contract
 
-The final report is a decision artifact, not a work log.
-
-- Lead with the recommendation and any decision needed from the user.
-- Prefer state over chronology: say what is true now, not the order you discovered it.
-- Group by ownership/boundary when multiple repos, submodules, packages, or worktrees are involved.
-- Keep process evidence in `Verification Evidence`; do not narrate every command inline.
-- If the next action is obvious, recommend it directly. If user approval is required, ask one concrete question.
+The final report is a decision artifact, not a work log. Output shape follows `docs/communication-contract.md` — load it if not already in context; no skill restates it. The template below operationalizes it: recommendation first, state over chronology, grouped by ownership boundary, process evidence confined to `Verification Evidence`.
 
 ```
 ## Review Summary

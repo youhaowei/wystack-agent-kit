@@ -38,7 +38,7 @@ The workspace location is project-configured, not fixed. One tracked file at the
 | Per-project (legacy)  | `.wystack`             | Gitignored workspace in the repo — requires repo-root resolution |
 | Custom                | any path               | Escape hatch                                    |
 
-**Resolving the workspace** — a skill, from any directory including a worktree:
+**Resolving the workspace** — the canonical procedure every resolver skill (`workspace`, `worktree`, `setup-agent-kit`) executes, from any directory including a worktree:
 
 1. **Primary** — run `git rev-parse --show-toplevel` to get the repo root. Read `.wystack.json` there. Resolve `root` **relative to the repo root** for relative paths, or expand `~` for home-relative paths. Never resolve `root` relative to `cwd` — in a worktree, `cwd` is the worktree directory and a relative `.wystack` would resolve to an empty path.
 2. **Fallback** — if `.wystack.json` is absent, resolve the main worktree with `git rev-parse --path-format=absolute --git-common-dir` and look for `.wystack/` beside it.

@@ -4,13 +4,7 @@ The merged-three-lens report this skill produces. Single message — don't drip-
 
 ## Clarity contract
 
-The report is a decision artifact, not a work log.
-
-- Lead with the recommendation and the user's next decision.
-- Use "current state" language instead of chronological narration.
-- Group multi-repo/submodule work by boundary, with each boundary showing status, evidence, and next action.
-- Put command/test output only in `Verification Evidence`.
-- End with one recommended action, not a loose list of possibilities unless the user explicitly asked for options.
+The report is a decision artifact, not a work log. Output shape follows `docs/communication-contract.md` — load it if not already in context; no skill restates it. The template below operationalizes it: recommendation first, current-state language, boundary-grouped with per-boundary status/evidence/next-action, command output confined to `Verification Evidence`.
 
 ```
 ## Full Review — TASK-{id}: {title}
