@@ -1,6 +1,6 @@
 # Comparison & Alternative Pages
 
-Four formats, each matching a different search intent. Use after profiling is complete — work from the competitor profiles produced by `wystack-agent-kit:competitor-analysis`; these pages need facts to be honest.
+Four formats, each matching a different search intent. These pages need facts to be honest — work from real, verifiable competitor positioning (pricing, features, claims you can cite).
 
 ## Principles
 

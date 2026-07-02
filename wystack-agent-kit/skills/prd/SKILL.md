@@ -32,7 +32,7 @@ Test: if removing a detail changes the *user experience*, it's a PRD. If it only
 
 ## Workflow
 
-1. **Research** — explore the codebase and the configured doc store for related specs, and any competitor profiles from `wystack-agent-kit:competitor-analysis` — they sharpen goals and non-goals.
+1. **Research** — explore the codebase and the configured doc store for related specs, and any competitor positioning already researched — it sharpens goals and non-goals.
 2. **Interview** — if a `brainstorm` design is already in context, build the PRD from it. Otherwise invoke `Skill("wystack-agent-kit:brainstorm", "--grill")` and let it run in full — no ad-hoc inline questions.
 3. **Terms** — use canonical term names, cited from the glossary. Every domain term — product or technical — is defined once in its glossary note; the PRD cites it `[[term-slug]]` in context (a one-clause use + link), never re-defines it. A term the PRD introduces that has no note yet gets one via `wystack-agent-kit:glossary` first, then is cited. See `docs/doc-model.md` § Terms.
 4. **Write** — PRD intent, goals/non-goals, users, dependencies, and the story index. For each story: one-sentence goal and a link placeholder. Author story bodies (requirement sentence, details, scenarios, edge cases, ACs) by invoking `wystack-agent-kit:story` — the story skill owns the canonical artifact; the PRD holds the index of links. Complete coverage means every use case has a story and a corresponding index entry.

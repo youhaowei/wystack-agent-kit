@@ -131,7 +131,7 @@ Per-page-type structural guidance. Same six-principle baseline; different emphas
 
 **Strategy**: Honest. Acknowledge competitor strengths. Be explicit about who each is best for.
 
-Four formats by search intent (alternative · alternatives · you-vs-competitor · competitor-vs-competitor), with full structure and SEO guidance: [COMPARISON-PAGES.md](COMPARISON-PAGES.md). These pages need facts — work from competitor profiles produced by `wystack-agent-kit:competitor-analysis`, not guesses.
+Four formats by search intent (alternative · alternatives · you-vs-competitor · competitor-vs-competitor), with full structure and SEO guidance: [COMPARISON-PAGES.md](COMPARISON-PAGES.md). These pages need facts — work from real competitor positioning (pricing, features, claims you can cite), not guesses.
 
 ---
 
