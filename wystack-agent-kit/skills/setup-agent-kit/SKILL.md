@@ -15,7 +15,7 @@ defines its own; no private workspace dependency.
 .wystack.json                  tracked, repo root — pointer: { "root": "~/.wystack/<project>" }
 ~/.wystack/<project>/          global workspace, outside every worktree
   workspace.md                 project identity, conventions, worktree setup
-  storage.json                 providers, extension bindings, status vocabulary, workflow conventions, quality gates, specialist roster
+  storage.json                 providers, extension bindings, status vocabulary, workflow conventions, quality gates
   verify.json                  optional — runtime config; created later by wystack-agent-kit:verify
   tasks/  docs/                filesystem providers only — may instead be Notion, kb, etc.
 ```
@@ -34,7 +34,7 @@ After resolving the workspace root, check whether `storage.json` exists there be
 
 Then explore the repo: `git remote -v`; root `AGENTS.md` / `CLAUDE.md` / `README.md` / `CONTEXT.md`; `docs/`, `.github/ISSUE_TEMPLATE/`; signs of a task system (GitHub/GitLab Issues, Linear, Jira, Notion, local markdown).
 
-If `.wystack.json` and `storage.json` already exist, this is an **update run**, not a fresh setup. Read both, summarize what's currently configured (location, task/doc providers, task + doc status vocabularies, enabled optional doc types, worktree preference, VCS host/CLI, requirement-ID format, preflight, extensions, specialists), and report it back. Then ask whether the user wants to:
+If `.wystack.json` and `storage.json` already exist, this is an **update run**, not a fresh setup. Read both, summarize what's currently configured (location, task/doc providers, task + doc status vocabularies, enabled optional doc types, worktree preference, VCS host/CLI, requirement-ID format, preflight, extensions), and report it back. Then ask whether the user wants to:
 
 - **Add missing keys** (recommended when the contract has gained fields since the last setup — e.g., a workspace from before `vcs` was a key). Skip every question whose answer is already present; only ask the ones whose key is absent. Preserve every other value verbatim.
 - **Revise specific keys** — name which ones; ask only those. Everything else is left untouched.
@@ -60,15 +60,13 @@ One question at a time, each led by a recommendation. On an update run, skip eve
 - **VCS host and CLI** — which platform the remote lives on and which CLI drives PRs. Infer the host from `git remote -v`; offer the matching CLI as the recommendation. Defaults: GitHub remote → `host: github`, `cli: gh`; GitLab → `gitlab`, `glab`; Bitbucket or unknown host → `bitbucket`/`none`, `cli: manual` (lifecycle skills print the resolved command and ask the user to run it). Graphite is an opt-in for stacked-PR users on GitHub: `cli: gt`, `stacked: true`; selecting it should drop a stub `adapters/graphite.md` describing the stacked-PR workflow. Skip the question entirely if `git remote -v` returns nothing — write `host: none`, `cli: manual`. The lookup table mapping `cli` to concrete commands lives in `docs/storage-contract.md`, not in skills.
 - **Domain docs** — single `CONTEXT.md` / multi-context `CONTEXT-MAP.md` / none yet (starter section in `workspace.md`).
 
-The **specialist reviewer roster** is not interviewed here — step 4 delegates it to `wystack-agent-kit:identify-specialists`, which analyzes the stack and proposes the roster.
-
 ### 3. Write
 
 On an update run, **merge** — read the current files, apply only the deltas, preserve every other value. Don't rewrite from scratch. Diff the resulting `storage.json` against the original and show the user the change set before saving.
 
 - `.wystack.json` at the repo root — `{ "root": <chosen>, "kitVersion": <installed plugin version> }`. For global mode write the expanded absolute path (e.g. `~/.wystack/wystack`). Stamp `kitVersion` from the installed `plugin.json` so a fresh workspace starts current — `upgrade` then has nothing historical to replay against an already-correct setup. On update, leave `root` untouched unless location changed; refresh `kitVersion` only when an upgrade run reconciles migrations.
 - `workspace.md` in the workspace root — sections: Project (name, root, repo), Task System and Document Store (→ `storage.json`), Conventions (requirement-ID format), Domain Docs, Worktree Setup (install/build/baseline commands), Workflow Notes. On update, append/replace only the sections whose underlying answer changed.
-- `storage.json` per `docs/storage-contract.md` — valid JSON, provider-neutral, no secrets. Records the provider mappings, extension registry/bindings, action policy, retention policy, the task and doc status vocabularies (`tasks.statuses`, `docs.statuses`), any enabled optional doc types (`docs.types`), project quality gates, the workflow conventions (`requirementIdFormat`, `worktree`), and the `vcs` block (`host`, `cli`, `stacked`, optional `commands`). `agents.specialists` is written by step 4. For filesystem providers, create the core local subdirs under `docs.path` (`prds/`, `specs/`, `stories/`, `glossary/`); add `adrs/` when `docs.types` enables ADR.
+- `storage.json` per `docs/storage-contract.md` — valid JSON, provider-neutral, no secrets. Records the provider mappings, extension registry/bindings, action policy, retention policy, the task and doc status vocabularies (`tasks.statuses`, `docs.statuses`), any enabled optional doc types (`docs.types`), project quality gates, the workflow conventions (`requirementIdFormat`, `worktree`), and the `vcs` block (`host`, `cli`, `stacked`, optional `commands`). For filesystem providers, create the core local subdirs under `docs.path` (`prds/`, `specs/`, `stories/`, `glossary/`); add `adrs/` when `docs.types` enables ADR.
 - Filesystem providers — create `tasks/.gitkeep`, `docs/.gitkeep` only if absent. Prose-only provider quirks → `adapters/<provider>.md`.
 
 Extension defaults:
@@ -83,11 +81,7 @@ Extension defaults:
 - Do not enable mutating external actions by default. Add allowed actions only
   after the user accepts the risk policy.
 
-### 4. Identify specialists
-
-Once `storage.json` exists, invoke `wystack-agent-kit:identify-specialists` — it analyzes the project's stack, proposes the specialist roster (an interactive checkpoint), writes `agents.specialists`, and generates each specialist's persona brief into the workspace `agents/`. A small project may correctly end with an empty roster. Re-runnable later when the stack shifts.
-
-### 5. Report
+### 4. Report
 
 Workspace location, task and doc providers, files created/updated, lifecycle skills now ready, any manual authentication required. On an update run, lead with the diff — which keys were added, which changed, which were preserved untouched.
 

@@ -31,7 +31,7 @@ Read-only: full-review *assesses and reports a verdict*. It does not fix code or
 - **No ticket** — warn; code review runs at full strength; QA and PM operate reduced (no ACs to check).
 - **`--code-only`** — skip QA and PM; a quick mid-implementation read.
 - **A lens agent fails** — continue with available results, note the gap.
-- **Workspace absent** — inner consults degrade per their own contracts (`code-review` runs with inline specialists, no records); the unified verdict is delivered without persistence; the step 6 footer carries the setup suggestion.
+- **Workspace absent** — inner consults degrade per their own contracts (`code-review` runs without records); the unified verdict is delivered without persistence; the step 6 footer carries the setup suggestion.
 - **No open PR** — include a PR Summary labeled "No open PR found", synthesized from branch/commits/diff.
 
 ## Harness portability

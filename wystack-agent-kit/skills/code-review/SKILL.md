@@ -1,11 +1,11 @@
 ---
 name: code-review
-description: "Run a multi-angle static code review with parallel lens reviewers, domain specialists, and configured work-item/doc context. Tunable effort (low/medium/high/ultra) trades recall vs precision; optional --comment posts findings inline on the PR; optional --fix applies MUSTs to the working tree. Use when the user asks to review code, review a branch, review changes, check regressions, or get feedback before merge. Also invoked by `wystack-agent-kit:full-review` and `wystack-agent-kit:finish-task`."
+description: "Run a multi-angle static code review with parallel lens reviewers, the universal principal and qa roles, and configured work-item/doc context. Tunable effort (low/medium/high/ultra) trades recall vs precision; optional --comment posts findings inline on the PR; optional --fix applies MUSTs to the working tree. Use when the user asks to review code, review a branch, review changes, check regressions, or get feedback before merge. Also invoked by `wystack-agent-kit:full-review` and `wystack-agent-kit:finish-task`."
 ---
 
 # Code Review
 
-Static review from multiple expert perspectives along two orthogonal axes — **lenses** (what question) and **specialists** (what code area). No code written or executed by default — findings only. Optional flags can post findings to the PR or apply MUSTs to the working tree.
+Static review from multiple expert perspectives: a panel of **lenses** (each a scoped *what-question* reviewer) plus the universal `wystack-agent-kit:principal` (architectural read) and `wystack-agent-kit:qa` (correctness) roles, with `perspective` and extensions as advisory reviewers — all grounded by the per-directory + root CLAUDE.md the skill collects. No code written or executed by default — findings only. Optional flags can post findings to the PR or apply MUSTs to the working tree.
 
 `$ARGUMENTS` — positional then flags. Positional: empty (current branch vs the base branch), a PR URL/number, or file paths. Flags:
 
@@ -17,17 +17,17 @@ Static review from multiple expert perspectives along two orthogonal axes — **
 Run the pipeline in order; each stage gates the next.
 
 0. **Eligibility.** Cheap precheck on the **standard** tier before any heavy work (judgment call — see [Model assignment](#model-assignment)). If the target is a PR/MR, bail when it is closed, merged, draft, an automated bot bump (Dependabot, Renovate, version-only), already reviewed by this skill on this `diff_sha` (check the configured record store when present; skip this sub-check when no workspace is loaded), or trivially small with no behavioral change (lockfile-only, copy-only, regenerated-snapshot-only). On bail, surface a one-line reason and stop. The user can override with an explicit re-run. No PR target → skip the gate; local branch reviews always proceed.
-1. **Scope.** Resolve the base branch — the PR's base, or the repo default (`git symbolic-ref refs/remotes/origin/HEAD`); never assume `main`. `git diff --name-only $(git merge-base HEAD <base>)..HEAD`, classify against the [roster](#specialist-roster) to pick specialists. Best-effort load `wystack-agent-kit:workspace` — its presence routes the [roster](#specialist-roster) (cached vs inline) and gates the [record](#record) write; the review itself never gates on it. Also enumerate **CLAUDE.md paths** — walk *every ancestor directory* of every touched file, deduplicated, up to and including the repo root (`light` tier, paths only — never contents). For `src/a/b/c.ts` that means checking `src/a/b/CLAUDE.md`, `src/a/CLAUDE.md`, `src/CLAUDE.md`, `CLAUDE.md`, including only the ones that exist. The list passes to reviewers as the local rule source.
+1. **Scope.** Resolve the base branch — the PR's base, or the repo default (`git symbolic-ref refs/remotes/origin/HEAD`); never assume `main`. `git diff --name-only $(git merge-base HEAD <base>)..HEAD` to enumerate the touched paths. Best-effort load `wystack-agent-kit:workspace` — its presence gates the [record](#record) write; the review itself never gates on it. Also enumerate **CLAUDE.md paths** — walk *every ancestor directory* of every touched file, deduplicated, up to and including the repo root (`light` tier, paths only — never contents). For `src/a/b/c.ts` that means checking `src/a/b/CLAUDE.md`, `src/a/CLAUDE.md`, `src/CLAUDE.md`, `CLAUDE.md`, including only the ones that exist. This list is the **primary domain-context mechanism** — it passes to reviewers as the local rule source.
 2. **PR snapshot.** If a PR/MR URL or number is given, or the branch has an open one, capture metadata via the workspace's `prView` capability — number, url, title, body, head/base refs, changed-files count, additions, deletions, author, review decision, merge-state status, status-check rollup. The capability resolves to the host's CLI (see `docs/storage-contract.md`). When `prView` is unavailable (`cli: manual`, no host CLI, network failure), synthesize the same shape from branch name, commits, diff stats. Feeds the report narrative, not severity.
 3. **Context.** Hard gate. Invoke the `wystack-agent-kit:engineering-context` skill (see [Context gathering](#context-gathering)). Skipping this is the #1 cause of false-positive reviews. Pass the returned block **verbatim** to every reviewer — not paraphrased.
 4. **Preflight.** Run the project's configured preflight checks from `storage.json` (`quality.preflight`) when a workspace is loaded; otherwise use the smallest obvious read-only baseline for the repo (for example typecheck/lint/test scripts already present). Any fail → stop; reviewing broken code produces findings about breakage, not design.
-5. **Parallel reviews.** Single message, all reviewers — both axes spawn together:
+5. **Parallel reviews.** Single message, all reviewers spawn together per the [review composition](#review-composition):
    - **Lens reviewers** — one per lens selected by [effort](#effort-dial) (or by `--lens` override). Each scoped to its single question per the [Lens roster](#lens-roster).
-   - **Domain specialists** — picked from the [specialist roster](#specialist-roster) by matched paths.
+   - **Universal roles** — `wystack-agent-kit:principal` (architectural read) and `wystack-agent-kit:qa` (correctness) as the [review composition](#review-composition) dictates by change type.
    - **Perspective** — invoke `wystack-agent-kit:perspective` with `review` intent when configured providers are available, unless effort is `low` (which skips it). Same-runtime reviewers can share blind spots.
    - **Extensions** — query enabled extensions that participate in `review` and support `observe.records` for the current diff; normalize per `docs/extension-contract.md`.
 
-   Each reviewer gets the PR snapshot, changed files, branch, base, the verbatim context block, its typed role (lens or domain), and the [reviewer brief](#reviewer-brief). At `ultra` effort, lens + specialist reviewers run **twice** with cross-comparison (LLM-sampling insurance, see [Effort dial](#effort-dial)). External review output (perspective, extensions) enters triage as claims, not facts. If providers/extensions are unavailable, note the gap and continue.
+   Each reviewer gets the PR snapshot, changed files, branch, base, the verbatim context block, its typed role (a lens name), and the [reviewer brief](#reviewer-brief). At `ultra` effort, lens reviewers run **twice** with cross-comparison (LLM-sampling insurance, see [Effort dial](#effort-dial)). External review output (perspective, extensions) enters triage as claims, not facts. If providers/extensions are unavailable, note the gap and continue.
 6. **Dedup + triage.** Orchestrator partitions findings by **Scope** first:
    - **In-diff findings** → re-classified into **MUST** / **SUGGEST** per [SEVERITY.md](SEVERITY.md), applying the effort's **confidence floor** (findings below the floor are dropped or demoted; see [Effort dial](#effort-dial)). These are the merge-gate findings. Each carries a do-now vs. defer recommendation.
    - **Out-of-diff findings** → separate **Out-of-diff** bucket in the report. Not merge-gating for this PR — the user did not modify those lines — but tracked so latent bugs the reviewer noticed in adjacent code aren't lost. Apply the **same effort confidence floor** as in-diff so `ultra` doesn't dump dozens of low-confidence observations into the bucket. The user can file follow-up tickets on explicit pick; the review controller never auto-files. Persist these alongside in-diff findings at step 8 with a `scope: "out-of-diff"` field so retro/audit can see what was deferred.
@@ -45,25 +45,22 @@ Run the pipeline in order; each stage gates the next.
 
 Reviewers hunt findings with maximum recall. **The review controller owns triage, severity translation, filing discipline, and round termination** — don't bake scope filters into reviewer prompts.
 
-## Specialist roster
+## Review composition
 
 Composition scales with change type:
 
-| Change type                             | Reviewers                                                                              |
-| --------------------------------------- | -------------------------------------------------------------------------------------- |
-| Features, refactors, architectural work | lens panel + `wystack-agent-kit:principal` + `wystack-agent-kit:qa` + domain specialists |
-| Bug fixes (scoped, observed bug)        | lens panel + `wystack-agent-kit:qa`                                                    |
-| Polish, docs, comments                  | lens panel alone                                                                       |
-| Security-sensitive                      | Full composition + `ultra` sampling (run reviews twice; LLM sampling insurance)        |
+| Change type                             | Reviewers                                                                 |
+| --------------------------------------- | ------------------------------------------------------------------------- |
+| Features, refactors, architectural work | lens panel + `wystack-agent-kit:principal` + `wystack-agent-kit:qa`        |
+| Bug fixes (scoped, observed bug)        | lens panel + `wystack-agent-kit:qa`                                        |
+| Polish, docs, comments                  | lens panel alone                                                          |
+| Security-sensitive                      | Full composition + `ultra` sampling (run reviews twice; LLM sampling insurance) |
 
 The **lens panel** is whichever lenses the [effort dial](#effort-dial) selects (or `--lens` overrides). It replaces what was historically a single generic `code-reviewer` subagent — lenses ask the same code-quality questions, but scoped and parallelized. Don't spawn a separate `code-reviewer` on top of the lens panel; that double-spawns the correctness/simplify questions and contradicts the role-scope clause in the [reviewer brief](#reviewer-brief).
 
-**Domain specialists** — pick by matching the diff's touched domains to whichever roster is available. Universal roles (`principal`, `qa`) are subagents; specialists are brief-driven, whether the brief is cached or generated.
+`wystack-agent-kit:principal` carries the architectural read and `wystack-agent-kit:qa` the correctness read; both run as subagents on the compositions above. Domain context they need comes from the CLAUDE.md paths collected at step 1 (per-directory + root) — the primary local-rule source — passed to every reviewer in the [reviewer brief](#reviewer-brief).
 
-- **Workspace present — cached path.** Read `agents.specialists` from `storage.json`. Each entry declares `name`, `domain`, and a `brief` path. Pick the entries whose `domain` matches the changed files; multiple join when the diff spans domains. A specialist runs as a general-purpose reviewer spawned with its cached `brief` as the role prompt. If the diff touches a domain _not_ covered by the cached roster, fall through to the inline path for that domain and note the gap in the report — recommend `wystack-agent-kit:identify-specialists` to make the addition durable.
-- **Workspace absent — inline path.** Apply `wystack-agent-kit:identify-specialists` step 1 (Analyze) to the _changed paths only_, not the whole tree — manifest files, top-level boundaries, signal files. For each detected domain, spawn an ephemeral specialist with a brief synthesized from `identify-specialists/ANALYSIS-HEURISTICS.md` and shaped to `identify-specialists/BRIEF-TEMPLATE.md`. No persistence — the brief lives only for this run. A workspace setup later codifies these picks via `wystack-agent-kit:identify-specialists`.
-
-With no domain matches detected either way, `principal` carries the domain perspective alone — an empty specialist panel is a valid outcome.
+### Advisory reviewers
 
 `wystack-agent-kit:perspective` runs as an advisory reviewer on every composition when configured providers are present. It can use internal agents, teammate briefs, external tools, or configured extensions; it does not replace the main reviewer roster. The review controller triages its claims alongside the rest.
 
@@ -75,7 +72,7 @@ agent or user decides whether to invoke it later.
 
 ## Lens roster
 
-Lenses are the *what-question* axis, orthogonal to specialists (the *what-area* axis). Each lens is a scoped reviewer — one question, high recall on that question, no cross-commentary. Run in parallel with specialists at step 5; the review controller triages all output together at step 6.
+Lenses are the *what-question* axis. Each lens is a scoped reviewer — one question, high recall on that question, no cross-commentary. Run in parallel with the universal roles at step 5; the review controller triages all output together at step 6.
 
 | Lens          | The question                                                                 | Auto-include trigger                                              |
 | ------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -87,7 +84,7 @@ Lenses are the *what-question* axis, orthogonal to specialists (the *what-area* 
 | api-contract  | Breaking changes, boundary leaks, undocumented surface changes               | Diff touches public exports, route handlers, schemas, types       |
 | docs          | Comments-as-code drift, stale docs, missing rationale on non-obvious calls   | Always at high+                                                   |
 
-**Selection** — `--lens=<list>` overrides auto-selection entirely. Otherwise the [effort dial](#effort-dial) sets the baseline; auto-include triggers add lenses on top. A specialist and a lens can coexist on the same diff (e.g. `security` lens + `auth` specialist) — they ask different questions; collapsing them loses recall.
+**Selection** — `--lens=<list>` overrides auto-selection entirely. Otherwise the [effort dial](#effort-dial) sets the baseline; auto-include triggers add lenses on top.
 
 Each lens runs as a general-purpose reviewer spawned with the lens name as its typed role; the [reviewer brief](#reviewer-brief) carries the scope clause.
 
@@ -95,18 +92,18 @@ Each lens runs as a general-purpose reviewer spawned with the lens name as its t
 
 `--effort` trades **recall vs precision**, **coverage vs cost**, and **single-pass vs sampling-insurance**. Default `medium`. Affects step 5 (composition) and step 6 (triage threshold) only — pipeline shape and severity model are unchanged.
 
-| Effort           | Lenses                                                       | Specialists                | Perspective | Confidence floor    | Sampling                                  | When                                                                |
-| ---------------- | ------------------------------------------------------------ | -------------------------- | ----------- | ------------------- | ----------------------------------------- | ------------------------------------------------------------------- |
-| `low`            | correctness, simplify                                        | none                       | off         | ≥ high              | single pass                               | Quick sanity check on a small or low-stakes diff                    |
-| `medium` (default) | correctness, simplify, testing + auto-include by diff signal | matched roster             | on if available | ≥ medium       | single pass                               | Standard pre-merge review                                           |
-| `high`           | all lenses with any signal + docs                            | matched roster (broader)   | on if available | ≥ low (broader recall, may include uncertain) | single pass                | Risky, security-sensitive, or large diffs                           |
-| `ultra`          | all lenses unconditionally                                   | matched roster (broader)   | on, all configured providers | ≥ low                  | reviewers run **twice**, cross-compared for stability | Pre-release, paid-tier exhaustive review, or LLM-sampling-sensitive verdicts |
+| Effort           | Lenses                                                       | Perspective | Confidence floor    | Sampling                                  | When                                                                |
+| ---------------- | ------------------------------------------------------------ | ----------- | ------------------- | ----------------------------------------- | ------------------------------------------------------------------- |
+| `low`            | correctness, simplify                                        | off         | ≥ high              | single pass                               | Quick sanity check on a small or low-stakes diff                    |
+| `medium` (default) | correctness, simplify, testing + auto-include by diff signal | on if available | ≥ medium       | single pass                               | Standard pre-merge review                                           |
+| `high`           | all lenses with any signal + docs                            | on if available | ≥ low (broader recall, may include uncertain) | single pass                | Risky, security-sensitive, or large diffs                           |
+| `ultra`          | all lenses unconditionally                                   | on, all configured providers | ≥ low                  | reviewers run **twice**, cross-compared for stability | Pre-release, paid-tier exhaustive review, or LLM-sampling-sensitive verdicts |
 
 **Confidence floor** is applied at step 6: a reviewer-reported `Confidence: low` finding is dropped at `low`/`medium`, surfaced as SUGGEST at `high`, and surfaced normally at `ultra`. The floor never overrides a `Severity: critical` correctness finding — a low-confidence bug claim still surfaces; it's just labeled "needs verification" in the report.
 
-**Sampling at `ultra`** — each lens and specialist runs twice in parallel; findings that appear in both passes are promoted in confidence, findings in only one pass are demoted one rung. This is the "LLM sampling insurance" from the [specialist roster](#specialist-roster) generalized: security-sensitive changes already trigger it implicitly at any effort level, but `ultra` makes it the rule.
+**Sampling at `ultra`** — each reviewer runs twice in parallel; findings that appear in both passes are promoted in confidence, findings in only one pass are demoted one rung. This is the "LLM sampling insurance" from the [review composition](#review-composition) generalized: security-sensitive changes already trigger it implicitly at any effort level, but `ultra` makes it the rule.
 
-**Reviewer tier per effort** — the effort dial also escalates reviewer tier where it pays off. `low` and `medium` run all reviewers (except `principal`) on `standard`. `high` escalates the `security` and `correctness` lenses to `deep` because false negatives there are most costly; everyone else stays `standard`. `ultra` escalates *all* reviewers to `deep`. `principal` is always `deep` whenever it runs — its job is the architectural read. See [Model assignment](#model-assignment) and [docs/model-tiers.md](../../docs/model-tiers.md).
+**Reviewer tier per effort** — the effort dial also escalates reviewer tier where it pays off. `low` and `medium` run all reviewers (lens panel + `qa`, except `principal`) on `standard`. `high` escalates the `security` and `correctness` lenses to `deep` because false negatives there are most costly; everyone else stays `standard`. `ultra` escalates *all* reviewers to `deep`. `principal` is always `deep` whenever it runs — its job is the architectural read. See [Model assignment](#model-assignment) and [docs/model-tiers.md](../../docs/model-tiers.md).
 
 **Cost note** — surface the effort level in the report header so the user can see what they paid for. If the user passes `--effort=ultra` on a one-file polish diff, propose `medium` first and wait for confirmation; effort should match the diff's stakes.
 
@@ -122,9 +119,9 @@ If engineering-context reports gaps (no PRD, unresolved open questions affecting
 
 ## Reviewer brief
 
-Each reviewer gets: changed files, branch, base; the PR snapshot; the step-3 context block verbatim; the output format from [REPORT-FORMAT.md](REPORT-FORMAT.md); its **typed role** (a lens name from the [Lens roster](#lens-roster) or a domain from the [Specialist roster](#specialist-roster)); and:
+Each reviewer gets: changed files, branch, base; the PR snapshot; the step-3 context block verbatim; the output format from [REPORT-FORMAT.md](REPORT-FORMAT.md); its **typed role** (a lens name from the [Lens roster](#lens-roster)); and:
 
-- **Role scope** — a lens reviewer only flags findings that fit its single question; a specialist only flags findings inside its declared domain. Cross-axis observations get a one-line note ("seen but out of scope, defer to <other role>") rather than a full finding, to avoid double-counting at triage.
+- **Role scope** — a lens reviewer only flags findings that fit its single question. Cross-scope observations get a one-line note ("seen but out of scope, defer to <other role>") rather than a full finding, to avoid double-counting at triage.
 - **Diff scope** — every finding records `Scope: in-diff | out-of-diff` based on whether the cited line was modified by the PR. **Out-of-diff findings are not dropped** — they go into a separate bucket (see step 6) so we can still capture latent bugs the reviewer noticed in adjacent code. Flag them, mark them, move on.
 - **CLAUDE.md grounding** — the review controller passes a list of CLAUDE.md file paths (root + per-directory for touched paths) collected at step 1. Read those files; cite the relevant clause in any finding that depends on them. A finding that contradicts CLAUDE.md is high-signal; a finding that *invokes* CLAUDE.md without quoting it is suspect.
 - **False-positive catalog** — do **not** flag any of the following:
@@ -179,14 +176,14 @@ The **full report** (per [REPORT-FORMAT.md](REPORT-FORMAT.md)) still goes to the
 Match the tier to the work, not to the step number. Tier vocabulary and per-harness mapping are owned by [docs/model-tiers.md](../../docs/model-tiers.md); skills name tiers, never provider models.
 
 - **`light`** — mechanical, no judgment: CLAUDE.md path enumeration (step 1), PR snapshot synthesis from branch/commits when `prView` is unavailable (step 2 fallback).
-- **`standard`** — default for almost everything else: eligibility precheck (step 0) and recheck (step 9 `--comment`), **lens reviewers**, **domain specialists**, **`qa`**, **`perspective`**. Sonnet-class models handle these well; reaching higher by default burns cost without lifting quality.
+- **`standard`** — default for almost everything else: eligibility precheck (step 0) and recheck (step 9 `--comment`), **lens reviewers**, **`qa`**, **`perspective`**. Sonnet-class models handle these well; reaching higher by default burns cost without lifting quality.
 - **`deep`** — reserved for architectural reasoning and the highest-effort runs: **`principal`** always, and at `--effort=high` the `security` and `correctness` lenses also escalate (where false negatives are most costly). At `--effort=ultra` all reviewers escalate to `deep` *and* run the double-sampling pass from the [Effort dial](#effort-dial).
 
 The rule: the lowest tier is for *no-judgment* work; `deep` is for work where reasoning is the bottleneck. Most review at `medium` effort is pattern-matching against established norms — `standard` is enough. See [docs/model-tiers.md](../../docs/model-tiers.md) for the sharp tests that decide tier picks.
 
 ## Harness portability
 
-Reviewers are shared role briefs, not custom Codex agent types — universal roles live in `agents/*.md`, specialists at their configured `agents.specialists` brief path. Claude can consume those files as native agent definitions. Codex uses its built-in transports (`explorer`, `worker`, `default`) with the role brief injected into the prompt; the reviewer name belongs in the prompt/report, not in a claimed custom transport. Don't claim plugin parity unless engineering skills are actually exposed; if `wystack-agent-kit:engineering-context` is unavailable, say so and fall back.
+Reviewers are shared role briefs, not custom Codex agent types — universal roles live in `agents/*.md`. Claude can consume those files as native agent definitions. Codex uses its built-in transports (`explorer`, `worker`, `default`) with the role brief injected into the prompt; the reviewer name belongs in the prompt/report, not in a claimed custom transport. Don't claim plugin parity unless engineering skills are actually exposed; if `wystack-agent-kit:engineering-context` is unavailable, say so and fall back.
 
 ## Record
 
@@ -223,11 +220,10 @@ then `.wystack/reviews/`, as evidence of a converged pass on this `diff_sha`
 - **Eligibility recheck before `--comment` flips to ineligible** → keep the report; skip the post; note the reason in the report footer.
 - **Out-of-diff bucket empty** → omit the section from the report; no need to print an empty heading.
 - **Reviewer cites a line as in-diff but it actually isn't** → review controller re-checks against the diff at step 6 and moves the finding to out-of-diff; reviewer self-classification is a hint, not authoritative.
-- **CLAUDE.md not found** → continue without it; lens reviewers and specialists fall back to spec/context block. Note absence in the report's PR Read section.
+- **CLAUDE.md not found** → continue without it; reviewers fall back to spec/context block. Note absence in the report's PR Read section.
 - **Reviewer fails** → continue, note the gap. At `ultra`, if one of the two sampling passes fails, treat the remaining pass as a `high` single-pass result and note the degraded confidence.
 - **Perspective unavailable** → continue with configured reviewers; note the missing independent perspective.
-- **Workspace absent** → review proceeds without persistence; specialists picked inline (see [Specialist roster](#specialist-roster)); record skipped with a single setup-suggestion line in the report footer.
-- **Specialist gap** (workspace present, diff touches an uncovered domain) → fall through to the inline path for that domain; the report recommends `wystack-agent-kit:identify-specialists` to make the addition durable.
+- **Workspace absent** → review proceeds without persistence; record skipped with a single setup-suggestion line in the report footer.
 - **`--lens` names an unknown lens** → ignore the unknown name with a one-line note, run the recognized lenses; never fail the review.
 - **`--fix` on a test edit that fails the strategic test gate** → skip that finding's edit, keep it in the report as a finding the user must decide on. Don't silently apply.
 - **`--fix` with no MUSTs** → no-op, report says "no MUSTs to apply" and proceeds as if the flag were absent.

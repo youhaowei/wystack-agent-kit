@@ -14,7 +14,7 @@ Portable agent-workflow plugin — requirements through shipped code, frontend d
     - `review-loop.md`, `testing-philosophy.md`, `communication-contract.md` — convergence, test strategy, output discipline (prose shape + format selection).
     - `run-record.md` — the conformance contract for durable operational evidence (calibration, verdicts, run summaries).
 - `references/` — design, copy, discoverability, UI primitive, and philosophy references loaded by the relevant skills.
-- `agents/` — universal role briefs every project shares: pm, principal, qa, devops, task-manager, wiki-librarian, designer, ux-writer, copywriter, marketing-specialist. Each agent is one `<name>.md`: body = portable principles (identity, values, disciplines), frontmatter = the adapter both the Claude and Codex harnesses read. Domain specialists are project-configured (`agents.specialists` in the workspace `storage.json`), not shipped here.
+- `agents/` — universal role briefs every project shares: pm, principal, qa, devops, task-manager, wiki-librarian, designer, ux-writer, copywriter, marketing-specialist. Each agent is one `<name>.md`: body = portable principles (identity, values, disciplines), frontmatter = the adapter both the Claude and Codex harnesses read.
 
 ## Framework and instance
 

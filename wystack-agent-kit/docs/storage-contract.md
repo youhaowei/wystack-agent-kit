@@ -185,15 +185,6 @@ act safely.
         "archiveRawAfterDays": 30,
         "expireDuplicatePolls": true
     },
-    "agents": {
-        "specialists": [
-            {
-                "name": "backend-specialist",
-                "domain": "server, data layer, APIs",
-                "brief": ".wystack/agents/backend-specialist.md"
-            }
-        ]
-    },
     "vcs": {
         "host": "github",
         "cli": "gh",
@@ -224,7 +215,6 @@ lifecycle skills read instead of hardcoding:
 | `bindings`                        | extension-aware skills                      | Project routing for authority and contribution: record store, relation store, work-item authority, PR authority, review sources, allowed actions.                                                                                                                                                                    |
 | `actionPolicy`                    | every skill that invokes `execute.action`   | Risk gates for read-only observation, local writes, worktree edits, external mutation, and destructive actions.                                                                                                                                                                                                      |
 | `retention`                       | record-producing skills and graph stores    | How long operational evidence stays full fidelity before coalescing, archiving, or expiring duplicate noise.                                                                                                                                                                                                         |
-| `agents.specialists`              | `code-review`, `full-review`                | The project's domain reviewer roster — see below.                                                                                                                                                                                                                                                                    |
 | `vcs`                             | `finish-task`, `code-review`, `engineering-context` | The repo's git host and CLI — picks which commands lifecycle skills run to open PRs, watch CI, read review state. See "VCS configuration" below.                                                                                                                                                                     |
 
 ### Extensions and bindings
@@ -341,15 +331,9 @@ or any case where the agent should never run the verb itself.
 
 The framework ships **universal roles** every project shares — `pm`,
 `principal`, `qa`, `devops`, `task-manager`, `wiki-librarian`. These are fixed
-plugin assets; they are not configured.
-
-**Specialists** are domain reviewers a project adds for its own stack — a
-backend reviewer, a UI reviewer, a data-layer reviewer. They are project
-instance, not framework: `agents.specialists` declares each one with a `name`,
-a one-line `domain`, and a `brief` path to its persona. Specialist briefs live
-in the workspace (`.wystack/agents/` by default), so a published plugin carries
-no project-specific reviewers. `code-review` assembles its panel from the
-universal roles plus the configured specialists.
+plugin assets; they are not configured. Domain review is carried by these
+universal roles plus each project's `CLAUDE.md` grounding, not by a
+project-configured reviewer roster.
 
 ## Local Markdown Defaults
 

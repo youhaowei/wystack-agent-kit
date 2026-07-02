@@ -101,7 +101,6 @@ The final report is a decision artifact, not a work log.
 - **Architecture**: {1 sentence}
 - **Tests**: {1 sentence}
 - **Fresh eyes**: {1 sentence}
-- {specialists}
 
 ### Triage summary
 | MUST | SUGGEST | PATTERNS |
@@ -126,7 +125,6 @@ The final report is a decision artifact, not a work log.
 | code-reviewer | SHIP / SHIP-WITH-TICKETS / BLOCK | {their argument, compressed} |
 | principal | ... | ... |
 | qa | ... | ... |
-| {specialists} | ... | ... |
 
 ### Branch recommendation
 {synthesize: if all SHIP or SHIP-WITH-TICKETS → recommend ship; if any BLOCK → lead with the blocker. Do NOT average severity — weigh the arguments. A Critical finding with a compelling "defer-to-ticket" argument from the flagging reviewer is still a SHIP-WITH-TICKETS; a Medium finding with "this changes a documented contract" is a BLOCK.}

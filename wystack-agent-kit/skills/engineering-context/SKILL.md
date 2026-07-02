@@ -26,11 +26,11 @@ This is the entrance for review and analysis work. Before gathering context, rea
 
 ## Pipeline
 
-`Freshness check → Parallel fetch (4 specialists) → Synthesize → Return structured block`
+`Freshness check → Parallel fetch (4 sources) → Synthesize → Return structured block`
 
 ### 1. Freshness check (do this first)
 
-Scan the current conversation for context already loaded — re-fetching wastes tokens and risks divergent answers. Skip a specialist if the conversation already contains its output.
+Scan the current conversation for context already loaded — re-fetching wastes tokens and risks divergent answers. Skip a source if the conversation already contains its output.
 
 | Source                           | Already-loaded signals                                                                                                      |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
@@ -45,7 +45,7 @@ When unsure, err toward re-fetching — stale context is worse than one extra su
 
 ### 2. Parallel dispatch
 
-Launch the not-skipped specialists in a **single message**.
+Launch the not-skipped sub-agents in a **single message**.
 
 #### a. `wystack-agent-kit:task-manager` → configured work items
 
@@ -125,7 +125,7 @@ Never silently categorize. If signals disagree (invoking skill says `review` but
 If `task-manager` or `wiki-librarian` reports the configured provider is unavailable:
 
 1. Check the workspace's `storage.json` and any `adapters/<provider>.md` instructions.
-2. Re-dispatch the specialist once the tool is available. Specialists know the doc-store and task schemas; raw MCP calls don't.
+2. Re-dispatch the sub-agent once the tool is available. These sub-agents know the doc-store and task schemas; raw MCP calls don't.
 3. `WebFetch` as last resort for public pages.
 
 A subagent's _"unavailable"_ reply is never terminal — the question is _how_ to hand them the tool, not whether to use them.
