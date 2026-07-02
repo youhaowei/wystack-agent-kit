@@ -40,7 +40,7 @@ Baseline: [`wystack-agent-kit/UPSTREAM-BASELINE.json`](wystack-agent-kit/UPSTREA
 - Two-label severity model (MUST / SUGGEST) with a "near-term-trigger" test for ticket creation. See `wystack-agent-kit/skills/code-review/SEVERITY.md`.
 - Lifecycle skills (`groom`, `swarm`, `start`, `finish`, `next`, `new`, `project`, `workspace`) with `.wystack` storage setup and private-provider adapters.
 - `improve-codebase` skill (Ousterhout vocabulary + Fowler catalog + WyStack constraints) — added 2026-05-01.
-- `competitor-analysis` skill — owned by `pm`, derived from coreyhaines31/marketingskills `competitor-profiling` + `competitor-alternatives`. Added 2026-05-02.
+- `competitor-analysis` skill — owned by `pm`, derived from coreyhaines31/marketingskills `competitor-profiling` + `competitor-alternatives`. Added 2026-05-02, removed 2026-07-01.
 - Codex compatibility annotations in skill bodies — superpowers is Claude-Code only.
 
 **Upstream check focus:**
@@ -83,7 +83,7 @@ Baseline: [`wystack-agent-kit/UPSTREAM-BASELINE.json`](wystack-agent-kit/UPSTREA
 - Dropped from impeccable: `colorize`, `bolder`, `quieter`, `extract`, `adapt`, `optimize`, `animate`, `harden`, `audit`, `normalize`, `delight`, `clarify`, `onboard`. The 23-command surface is too narrow for our usage data.
 - Dropped from marketingskills: `paid-ads`, `referral-program`, `email-sequence`, `launch-strategy`, `pricing-strategy`, `free-tool-strategy`, `marketing-ideas`, `content-strategy`, `social-content`, `programmatic-seo`, `product-marketing-context`, `analytics-tracking`, `ab-test-setup`, all narrow CRO variants (`signup-flow-cro`, `form-cro`, `popup-cro`, `paywall-upgrade-cro`, `onboarding-cro`, `page-cro`). Not adopted from upstream: `cold-email`, `churn-prevention`, `lead-magnets`, `customer-research`, `ad-creative`, `aso-audit`, `community-marketing`, `revops`, `sales-enablement`, `image`, `video`. Most are general-knowledge enough that Claude handles them without a dedicated SKILL.md.
 - Moved to wystack-agent-kit: `competitor-analysis` (consolidates upstream `competitor-profiling` + `competitor-alternatives`) — owned by `pm`, not designer.
-- `establish` is scoped to DESIGN.md only; PRODUCT.md belongs to engineering's PM workflow (`prd`, `project`).
+- `establish` is scoped to DESIGN.md only; PRODUCT.md belongs to engineering's PM workflow (`prd`, `project`). (Design skills renamed to `establish-design`/`frontend-design`/`polish-design` on 2026-07-01.)
 - Added `references/philosophies/{impeccable,anthropic-frontend,wystack}.md` for absorbed design philosophies; references grow as we adopt more.
 - Stripped impeccable's command frontmatter pattern (`user-invokable: true`, `args:` blocks) — we treat them as plain skills.
 

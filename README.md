@@ -93,11 +93,11 @@ Everything else is depth for when you need it — drafting a PRD, verifying runt
 | **Planning** | `brainstorm`, `prd`, `spec`, `breakdown`, `groom`, `estimation`, `reprioritize`, `next-task`, `new-task` |
 | **Execution** | `start-task`, `worktree`, `orchestrate`, `finish-task`, `cleanup`, `handoff` |
 | **Review + verification** | `code-review`, `full-review`, `critique`, `verify`, `perspective`, `retro`, `improve-codebase` |
-| **Design** | `establish`, `frontend`, `polish` |
-| **Writing + distribution** | `ux-writing`, `copywriting`, `discoverability`, `competitor-analysis` |
-| **Workspace** | `setup-agent-kit`, `workspace`, `identify-specialists`, `engineering-context` |
+| **Design** | `establish-design`, `frontend-design`, `polish-design` |
+| **Writing + distribution** | `ux-writing`, `copywriting`, `discoverability` |
+| **Workspace** | `setup-agent-kit`, `workspace`, `engineering-context` |
 
-Plus 10 universal role agents — `pm`, `principal`, `qa`, `devops`, `task-manager`, `wiki-librarian`, `designer`, `ux-writer`, `copywriter`, `marketing-specialist` — with project-configured domain specialists on top.
+Plus 10 universal role agents — `pm`, `principal`, `qa`, `devops`, `task-manager`, `wiki-librarian`, `designer`, `ux-writer`, `copywriter`, `marketing-specialist`.
 
 </details>
 

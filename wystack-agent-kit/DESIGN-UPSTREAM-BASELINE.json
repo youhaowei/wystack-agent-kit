@@ -62,8 +62,8 @@
     "skills/ux-writing"
   ],
   "skills_renamed_or_rewritten": {
-    "skills/build → skills/frontend": "renamed + rewrote SKILL.md for clarity (was ambiguous between context-loader and creator)",
-    "skills/setup → skills/establish": "renamed + rewrote, now scoped to DESIGN.md only (visual). PRODUCT.md is wystack-agent-kit:pm's domain."
+    "skills/build → skills/frontend-design": "renamed + rewrote SKILL.md for clarity (was ambiguous between context-loader and creator)",
+    "skills/setup → skills/establish-design": "renamed + rewrote, now scoped to DESIGN.md only (visual). PRODUCT.md is wystack-agent-kit:pm's domain."
   },
   "skills_dropped": {
     "from_local": ["skills/iterate", "skills/distill"],
@@ -75,7 +75,7 @@
     "competitor-analysis": {
       "from": "marketingskills (competitor-profiling + competitor-alternatives merged)",
       "to": "wystack-agent-kit/skills/competitor-analysis",
-      "reason": "Competitor research is product/PM territory, not designer's responsibility"
+      "reason": "Competitor research is product/PM territory, not designer's responsibility. Skill removed entirely 2026-07-01"
     }
   },
   "agents": {
