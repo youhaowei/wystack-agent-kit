@@ -45,7 +45,7 @@ Too thin = "a person who applies" (dictionary). Too heavy = hashed-SSN columns, 
 1. **Collect.** Scan the conversation, open PRDs/specs/stories, and recent code for the term(s) in play. Note ambiguities (same word, two meanings) and synonyms (two words, one meaning).
 2. **Resolve the canonical name.** For an ambiguous or conflicting term, propose one canonical name with reasoning; present alternatives and defer to the user. For a genuinely contested concept boundary, `Skill("wystack-agent-kit:brainstorm", "--grill")` forces explicitness — skip obviously-unambiguous terms.
 3. **Write the note** — one file, slug filename, definition first, opinionated about the canonical name.
-4. **Save + cross-link** — delegate to `wystack-agent-kit:wiki-librarian`: save as `glossary/<slug>.md`. Ask the librarian to scan open specs/PRDs/stories for uses of this term that don't yet cite `[[term-slug]]`, and update them to cite the note. Verify the citations resolve before reporting done. If a write can't be automated, report a setup gap with a concrete fix — never hand the edits over as a chore. Never call doc-store MCP tools directly.
+4. **Save + cross-link** — delegate to `wystack-agent-kit:wiki-librarian`: save as `glossary/<slug>.md`, then scan open specs/PRDs/stories for uses of this term not yet citing `[[term-slug]]` and update them to cite the note. Follow the Save + cross-link protocol in `docs/doc-model.md` § Cross-linking (delegate, verify citations resolve, report gaps as fixes).
 
 ## Renaming a term
 

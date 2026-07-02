@@ -32,7 +32,7 @@ The spec's **Key concepts** section is a per-spec *index into the glossary* — 
 
    Describe shape and intent, not code. Interfaces, message shapes, schemas, and types live in the codebase — prose that restates them is a drift-magnet. Apply the ownership test: if a detail's authoritative home is the code, the spec points to it, it does not copy it. Paste a signature in only when the prototype *is* the decision (a state machine, a reducer, a type shape the design turns on).
 4. **Critique** — invoke `wystack-agent-kit:critique` on the draft; resolve load-bearing findings before saving.
-5. **Save + cross-link** — delegate to `wiki-librarian`: save with title `"Spec — …"`, `id` `SPEC-NNNN` (next sequential), then link neighbors per `docs/doc-model.md` Cross-linking — the PRD it implements (bidirectional) and an `Implementation tickets` section. Verify backlinks resolve before reporting done; if a write can't be automated, report it as a setup gap with a concrete fix — don't hand the edits over as a chore. Never call doc-store MCP tools directly.
+5. **Save + cross-link** — delegate to `wiki-librarian`: save with title `"Spec — …"`, `id` `SPEC-NNNN` (next sequential). Link the PRD it implements (bidirectional) and an `Implementation tickets` section, following the Save + cross-link protocol in `docs/doc-model.md` § Cross-linking (delegate, verify backlinks resolve, report gaps as fixes).
 
 The spec lives in the doc store and is edited there as the design evolves — no promotion gate.
 
