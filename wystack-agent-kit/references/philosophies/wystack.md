@@ -26,7 +26,7 @@ Compact and comfortable density use the same components with different `--space-
 
 WCAG AA contrast minimum. Visible focus rings on all interactives. Reduced-motion respected. Screen-reader labels on icon buttons. Keyboard parity with mouse.
 
-These are validated in `polish-design` and `design-review`, not optional polish-passes.
+These are validated in `polish-design`, not optional polish-passes.
 
 ## 6. Performance is part of design
 

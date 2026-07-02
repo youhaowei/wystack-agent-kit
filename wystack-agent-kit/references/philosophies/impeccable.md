@@ -7,7 +7,7 @@ Source: [pbakaus/impeccable](https://github.com/pbakaus/impeccable). Forked at v
 ### 1. The AI slop test
 > "If you showed this interface to someone and said 'AI made this,' would they believe you immediately?"
 
-Used as a quality gate after `frontend-design` and inside `design-review`. See `references/anti-patterns.md` for the named slop catalog.
+Used as a quality gate after `frontend-design` and in `polish-design`. See `references/anti-patterns.md` for the named slop catalog.
 
 ### 2. Brand vs Product register
 Two contradictory sets of rules depending on what you're designing:
