@@ -15,7 +15,7 @@ Walk the codebase. Find shallow modules and propose **deepening opportunities** 
 5. Once chosen, drop into a grilling loop on the design — constraints, dependencies, the deepened interface, what survives in tests. As it crystallizes, record any new term as a glossary note (`wystack-agent-kit:glossary`) and any decision in the relevant spec's Decisions section (`wystack-agent-kit:spec`).
 6. **Structural refactors get dedicated tickets** — never bundled into feature work. When the user picks a candidate to pursue, propose the ticket via `wystack-agent-kit:new-task` rather than starting work.
 
-Use the vocabulary in [LANGUAGE.md](LANGUAGE.md) **exactly** — module, interface, depth, seam, adapter, leverage, locality. Do not drift into "component", "service", "boundary."
+Use the [LANGUAGE.md](LANGUAGE.md) vocabulary **exactly**, referring to each term by name — don't drift into generic synonyms like "component", "service", or "boundary."
 
 ## Reference files
 
