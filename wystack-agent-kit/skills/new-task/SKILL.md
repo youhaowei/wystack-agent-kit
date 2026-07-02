@@ -1,6 +1,6 @@
 ---
 name: new-task
-description: "Create a new work item in the configured task system with codebase-aware scope, acceptance criteria, and estimate. Use when the user wants to capture new engineering work, turn an idea into a task, or write up follow-on implementation work."
+description: "Create a new work item in the configured task system with codebase-aware scope, acceptance criteria, and estimate. Use when the user wants to capture new engineering work or turn an idea into a task."
 ---
 # New Task
 
@@ -81,5 +81,4 @@ Report `{id} — {title}` and location, then ask: plan it (`wystack-agent-kit:gr
 
 ## Principles
 
-- **Explore observes, the main agent judges** — the subagent reports complexity signals; sizing happens in the main context where the `estimation` scale is loaded.
 - **Roles, not literal statuses** — map onto the configured status vocabulary; never hardcode status names.

@@ -1,6 +1,6 @@
 ---
 name: spec
-description: "Write or update a technical specification — system design, component boundaries, data flow, and the decisions that shaped them. The engineering counterpart to `prd`. Use when the user wants a tech spec, design doc, architecture doc, or system design documented before implementation, when editing an existing spec, or after `wystack-agent-kit:brainstorm --grill` produces architecture that needs formal documentation."
+description: "Write or update a technical specification — system design, component boundaries, data flow, and the decisions that shaped them. The engineering counterpart to `prd`. Use when the user wants a technical spec or system design documented before implementation, when editing an existing spec, or after `wystack-agent-kit:brainstorm --grill` produces architecture that needs formal documentation."
 ---
 # Spec
 

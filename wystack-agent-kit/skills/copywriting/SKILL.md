@@ -1,6 +1,6 @@
 ---
 name: copywriting
-description: Write or improve marketing copy for landing pages, homepages, pricing pages, feature pages, about pages, hero sections, value propositions, headlines, subheadlines, CTAs, social proof, comparison pages. Use when the user mentions "write copy", "rewrite this hero", "landing page copy", "value prop", "headline help", "CTA copy", "marketing copy", "improve this copy", "review my copy", "copy feedback", "polish this copy", "edit copy", "proofread", "copy sweep", "marketing page", "pricing page copy", or "about page". Persuasive narrative, brand voice, conversion-focused. For in-product copy (button labels, errors, empty states, microcopy, system messages), see wystack-agent-kit:ux-writing.
+description: Write or improve marketing copy for landing pages, homepages, pricing pages, feature pages, about pages, hero sections, value propositions, headlines, subheadlines, CTAs, social proof, comparison pages. Use when the user mentions "write copy", "rewrite this hero", "landing page copy", "pricing page copy", "value prop", "CTA copy", "improve this copy", "copy feedback", or "edit copy". Persuasive narrative, brand voice, conversion-focused. For in-product copy (button labels, errors, empty states, microcopy, system messages), see wystack-agent-kit:ux-writing.
 ---
 # Copywriting
 

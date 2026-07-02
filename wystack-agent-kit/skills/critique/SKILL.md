@@ -1,6 +1,6 @@
 ---
 name: critique
-description: "Adversarially pressure-test a finished design, plan, spec, or PRD — walk every branch, attack every assumption, surface holes, unresolved dependencies, and unstated risks. Findings only, no rewrite. Use when the user says 'critique this', 'poke holes', 'pressure-test', 'red-team this design/plan/spec', or 'what's wrong with this'. For code, see wystack-agent-kit:code-review. For whether a feature works at runtime, see wystack-agent-kit:verify. To turn a fuzzy idea into a design, see wystack-agent-kit:brainstorm."
+description: "Adversarially pressure-test a finished design, plan, spec, or PRD — walk every branch, attack every assumption, surface holes, unresolved dependencies, and unstated risks. Findings only, no rewrite. Use when the user says 'critique this', 'poke holes', or 'red-team this design/plan/spec'. For code, see wystack-agent-kit:code-review. For whether a feature works at runtime, see wystack-agent-kit:verify. To turn a fuzzy idea into a design, see wystack-agent-kit:brainstorm."
 ---
 # Critique
 
@@ -43,6 +43,6 @@ When the artifact is a spec or PRD, also attack its **doc discipline** (`docs/do
 
 ## Rules
 
-- **Findings only — never rewrite.** Critique surfaces holes; fixing belongs to the artifact's owner. Findings-only keeps critique safe by construction — it edits nothing.
+- **Findings only — never rewrite.** Fixing belongs to the artifact's owner; findings-only keeps critique safe by construction — it edits nothing.
 - **Attack the structure, not the person.** Adversarial toward the artifact, collaborative toward its author.
 - **Ground every finding.** Cite the section or claim. "This feels weak" with no pointer is noise.

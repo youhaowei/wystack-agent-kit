@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Create production-grade frontend interfaces — pages, components, layouts, hero sections, dashboards, marketing surfaces, app UI. Applies project DESIGN.md (tokens, primitives, anti-references), brand-vs-product register, and the named anti-pattern catalog. Use before any UI work — building a new page, component, layout, or screen. Triggers on "build a page", "create a component", "design this UI", "build the frontend", "make a hero section", "design a dashboard", "build the landing page", "redesign this", "the homepage needs", or any request that produces visual frontend code. For polishing functionally complete work, see wystack-agent-kit:polish-design. For per-project design system bootstrap, see wystack-agent-kit:establish-design.
+description: Create production-grade frontend interfaces — pages, components, layouts, hero sections, dashboards, marketing surfaces, app UI. Applies project DESIGN.md (tokens, primitives, anti-references), brand-vs-product register, and the named anti-pattern catalog. Use before any UI work — building a new page, component, layout, or screen. Triggers on "build a page or component", "design this UI", "make a hero section", "redesign this", or any request that produces visual frontend code. For polishing functionally complete work, see wystack-agent-kit:polish-design. For per-project design system bootstrap, see wystack-agent-kit:establish-design.
 ---
 # Frontend
 

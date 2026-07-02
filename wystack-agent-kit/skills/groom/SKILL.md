@@ -1,6 +1,6 @@
 ---
 name: groom
-description: "Groom engineering tasks — codebase-aware scope, acceptance criteria, estimates, and an implementation plan. Use when the user asks to plan a task, refine a ticket, estimate work, or prepare implementation-ready next steps."
+description: "Groom engineering tasks — codebase-aware scope, acceptance criteria, estimates, and an implementation plan. Use when the user asks to plan a task, refine a ticket, or prepare implementation-ready next steps."
 ---
 # Groom
 

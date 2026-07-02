@@ -1,10 +1,10 @@
 ---
 name: next-task
-description: "Review a project's configured work items and recommend what to work on next. Use when the user asks what to do next, which task to pick, what is ready to implement, or how to prioritize current engineering work."
+description: "Review a project's configured work items and recommend what to work on next. Use when the user asks what to do next, which task to pick, or how to prioritize current engineering work."
 ---
 # Next Task
 
-Find the best task to work on next for a project — discover, rank, recommend.
+Find the best task to work on next for a project.
 
 `$ARGUMENTS` — project hint, or empty (resolve the project from the workspace).
 

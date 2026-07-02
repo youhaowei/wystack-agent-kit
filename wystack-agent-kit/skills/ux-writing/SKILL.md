@@ -1,6 +1,6 @@
 ---
 name: ux-writing
-description: Write or improve in-product copy — button labels, error messages, empty states, form helper text, system messages, tooltips, microcopy, onboarding text, accessibility copy, voice and tone calibration. Use when the user mentions "button label", "CTA copy", "error message", "empty state", "form helper text", "tooltip", "microcopy", "system message", "loading state", "in-product copy", "in-app text", "UX writing", "alt text", "ARIA label", "screen reader copy", or asks to "rewrite this label / button / error / empty state". Functional clarity over persuasion — UX writing serves the task, marketing copy persuades. For landing-page / hero / value-prop / marketing copy, see wystack-agent-kit:copywriting.
+description: Write or improve in-product copy — button labels, error messages, empty states, form helper text, system messages, tooltips, microcopy, onboarding text, accessibility copy, voice and tone calibration. Use when the user mentions "button label", "error message", "empty state", "form helper text", "tooltip", "microcopy", "system message", "loading state", "in-product copy", "in-app text", "UX writing", "alt text", "ARIA label", "screen reader copy", or asks to "rewrite this label / button / error / empty state". Functional clarity over persuasion — UX writing serves the task, marketing copy persuades. For landing-page / hero / value-prop / marketing copy, see wystack-agent-kit:copywriting.
 ---
 # UX Writing
 

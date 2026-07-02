@@ -89,7 +89,7 @@ When implementation is complete, invoke `wystack-agent-kit:finish-task <task> pr
 
 ## Edge cases
 
-- **Task is blocked** — hard stop regardless of `--auto`; report the blocking task(s) and stop.
+- **Task is blocked** — hard stop regardless of mode (default or `--interactive`); report the blocking task(s) and stop.
 - **Worktree exists for a different task** — don't overwrite; use a unique branch name.
 - **User wants to pause** — keep the branch, leave the task in-flight, report how to resume.
 - **Shepherd loop exceeds 5 wakeup passes without reaching `ready-to-merge`** — exit `needs-human`; do not schedule further wakeups.

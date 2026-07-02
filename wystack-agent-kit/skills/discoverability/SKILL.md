@@ -4,7 +4,7 @@ description: Make a site, product, plugin, or tool findable across all surfaces 
 ---
 # Discoverability
 
-Channel-agnostic findability. Five surfaces, one cohesive concern.
+Channel-agnostic findability. Six surfaces, one cohesive concern.
 
 ## What to do
 
@@ -18,7 +18,7 @@ Channel-agnostic findability. Five surfaces, one cohesive concern.
 
 </what-to-do>
 
-## The five surfaces
+## The six surfaces
 
 Load the relevant reference for each in-scope channel:
 
