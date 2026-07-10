@@ -10,25 +10,18 @@ Persuasive marketing copy. Two modes in one skill: write new (greenfield) and ed
 
 <what-to-do>
 
-1. **Identify mode**: greenfield write, or edit existing draft? Different process per mode (see below).
-2. **Read brand voice** from `DESIGN.md` if present. If voice section is missing, ask for two voice examples (one positive, one anti-pattern) before drafting.
-3. **Gather context** — page purpose, audience, primary action, proof points available, traffic source. Skip questions answered by existing project docs (PRD, spec, DESIGN.md).
-4. **Apply the six core principles** (below) on first draft.
-5. **Run the seven sweeps** ([SEVEN-SWEEPS.md](SEVEN-SWEEPS.md)) on every draft before declaring done — your own draft included.
-6. **Provide alternatives** for headlines and CTAs (2–3 options with rationale per).
-7. **Annotate decisions** for any non-obvious choice.
-8. **Hand off** meta tags / structured data / discoverability work to `wystack-agent-kit:discoverability`.
+1. **Identify mode**: greenfield write, or edit existing draft? Process differs per mode (below).
+2. **Read brand voice** from `DESIGN.md` if present. If the voice section is missing, ask for two examples (one positive, one anti-pattern) before drafting.
+3. **Gather context** — page purpose, audience, primary action, proof points, traffic source. Skip what project docs (PRD, spec, DESIGN.md) already answer.
+4. **Apply the six core principles** on the first draft; **run the seven sweeps** on every draft before declaring done, your own included.
+5. **Deliver** per the output format: alternatives for headlines and CTAs, annotations for non-obvious choices.
+6. **Hand off** meta tags / structured data / discoverability to `wystack-agent-kit:discoverability`.
 
 </what-to-do>
 
 ## Cognitive mode (don't drift to UX writing)
 
-Copywriting is *persuasive*. UX writing is *functional*. The line:
-- Pre-conversion / marketing surfaces / hero blocks → copywriting
-- Post-conversion / in-app / mid-task → ux-writing
-
-Symptoms of drift toward UX writing: copy that reads like instructions, no emotional resonance, all features no benefits.
-Symptoms of drift toward marketing slop: superlatives, buzzwords, hype that says nothing.
+Copywriting is *persuasive*, UX writing is *functional*. Pre-conversion / marketing / hero blocks → copywriting; post-conversion / in-app / mid-task → ux-writing. Drift toward UX writing reads like instructions (features, no benefits, no resonance); drift toward slop piles on superlatives and buzzwords that say nothing.
 
 ## Six core principles
 
@@ -58,16 +51,8 @@ Symptoms of drift toward marketing slop: superlatives, buzzwords, hype that says
 | Streamline | (be specific about what step is removed) |
 | Optimize | (be specific about what improves) |
 
-**Sentence rules**:
-- One idea per sentence.
-- Mix short and long for rhythm.
-- Front-load important information.
-- Max ~25 words per sentence.
-
-**Paragraph rules**:
-- Short paragraphs (2–4 sentences for web).
-- Strong opening sentence per paragraph.
-- White space for scannability.
+**Sentences**: one idea each, front-loaded, ~25 words max; mix short and long for rhythm.
+**Paragraphs**: 2–4 sentences for web, strong opener, white space for scannability.
 
 ## Page structure framework
 
@@ -89,7 +74,7 @@ Symptoms of drift toward marketing slop: superlatives, buzzwords, hype that says
 | Objection handling | FAQ, comparisons, guarantees |
 | Final CTA | Recap value, repeat CTA, risk reversal |
 
-For deeper page templates by type (homepage, landing, pricing, feature, about), see [PAGE-TYPES.md](PAGE-TYPES.md).
+For deeper page templates by type (homepage, landing, pricing, feature, about), see [PAGE-TYPES.md](PAGE-TYPES.md); for competitor/alternative pages, [COMPARISON-PAGES.md](COMPARISON-PAGES.md).
 
 ## CTA copy
 
@@ -106,18 +91,7 @@ For deeper page templates by type (homepage, landing, pricing, feature, about), 
 
 ## Editing existing copy
 
-Use the seven-sweep methodology — sequential focused passes that each catch issues missed by the others. After each sweep, re-check earlier sweeps to ensure no regressions.
-
-The sweeps:
-1. **Clarity** — can the reader understand it?
-2. **Voice & tone** — consistent throughout?
-3. **So what** — every claim answers "why care?"
-4. **Prove it** — every claim has evidence?
-5. **Specificity** — concrete enough to be compelling?
-6. **Heightened emotion** — does it move the reader?
-7. **Zero risk** — every barrier to action removed?
-
-Full methodology with templates, anti-patterns, and checklists: [SEVEN-SWEEPS.md](SEVEN-SWEEPS.md).
+Run the seven-sweep methodology — sequential focused passes (Clarity → Voice & tone → So what → Prove it → Specificity → Heightened emotion → Zero risk), each re-verifying the earlier ones. Full method: [SEVEN-SWEEPS.md](SEVEN-SWEEPS.md).
 
 ## Persuasion psychology
 
@@ -129,22 +103,14 @@ The marketing-psychology reference ([`references/marketing-psychology.md`](../..
 
 ## Output format
 
-When delivering copy:
-
-1. **Page copy** organized by section (headline, subheadline, CTA, section headers, body, secondary CTAs).
-2. **Annotations** for non-obvious choices (which principle / model applied, why this word).
-3. **Alternatives** for headlines and CTAs — 2–3 options per, with rationale.
-4. **Meta content** if relevant (page title for SEO, meta description) — or hand off to `wystack-agent-kit:discoverability`.
+Deliver: page copy organized by section (headline, subheadline, CTA, section headers, body, secondary CTAs); 2–3 headline/CTA alternatives each with rationale; annotations for non-obvious choices (principle/model applied); meta content if relevant (SEO title, meta description).
 
 ## Common problems → fixes
 
+Beyond the principles and sweeps above, watch for:
+
 | Problem | Symptom | Fix |
 |---|---|---|
-| Wall of features | List of what the product does without why it matters | Add "which means…" after each feature |
-| Corporate speak | "Leverage synergies to optimize outcomes" | Ask "How would a human say this?" |
 | Weak opening | Starts with company history or vague statements | Lead with the reader's problem or desired outcome |
-| Buried CTA | The ask comes after too much buildup | Make CTA obvious, early, and repeated |
-| No proof | "Customers love us" with no evidence | Add specific testimonials, numbers, case references |
-| Generic claims | "We help businesses grow" | Specify who, how, by how much |
+| Buried CTA | The ask comes after too much buildup | Make the CTA obvious, early, and repeated |
 | Mixed audiences | Tries to speak to everyone | Pick one audience and write directly |
-| Feature overload | Lists every capability | Focus on 3–5 benefits that matter most |

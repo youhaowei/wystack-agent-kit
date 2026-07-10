@@ -4,7 +4,7 @@ The merged-three-lens report this skill produces. Single message — don't drip-
 
 ## Clarity contract
 
-The report is a decision artifact, not a work log. Output shape follows `docs/communication-contract.md` — load it if not already in context; no skill restates it. The template below operationalizes it: recommendation first, current-state language, boundary-grouped with per-boundary status/evidence/next-action, command output confined to `Verification Evidence`.
+A decision artifact, not a work log. Output shape follows `docs/communication-contract.md` (load it if not in context). The template below operationalizes it: recommendation first, current-state language, boundary-grouped with per-boundary status/evidence/next-action, command output confined to `Verification Evidence`.
 
 ```
 ## Full Review — TASK-{id}: {title}
@@ -70,11 +70,11 @@ The report must be self-contained — copy/paste-able into another session.
 
 ## Severity model
 
-See [SEVERITY.md](../code-review/SEVERITY.md). The review controller re-classifies all reviewer-supplied severities into MUST / SUGGEST.
+See [SEVERITY.md](../code-review/SEVERITY.md) — the controller re-classifies all reviewer severities into MUST / SUGGEST.
 
 ## Action selection prompt
 
-Presented immediately after the report only when the best next action is not obvious or the user asked for options:
+Presented after the report only when the best next action isn't obvious or the user asked for options:
 
 ```
 **Actions:**

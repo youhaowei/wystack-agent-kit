@@ -17,7 +17,7 @@ Re-rank the backlog as one deliberate operation — discover, propose, approve, 
 | Orchestration, ranking judgment, user interaction | **Main agent** | Needs conversation context and the loaded vocabularies |
 | Work-item discovery + priority writes | **`wystack-agent-kit:task-manager`** | Provider quirks and confirmation noise stay out of context |
 
-This skill owns the ordering and the approval; it never does task CRUD itself. No codebase exploration — priority is a queue decision, not a code decision.
+This skill owns the ordering and the approval, never task CRUD; no codebase exploration — priority is a queue decision, not a code decision.
 
 ## Workflow
 
@@ -69,4 +69,3 @@ Old → new priority per changed task, the count of items left unchanged, and th
 
 - **Propose, never silently re-sort** — the table is the artifact; the user approves it before any write.
 - **Roles and priority values, not literal names** — map onto the configured status and priority vocabularies; never hardcode either.
-- **Delegate** — `task-manager` owns discovery and writes; this skill owns only the ordering and the approval.

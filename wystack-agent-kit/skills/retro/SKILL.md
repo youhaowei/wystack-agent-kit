@@ -5,9 +5,7 @@ description: "Run a project retrospective from accumulated calibration data — 
 
 # Retro
 
-Close the calibration loop. `orchestrate`, `finish-task`, and `perspective` *emit* outcome data; `retro` *consumes* it — turning accumulated evidence into project-local policy the skills read.
-
-The skills are a fixed framework. `retro` doesn't edit them — it writes the workspace `tuning.json`, and the skills adapt by reading it. Refinement is data, not code.
+Close the calibration loop. `orchestrate`, `finish-task`, and `perspective` *emit* outcome data; `retro` *consumes* it — turning accumulated evidence into the workspace `tuning.json`, which the fixed skills read. Refinement is data, not code; retro never edits the skills.
 
 ## Input
 

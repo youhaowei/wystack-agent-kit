@@ -4,7 +4,7 @@ Two formats: the **reviewer brief** (what each reviewer outputs) and the **final
 
 ## Reviewer output (per reviewer)
 
-Each reviewer ends with four sections:
+Four sections:
 
 ```
 ## Insight
@@ -34,24 +34,11 @@ Each reviewer ends with four sections:
 
 ### On PATTERNS
 
-Reviewers surface good practice worth propagating — not just defects. Name the pattern, say where, explain why. _"Well-written"_ without a named pattern doesn't count.
-
-Examples:
-- _"Flag-check cancellation via pending IDs"_ (flatter than signal plumbing).
-- _"Per-call fresh synthetic Request"_ (immutable adapter boundary).
-- _"Hoist-to-export for testability"_ (pure function testable without DI).
-- _"Spec-anchored test names"_.
-
-Destinations:
-- Project-specific idiom → CLAUDE.md.
-- Architectural decision → the spec's Decisions section (`wystack-agent-kit:spec`).
-- Tactical pattern → KB + optional inline comment.
+Surface good practice worth propagating, not just defects. Name the pattern, say where, explain why — _"well-written"_ without a named pattern doesn't count. Destinations: project-specific idiom → CLAUDE.md; architectural decision → the spec's Decisions section (`wystack-agent-kit:spec`); tactical pattern → KB + optional inline comment.
 
 ### On Ship verdict
 
-Why this matters: reviewers optimized to "find issues" will always find something. Without an explicit ship argument, their findings bias toward blocking by default — noise accumulates faster than it converges. The argument forces them to weigh severity × ship-worthiness in their own voice.
-
-Include the argument even when the verdict is SHIP — _"no findings, ship it"_ is a legitimate argument and locks in that the reviewer actually considered the question.
+Reviewers optimized to "find issues" always find something; without an explicit ship argument their findings bias toward blocking, and noise accumulates faster than it converges. The argument forces weighing severity × ship-worthiness in their own voice. Include it even for SHIP — _"no findings, ship it"_ locks in that the reviewer considered the question.
 
 ## Final report (orchestrator)
 
@@ -59,7 +46,7 @@ Single message — don't drip-feed findings.
 
 ### Clarity contract
 
-The final report is a decision artifact, not a work log. Output shape follows `docs/communication-contract.md` — load it if not already in context; no skill restates it. The template below operationalizes it: recommendation first, state over chronology, grouped by ownership boundary, process evidence confined to `Verification Evidence`.
+A decision artifact, not a work log. Output shape follows `docs/communication-contract.md` (load it if not in context). The template below operationalizes it: recommendation first, state over chronology, grouped by ownership boundary, process evidence confined to `Verification Evidence`.
 
 ```
 ## Review Summary
@@ -136,6 +123,6 @@ Report must be self-contained — copy/paste-able into another session.
 ## Walk-through actions
 
 - **Fix inline**: apply all fixes → re-run preflight → show diff → offer commit.
-- **Discuss + fix**: walk findings highest-severity first in the `collaborate` shape — each finding gets its block (title + detail + bold recommendation), then a single prompt asks for batch confirmation. The user responds with one batch (e.g. _"fix #1, #3; defer #2 with ticket; skip rest"_). Don't drip-feed one finding per turn. If a finding genuinely needs deep back-and-forth, break out, discuss, return to the batch.
+- **Discuss + fix**: walk findings highest-severity first in the `collaborate` shape — each gets its block (title + detail + bold recommendation), then one prompt asks for batch confirmation (e.g. _"fix #1, #3; defer #2 with ticket; skip rest"_). Don't drip-feed one finding per turn; if one needs deep back-and-forth, break out, discuss, return to the batch.
 - **Discuss only**: same walk-through, no fixing.
 - **Skip**: acknowledge, continue.

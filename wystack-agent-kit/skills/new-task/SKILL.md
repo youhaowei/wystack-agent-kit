@@ -30,7 +30,7 @@ If `$ARGUMENTS` is empty, ask via the harness question UI — type (Bug / Featur
 
 ### 3. Check for duplicates
 
-Before exploring, spawn `wystack-agent-kit:task-manager` to search the task store for similar-titled items. If a near-match exists, surface it and ask, recommending **extend the existing task** on a strong match: extend / create anyway / cancel. Creating a duplicate is a common, costly failure — this step is not optional.
+Before exploring, spawn `wystack-agent-kit:task-manager` to search the task store for similar-titled items. If a near-match exists, surface it and ask, recommending **extend the existing task** on a strong match: extend / create anyway / cancel.
 
 ### 4. Explore codebase impact
 

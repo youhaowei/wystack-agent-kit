@@ -1,10 +1,7 @@
 # Review Run Record
 
 Durable evidence for one assessment pass. Written by `wystack-agent-kit:code-review`
-and `wystack-agent-kit:full-review` when a workspace is loaded.
-
-Portable layout (clawpatch-inspired — findings are **project state**, not chat
-history):
+and `wystack-agent-kit:full-review` when a workspace is loaded. Portable layout:
 
 ```text
 .wystack/
@@ -18,14 +15,7 @@ When `storage.json` binds `record.write`, write through that binding first; keep
 
 ## Principle
 
-Borrowed from [clawpatch](https://github.com/openclaw/clawpatch): **findings are
-first-class project state** — evidence-backed, individually addressable, triageable
-across sessions. The review pass record is an audit trail that links to them;
-each finding file carries enough context to fix, defer, or revalidate one item
-without reopening the transcript.
-
-The chat report is ephemeral. `.wystack/findings/` is what `finish-task`, `retro`,
-and later sessions query.
+**Findings are first-class project state** — evidence-backed, individually addressable, triageable across sessions (the [clawpatch](https://github.com/openclaw/clawpatch) model). The chat report is ephemeral; `.wystack/findings/` is what `finish-task`, `retro`, and later sessions query. The review pass record is the audit trail that links them.
 
 ## Review pass record
 
@@ -138,7 +128,7 @@ Path: `.wystack/findings/<findingId>.json`
 
 ### Evidence ref
 
-Clawpatch requires path-backed evidence — not vibes. Each ref:
+Path-backed, not vibes. Each ref:
 
 ```json
 {
@@ -162,7 +152,7 @@ Product/AC findings without a code anchor: `evidence` may be a single ref with
 
 ### Categories
 
-Aligned with clawpatch; map report labels to these slugs:
+Map report labels to these slugs:
 
 | Slug | Report label |
 |---|---|
@@ -194,8 +184,7 @@ Append-only — status changes never delete prior state (`docs/run-record.md`):
 
 `by`: `user` \| `finish-task` \| `revalidate` \| `orchestrator`
 
-Mark `fixed` only after revalidation or an explicit human confirmation — same
-discipline as clawpatch's `revalidate --finding`.
+Mark `fixed` only after revalidation or explicit human confirmation.
 
 ## Pattern shape (optional)
 
@@ -228,8 +217,7 @@ On the review pass record — per-reviewer ship arguments:
 1. **One finding file per triaged item** under `.wystack/findings/`. Link ids in
    the pass record's `finding_ids`.
 2. **Evidence required for code-local claims** — path + quote when possible;
-   drop or downgrade to `uncertain` findings with no anchor (clawpatch validation
-   rule).
+   drop or downgrade to `uncertain` findings with no anchor.
 3. **Recompute counts** from finding files' `gate` before writing the pass record.
 4. **Dedup by `signature`** — same issue in a later pass updates the existing
    finding (refresh `reviewId`, append triage history) instead of duplicating.
@@ -240,16 +228,7 @@ On the review pass record — per-reviewer ship arguments:
 
 ## Revalidation (manual / extension)
 
-When a finding is fixed or the branch moves on, re-check open findings:
-
-- Evidence still present at cited lines?
-- Does `gate` still apply after orchestrator re-triage?
-- Append outcome to `triage_history`; set `status` to `fixed`, `false-positive`,
-  or `uncertain`.
-
-Extensions such as clawpatch expose this as `execute.action` /
-`verify_record`; Agent Kit surfaces the action but does not auto-run it in v1
-(`code-review/SKILL.md`).
+When a finding is fixed or the branch moves on, re-check open findings: evidence still present at cited lines? `gate` still applies after re-triage? Append the outcome to `triage_history`; set `status` to `fixed`, `false-positive`, or `uncertain`. Extensions expose this as `execute.action` / `verify_record`; Agent Kit surfaces the action but does not auto-run it in v1.
 
 ## Full-review
 

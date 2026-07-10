@@ -44,11 +44,8 @@ When `adr` is enabled and the overturned decision had an ADR, the ADR is **appen
 
 ## Rules
 
-- **Does this spec need to exist?** Apply the earn-the-page test (`docs/doc-model.md`) before writing. A substrate or utility package whose contract is its code plus a handful of small decisions does *not* get a standalone spec — fold those decisions into the Decisions section of its one architectural consumer. Reach for a standalone spec when a system has real structure to design: multiple components, non-obvious data flow, contested choices.
-- **Decisions are a living section, not a separate record** — load-bearing choices live in the spec's Decisions section, edited in place as the design evolves. Record only genuine decisions; skip the obvious. Format and ceremony level follow the one-line-decision default (`docs/doc-model.md`).
-- **Link neighbors, verify backlinks** — PRD and tickets, both directions, per `docs/doc-model.md` Cross-linking.
+- **Does this spec need to exist?** Apply the earn-the-page test (`docs/doc-model.md`) before writing. A substrate or utility package whose contract is its code plus a few small decisions does *not* get a standalone spec — fold those into the Decisions section of its one architectural consumer. Reach for a standalone spec when a system has real structure: multiple components, non-obvious data flow, contested choices.
 - **Tool-agnostic content** — never reference the doc store tool, page IDs, or URLs in the spec body; cross-references are name/id only.
-- **Terms are cited, not defined** — every domain term is defined once in its glossary note; Key concepts, Domain Model, and the rest of the spec cite `[[term-slug]]` and use the canonical name. A new term gets a glossary note (via `wystack-agent-kit:glossary`) before it's used here. Code identifiers must match the canonical name — drift is a bug.
 - **Level of detail** — architecture and decisions, not vibes and not code. _Too light:_ "the engine runs workflows with agents." _Right:_ "a concurrency pool (max N, auto-fills from ready work) + an ask queue (agents park on human decisions); append-only JSONL logs over SQLite, to match session persistence and support replay-recovery." _Too heavy:_ pasted TypeScript interfaces or schemas.
 
 ## Reference

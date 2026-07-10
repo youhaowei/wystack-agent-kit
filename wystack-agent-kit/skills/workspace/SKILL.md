@@ -5,7 +5,7 @@ description: "Load repo-local WyStack Agent Kit workspace context, including .wy
 
 # Workspace Context
 
-Resolve and load the WyStack workspace first. This skill owns the resolved-workspace *contract* — other lifecycle skills load it rather than re-deriving the project's conventions. Two skills self-resolve because they run before the workspace is loadable: `setup-agent-kit` (it creates the workspace) and `worktree` (its `.wystack` is gitignored). They execute the same canonical procedure — `docs/storage-contract.md` § Location and resolution — never a private variant.
+Resolve and load the WyStack workspace first. This skill owns the resolved-workspace *contract* — other lifecycle skills load it rather than re-deriving conventions. Two skills self-resolve because they run before the workspace is loadable: `setup-agent-kit` (it creates the workspace) and `worktree` (its `.wystack` is gitignored). Both run the same canonical procedure — `docs/storage-contract.md` § Location and resolution — never a private variant.
 
 ## Load the constitution
 

@@ -4,72 +4,40 @@ description: Final quality pass — alignment, spacing, states, copy, responsive
 ---
 # Polish
 
-Systematic final pass. Don't polish incomplete work.
+Systematic final pass on functionally complete work. Load `wystack-agent-kit:frontend-design` for the design principles, token rules, and anti-pattern catalog. Work each dimension, fix as you go.
 
-## Prerequisites
+## Alignment & spacing
+- Everything lines up to grid; all gaps use the spacing scale (no random 13px)
+- Optical alignment for icons (may need offset); consistent at all breakpoints
 
-Load `wystack-agent-kit:frontend-design` for the design principles, token rules, and anti-pattern catalog.
-
-## Checklist
-
-Work through each dimension. Fix as you go.
-
-### Alignment & Spacing
-- Everything lines up to grid
-- All gaps use spacing scale (no random 13px)
-- Optical alignment for icons (may need offset)
-- Consistent at all breakpoints
-
-### Typography
+## Typography
 - Hierarchy consistent — same elements, same sizes/weights
-- Line length 45-75 characters
-- No widows/orphans
+- Line length 45–75 characters; no widows/orphans
 - Font loading: no FOUT/FOIT flashes
 
-### Color & Contrast
-- All text meets WCAG AA
-- No hard-coded colors — use design tokens
-- Works in all themes
-- Tinted neutrals — no pure gray or pure black
-- No gray text on colored backgrounds
+## Color & contrast
+- All text meets WCAG AA; tokens only, no hard-coded colors; works in all themes
+- Tinted neutrals — no pure gray/black; no gray text on colored backgrounds
 
-### Interaction States
-All 8 for every interactive element:
-- [ ] Default, Hover, Focus (`:focus-visible`), Active
-- [ ] Disabled, Loading, Error, Success
+## Interaction states
+All 8 for every interactive element: Default, Hover, Focus (`:focus-visible`), Active, Disabled, Loading, Error, Success.
 
-### Transitions
-- All state changes animated (150-300ms)
-- Exponential easing only — no bounce/elastic
-- 60fps — only transform/opacity
-- `prefers-reduced-motion` respected
+## Transitions
+- Animate all state changes (150–300ms); exponential easing only, no bounce/elastic
+- 60fps — transform/opacity only; `prefers-reduced-motion` respected
 
-### Copy
-- Consistent terminology throughout
-- Consistent capitalization (title case or sentence case)
-- No typos
-- Button labels: verb + object
+## Copy
+- Consistent terminology and capitalization; no typos; button labels are verb + object
 
-### Edge Cases
-- [ ] Empty states guide toward action
-- [ ] Loading states show progress
-- [ ] Error states: what + why + fix
-- [ ] Long content handled (truncation, overflow)
-- [ ] Missing data handled gracefully
+## Edge cases
+- Empty states guide toward action; loading states show progress
+- Error states: what + why + fix; long content handled (truncation, overflow); missing data handled gracefully
 
-### Responsive
-- [ ] Mobile, tablet, desktop
-- [ ] Touch targets 44px+
-- [ ] No horizontal scroll
-- [ ] No text < 14px on mobile
+## Responsive
+- Mobile, tablet, desktop; touch targets 44px+; no horizontal scroll; no text < 14px on mobile
 
-### Code Cleanup
-- [ ] No console.log
-- [ ] No commented-out code
-- [ ] No unused imports
-- [ ] No TypeScript `any`
+## Code cleanup
+- No console.log, commented-out code, unused imports, or TypeScript `any`
 
 ## Verification
-- Use it yourself — interact with the feature
-- Check all states, not just happy path
-- Compare to design intent
+Interact with the feature yourself — check all states, not just the happy path, against design intent.

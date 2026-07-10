@@ -4,13 +4,11 @@ description: "Record a contested architecture decision as a dated, append-only A
 ---
 # ADR
 
-An Architecture Decision Record: the full deliberation behind one *contested* decision — what was chosen, the alternatives weighed, the trade-offs, the moment in time. The ADR is the **expanded form** of a decision whose one-line entry in the spec would lose what made it hard.
+An Architecture Decision Record: the full deliberation behind one *contested* decision — what was chosen, the alternatives weighed, the trade-offs, the moment in time. The ADR is the **expanded form** of a decision whose one-line spec entry would lose what made it hard.
 
-**Optional type, off by default.** ADR participates only when `docs.types` enables `adr`. Without it, a contested decision stays a one-liner in the spec's Decisions section — that is the floor, and it loses nothing a reader needs to understand the system. Reach for an ADR only when the deliberation is load-bearing *and* genuinely contested; an obvious or uncontested choice never earns one.
+**Optional type, off by default.** ADR participates only when `docs.types` enables `adr`. Without it, a contested decision stays a one-liner in the spec's Decisions section — the floor, which loses nothing a reader needs.
 
-**The spec stays primary.** A reader understands the system from the spec alone. The ADR is depth-on-demand — the spec's one-line decision links down to it (`expands:`), the ADR points up to the spec it serves (`serves:`). The dependency runs ADR → spec, never spec → ADR-for-understanding: delete every ADR and the specs still explain themselves.
-
-**Write the decision, not the document** — the shared doc discipline (architecture-not-meta, first-line-is-the-thing, earn-the-page) lives in `docs/doc-model.md` § Write the artifact, not the document. An ADR opens with the decision, not "this record documents…".
+**The spec stays primary.** A reader understands the system from the spec alone; the ADR is depth-on-demand. The spec's one-line decision links down (`expands:`), the ADR points up to the one spec it serves (`serves:`) — delete every ADR and the specs still explain themselves. Open with the decision, not "this record documents…" (the shared doc discipline lives in `docs/doc-model.md` § Write the artifact, not the document).
 
 `$ARGUMENTS` — the decision to record (a spec decision reference, a contested choice from a brainstorm), the prior ADR to supersede, or empty (interactive).
 
@@ -18,32 +16,24 @@ An Architecture Decision Record: the full deliberation behind one *contested* de
 
 ## Earn the ADR
 
-Before writing one, both tests must pass:
+Both tests must pass, or keep the one-line decision in the spec and write no ADR:
 
-- **Contested** — a real alternative was weighed and rejected, with trade-offs a one-liner flattens. "Delivery is async, here's why" is one line, not an ADR. "We co-locate the wire protocol and channel in one package rather than two *or* folding into the server, because splitting creates a version-coupling seam with no independent-release benefit and folding leaks server deps to the client" — that's an ADR's worth of deliberation.
-- **Would bloat the spec** — the full _what / alternatives / why / reversibility_ doesn't fit the spec's Decisions section without drowning the surrounding design. If it fits as a one-liner, keep it inline.
-
-Fail either test → keep the one-line decision in the spec, write no ADR.
+- **Contested** — a real alternative was weighed and rejected, with trade-offs a one-liner flattens. "Delivery is async, here's why" is one line; a genuine version-coupling-vs-dependency-leak deliberation across three package layouts is an ADR's worth.
+- **Would bloat the spec** — the full _what / alternatives / why / reversibility_ doesn't fit the Decisions section without drowning the surrounding design.
 
 ## What an ADR captures
 
 - **Decision** — what was chosen, in one sentence. The first line is the decision itself.
-- **Context** — the forces in play at the time: the constraint, the requirement tension, the moment. Dated, because it's a snapshot — later context may shift, but this record doesn't.
+- **Context** — the forces in play at the time, dated because it's a snapshot: later context may shift, this record doesn't.
 - **Alternatives** — the options genuinely weighed and why each was rejected. The alternatives are the point; an ADR with one option is a one-liner in disguise.
 - **Trade-offs** — what the chosen path costs, and what's accepted by taking it.
 - **Reversibility** — how expensive this is to undo, so a future reader knows whether to revisit or respect it.
 
-Describe the decision and its reasoning, not the implementation — interfaces and schemas live in the code, the current design lives in the spec. The ADR is the *why-at-the-time*.
+Describe the decision and its reasoning, not the implementation — the ADR is the *why-at-the-time*, never the interfaces/schemas (those live in code) or the current design (the spec).
 
 ## Append-only and supersession
 
-An ADR is **never edited after acceptance** — the record is the moment it was made. When a later decision overturns it:
-
-1. Write a **new** ADR that captures the new decision and its deliberation.
-2. The new ADR `supersedes:` the old; the old flips to `superseded` (body untouched).
-3. Re-point the spec's one-line decision `expands:` to the new ADR.
-
-This mirrors whole-doc supersede one tier down (`docs/doc-model.md` § Supersession), at *decision* granularity. The trail is append-only — the reasoning history survives, never rewritten.
+An ADR is **never edited after acceptance** — the record is the moment it was made. To overturn one: write a **new** ADR with the new deliberation, `supersedes:` the old (body untouched, status flipped to `superseded`), and re-point the spec's one-liner `expands:` to the new ADR. This mirrors whole-doc supersession (`docs/doc-model.md` § Supersession) at *decision* granularity — the trail is append-only, never rewritten.
 
 ## Workflow
 
@@ -54,9 +44,7 @@ This mirrors whole-doc supersede one tier down (`docs/doc-model.md` § Supersess
 
 ## Rules
 
-- **One spec per ADR** — an ADR serves exactly one spec (`serves:`). A decision spanning two specs belongs to the one that owns the affected boundary; cite the other in context.
-- **Never edit an accepted ADR** — overturn by superseding, never by rewriting. The record is append-only.
-- **The spec keeps the one-liner** — writing an ADR doesn't remove the decision from the spec; it expands it. The spec's Decisions section stays the readable summary, the ADR holds the depth.
+- **One spec per ADR** (`serves:`) — a decision spanning two specs belongs to the one that owns the affected boundary; cite the other in context.
 - **Tool-agnostic content** — never reference the doc store tool, page IDs, or URLs in the ADR body; cross-references are name/id only.
 
 ## Reference

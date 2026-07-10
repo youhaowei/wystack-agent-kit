@@ -1,268 +1,43 @@
 # The Seven Sweeps Editorial Method
 
-Sequential focused passes for editing copy. Each sweep catches issues that get missed when trying to fix everything at once. After each sweep, loop back to verify earlier sweeps aren't compromised.
-
-## Working principle
-
-- Don't change the core message — focus on enhancing it.
-- Multiple focused passes beat one unfocused review.
-- Each edit should have a clear reason.
-- Preserve the author's voice while improving clarity.
-
----
+Sequential focused passes for editing copy — each sweep catches what a single unfocused review misses. Run them in order. **After each sweep, re-verify the earlier ones** so a later edit doesn't regress an earlier fix. Enhance the core message; don't rewrite it. Every edit needs a reason. Preserve the author's voice.
 
 ## Sweep 1: Clarity
 
-**Focus**: Can the reader understand what you're saying?
+Can the reader understand it? Check for: sentences saying too much, unclear pronoun references, jargon, abstract-where-concrete, assumed knowledge, points buried under qualifications.
 
-**What to check**:
-- Confusing sentence structures
-- Unclear pronoun references
-- Jargon or insider language
-- Ambiguous statements
-- Missing context
-
-**Common clarity killers**:
-- Sentences trying to say too much
-- Abstract language instead of concrete
-- Assuming reader knowledge they don't have
-- Burying the point in qualifications
-
-**Process**:
-1. Read through quickly, highlighting unclear parts.
-2. Don't correct yet — just note problem areas.
-3. After marking, recommend specific edits.
-4. Verify edits maintain the original intent.
-
-**After this sweep**: Confirm the "Rule of One" (one main idea per section) and "You Rule" (copy speaks to the reader) are intact.
-
----
+Confirm afterward: one main idea per section, copy speaks to the reader ("you").
 
 ## Sweep 2: Voice and Tone
 
-**Focus**: Is the copy consistent in how it sounds?
-
-**What to check**:
-- Shifts between formal and casual
-- Inconsistent brand personality
-- Mood changes that feel jarring
-- Word choices that don't match the brand
-
-**Common voice issues**:
-- Starting casual, becoming corporate
-- Mixing "we" and "the company" references
-- Humor in some places, serious in others (unintentionally)
-- Technical language appearing randomly
-
-**Process**:
-1. Read aloud to hear inconsistencies.
-2. Mark where tone shifts unexpectedly.
-3. Recommend edits that smooth transitions.
-4. Ensure personality remains throughout.
-
-**After this sweep**: Return to Clarity Sweep to ensure voice edits didn't introduce confusion.
-
----
+Does it sound consistent throughout? Check for: formal↔casual drift, "we" vs "the company", unintentional mood shifts, technical language appearing at random. Read aloud to hear the seams.
 
 ## Sweep 3: So What
 
-**Focus**: Does every claim answer "why should I care?"
+Does every claim answer "why should I care?" For each statement, ask "so what?" — if there's no benefit bridge, add one.
 
-**What to check**:
-- Features without benefits
-- Claims without consequences
-- Statements that don't connect to reader's life
-- Missing "which means…" bridges
-
-**The So What test**: For every statement, ask "Okay, so what?" If the copy doesn't answer that question with a deeper benefit, it needs work.
-
-❌ "Our platform uses AI-powered analytics."
-*So what?*
-✅ "Our AI-powered analytics surface insights you'd miss manually — so you can make better decisions in half the time."
-
-**Common So What failures**:
-- Feature lists without benefit connections
-- Impressive-sounding claims that don't land
-- Technical capabilities without outcomes
-- Company achievements that don't help the reader
-
-**Process**:
-1. Read each claim and literally ask "so what?"
-2. Highlight claims missing the answer.
-3. Add the benefit bridge or deeper meaning.
-4. Ensure benefits connect to real reader desires.
-
-**After this sweep**: Return to Voice and Tone, then Clarity.
-
----
+❌ "Our platform uses AI-powered analytics." *So what?*
+✅ "Our AI-powered analytics surface insights you'd miss manually — so you decide better in half the time."
 
 ## Sweep 4: Prove It
 
-**Focus**: Is every claim supported with evidence?
-
-**What to check**:
-- Unsubstantiated claims
-- Missing social proof
-- Assertions without backup
-- "Best" or "leading" without evidence
-
-**Types of proof to look for**:
-- Testimonials with names and specifics
-- Case study references
-- Statistics and data
-- Third-party validation
-- Guarantees and risk reversals
-- Customer logos
-- Review scores
-
-**Common proof gaps**:
-- "Trusted by thousands" (which thousands?)
-- "Industry-leading" (according to whom?)
-- "Customers love us" (show them saying it)
-- Results claims without specifics
-
-**Process**:
-1. Identify every claim that needs proof.
-2. Check if proof exists nearby.
-3. Flag unsupported assertions.
-4. Recommend adding proof or softening claims.
-
-**After this sweep**: Return to So What, Voice and Tone, then Clarity.
-
----
+Is every claim backed? Flag "best" / "leading" / "trusted by thousands" / "customers love us" without evidence — then add proof (named testimonials, case studies, stats, third-party validation, logos, review scores, guarantees) or soften the claim.
 
 ## Sweep 5: Specificity
 
-**Focus**: Is the copy concrete enough to be compelling?
-
-**What to check**:
-- Vague language ("improve", "enhance", "optimize")
-- Generic statements that could apply to anyone
-- Round numbers that feel made up
-- Missing details that would make it real
-
-**Specificity upgrades**:
+Concrete enough to be compelling? Replace vague words ("improve", "enhance", "optimize") with numbers, timeframes, examples. Content that can't be made specific is usually filler — cut it.
 
 | Vague | Specific |
 |-------|----------|
 | Save time | Save 4 hours every week |
 | Many customers | 2,847 teams |
 | Fast results | Results in 14 days |
-| Improve your workflow | Cut your reporting time in half |
 | Great support | Response within 2 hours |
-
-**Process**:
-1. Highlight vague words and phrases.
-2. Ask "Can this be more specific?"
-3. Add numbers, timeframes, or examples.
-4. Remove content that can't be made specific (it's probably filler).
-
-**After this sweep**: Return to Prove It, So What, Voice and Tone, then Clarity.
-
----
 
 ## Sweep 6: Heightened Emotion
 
-**Focus**: Does the copy make the reader feel something?
-
-**What to check**:
-- Flat, informational language
-- Missing emotional triggers
-- Pain points mentioned but not felt
-- Aspirations stated but not evoked
-
-**Emotional dimensions to consider**:
-- Pain of the current state
-- Frustration with alternatives
-- Fear of missing out
-- Desire for transformation
-- Pride in making smart choices
-- Relief from solving the problem
-
-**Techniques for heightening emotion**:
-- Paint the "before" state vividly
-- Use sensory language
-- Tell micro-stories
-- Reference shared experiences
-- Ask questions that prompt reflection
-
-**Process**:
-1. Read for emotional impact — does it move you?
-2. Identify flat sections that should resonate.
-3. Add emotional texture while staying authentic.
-4. Ensure emotion serves the message (not manipulation).
-
-**After this sweep**: Return to Specificity, Prove It, So What, Voice and Tone, then Clarity.
-
----
+Does it make the reader feel something? Flat, informational copy needs emotional texture — paint the "before" state, use sensory language, tell micro-stories, ask reflective questions. Draw on pain of the current state, frustration with alternatives, desire for transformation, relief. Keep it authentic; emotion serves the message, not manipulation.
 
 ## Sweep 7: Zero Risk
 
-**Focus**: Have we removed every barrier to action?
-
-**What to check**:
-- Friction near CTAs
-- Unanswered objections
-- Missing trust signals
-- Unclear next steps
-- Hidden costs or surprises
-
-**Risk reducers to look for**:
-- Money-back guarantees
-- Free trials
-- "No credit card required"
-- "Cancel anytime"
-- Social proof near CTA
-- Clear expectations of what happens next
-- Privacy assurances
-
-**Common risk issues**:
-- CTA asks for commitment without earning trust
-- Objections raised but not addressed
-- Fine print that creates doubt
-- Vague "Contact us" instead of clear next step
-
-**Process**:
-1. Focus on sections near CTAs.
-2. List every reason someone might hesitate.
-3. Check if the copy addresses each concern.
-4. Add risk reversals or trust signals as needed.
-
-**After this sweep**: Return through all previous sweeps one final time.
-
----
-
-## Quick checklist
-
-### Before you start
-- [ ] Understand the goal of this copy
-- [ ] Know the target audience
-- [ ] Identify the desired action
-- [ ] Read through once without editing
-
-### Per sweep
-- [ ] Sweep 1 (Clarity): every sentence is immediately understandable
-- [ ] Sweep 2 (Voice & Tone): consistent throughout, reads well aloud
-- [ ] Sweep 3 (So What): every feature connects to a benefit
-- [ ] Sweep 4 (Prove It): claims substantiated, proof attributed
-- [ ] Sweep 5 (Specificity): vague words replaced, numbers and timeframes added
-- [ ] Sweep 6 (Emotion): copy evokes feeling, pain feels real, aspirations feel achievable
-- [ ] Sweep 7 (Zero Risk): objections addressed near CTA, trust signals present, next steps crystal clear
-
-### Final
-- [ ] No typos or grammatical errors
-- [ ] Consistent formatting
-- [ ] Links work
-- [ ] Core message preserved through all edits
-
----
-
-## Iterative collaboration pattern
-
-When editing collaboratively:
-
-1. **Run a sweep and present findings** — show what you found, why it's an issue.
-2. **Recommend specific edits** — don't just identify problems; propose solutions.
-3. **Request the updated copy** — let the author make final decisions.
-4. **Verify previous sweeps** — after each round of edits, re-check earlier sweeps.
-5. **Repeat until clean** — continue until a full sweep finds no new issues.
+Is every barrier to action removed? Near CTAs, list every reason to hesitate and check each is addressed — guarantees, free trial, "no credit card required", "cancel anytime", nearby social proof, clear next step, privacy assurance. Replace vague "Contact us" with a concrete next action.

@@ -1,6 +1,6 @@
 # Severity Model
 
-Two labels, not five. Applied by the orchestrator (the calling skill) when consolidating reviewer findings. Reviewers keep using their native labels (Critical/High/Medium/Low/Nit) as input signal — the orchestrator re-classifies. Forcing reviewers to pre-triage reduces recall.
+Two labels, not five. Applied by the orchestrator (the calling skill) when consolidating findings; reviewers keep their native labels (Critical/High/Medium/Low/Nit) as input signal. Forcing reviewers to pre-triage reduces recall.
 
 Shared between `wystack-agent-kit:code-review` and `wystack-agent-kit:full-review`.
 

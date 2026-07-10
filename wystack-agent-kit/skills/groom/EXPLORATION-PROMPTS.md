@@ -37,7 +37,7 @@ Status: {status} | Priority: {priority} | Current estimate: {est} | Type: {type}
 
 **Codebase Analysis**:
 - Files: {affected files}
-- Suggested estimate: **{size}** ({model tier, e.g. Sonnet or Opus}) — {reasoning}
+- Suggested estimate: **{size}** ({model tier, e.g. standard/Sonnet/Terra or deep/Opus/Sol}) — {reasoning}
 - Full scope at {size}:
   - Tests: {what's required after strategic test gate, or "No new automated tests"}
   - Docs: {what needs updating}
@@ -93,7 +93,7 @@ Exploration depth: "very thorough"
 ## Planning Summary
 
 ### Changes
-- TASK-{id}: {title} — estimate: ? → M (large model tier, e.g. Opus), added ACs + plan → **Ready**
+- TASK-{id}: {title} — estimate: ? → M (deep model tier, e.g. Opus/Sol), added ACs + plan → **Ready**
 - TASK-{id}: {title} — priority: Medium → High → **Ready**
 - TASK-{id}: {title} — split into 3 sub-tasks
 
@@ -104,8 +104,8 @@ Exploration depth: "very thorough"
 - TASK-{id}: {title} — missing: {what's missing}
 
 ### Updated Priority Stack (Ready tasks first)
-1. TASK-{id}: {title} (High, S/medium model tier, e.g. Sonnet) — Ready
-2. TASK-{id}: {title} (High, M/large model tier, e.g. Opus) — Ready
+1. TASK-{id}: {title} (High, S/standard model tier, e.g. Sonnet/Terra) — Ready
+2. TASK-{id}: {title} (High, M/deep model tier, e.g. Opus/Sol) — Ready
 ...
 
 ### Stats

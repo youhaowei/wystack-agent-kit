@@ -4,11 +4,9 @@ description: "Consolidate a session's work into durable homes and emit a kicksta
 ---
 # Handoff
 
-Close a session: drain its work into the durable stores, then emit a prompt that starts the next session where this one left off.
+Close a session: drain its work into the durable stores, then emit a prompt that starts the next session where this one left off. The sibling of `finish-task` — that closes a *task*, this closes a *session* (one continuous working window, which may span several tasks or none). User-invoked, directly or via `next-task`'s heavy-context branch; takes no arguments.
 
-A session-end consolidation ritual — the sibling of `finish-task`. `finish-task` closes a *task*; `handoff` closes a *session* — one continuous working window, regardless of context compaction — which may span several tasks or none. User-invoked — directly, or via `next-task`'s heavy-context branch; no skill triggers it unprompted. handoff takes no arguments — it operates on the current session.
-
-handoff writes **no durable artifact**. The tasks and docs it updates are the persistence; the handoff itself is a transient prompt. Derive, don't store.
+handoff writes **no durable artifact** — the tasks and docs it updates are the persistence; the prompt itself is transient. Derive, don't store.
 
 **Prerequisites.** Load `wystack-agent-kit:workspace` — the consolidation step's delegates (`task-manager`, `new-task`, `spec`, `prd`, `wiki-librarian`) all require it; loading it up front fails fast if the kit isn't set up. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
 
@@ -21,7 +19,7 @@ Read back over the current session's context — the conversation in this window
 - **Tasks touched** — work items started, advanced, discussed, or discovered.
 - **Decisions made** — design choices, scope boundaries, rejected alternatives.
 - **Terms and principles** — vocabulary or cross-cutting rules that surfaced.
-- **Loose ends** — follow-up work surfaced in the session but not yet a task. Distinct from `finish-task`'s review-loop deferrals, which `finish-task` triages with the user — recommending each, filing only on approval.
+- **Loose ends** — follow-up work surfaced but not yet a task (distinct from `finish-task`'s review-loop deferrals, which finish-task triages itself).
 - **Stale docs** — methodology or domain docs the session's decisions outdate.
 
 ### 2. Consolidate into durable homes
@@ -68,7 +66,6 @@ The prompt is the only output. handoff does not write it to a file — emit it a
 
 ## Principles
 
-- **Derive, don't store** — no durable handoff artifact; the updated tasks and docs are the record.
 - **Delegate, never reimplement** — task CRUD, doc edits, and ticket creation belong to the skills and agents that own them.
 - **Session-level context only** — task-level detail in the prompt is a sign step 2 left a task incomplete.
 - **One-directional** — handoff is a terminal step. It never invokes `next-task` as a skill call (it may name `next-task` as text in the kickstart prompt); `next-task` delegates *to* handoff.

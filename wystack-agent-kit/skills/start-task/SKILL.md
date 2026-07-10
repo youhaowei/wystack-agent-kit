@@ -97,5 +97,5 @@ When implementation is complete, invoke `wystack-agent-kit:finish-task <task> pr
 ## Notes
 
 - Main entry point — composes `wystack-agent-kit:next-task`, `wystack-agent-kit:groom`, an execution skill, and `wystack-agent-kit:finish-task`.
-- The `{id}` branch matching pattern is intentionally broad — it matches provider-native names like `YW-56` as well as the derived `task-56-*` convention. Resume detection works either way.
-- Default behavior eliminates all confirmation prompts except hard stops (blocked task, `needs-human` shepherd exit). Every other decision takes the recommended path. Pass `--interactive` to restore confirmation prompts at each step.
+- The `{id}` branch-matching pattern is intentionally broad — it matches provider-native names (`YW-56`) as well as the derived `task-56-*`, so resume detection works either way.
+- Default mode eliminates every confirmation prompt except hard stops (blocked task, `needs-human` shepherd exit); other decisions take the recommended path. `--interactive` restores the prompts.

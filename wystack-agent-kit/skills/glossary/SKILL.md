@@ -4,11 +4,9 @@ description: "Define a domain term as an atomic glossary note (glossary/<term>.m
 ---
 # Glossary
 
-The glossary is the project's **term spine**: the single canonical home for every domain term. One atomic note per term (`glossary/<term>.md`); every other doc — PRD, Spec, Story — *cites* the note (`[[term-slug]]`) and never redefines it. The directory is the glossary; each note is an independently-linkable definition. Never a monolith — a single `glossary.md` listing every term is the antipattern this structure exists to avoid.
+The glossary is the project's **term spine**: the single canonical home for every domain term. One atomic note per term (`glossary/<term>.md`) — the directory *is* the glossary, each note an independently-linkable definition; a single `glossary.md` listing every term is the antipattern this structure avoids. A term lives in exactly one note; every other doc *cites* it (`[[term-slug]]`) and never redefines it (Spec Key concepts *indexes* the glossary, the PRD cites product terms, a Story cites in user language — none is a second definition). Change the note once, every citation follows.
 
-**Core, always on.** The glossary holds the ubiquitous language together — without it, terms scatter across docs, the same entity gets defined twice, and code identifiers match neither. Every project has one; it isn't opt-in.
-
-**One owner, one home.** A term lives in exactly one note. Spec Key concepts is an *index* into the glossary (the terms a spec leans on, cited), not a second place to define them; the PRD cites product terms; a Story cites in user language. The note is the only definition — change it once, every citation follows.
+**Core, always on.** Without the glossary, terms scatter, the same entity gets defined twice, and code identifiers match neither. Every project has one; it isn't opt-in.
 
 **Write the term, not the document** — the shared doc discipline (architecture-not-meta, first-line-is-the-thing, earn-the-page) lives in `docs/doc-model.md` § Write the artifact, not the document. A note opens with the definition, not "this note defines…".
 
@@ -18,9 +16,9 @@ The glossary is the project's **term spine**: the single canonical home for ever
 
 ## What belongs in the glossary
 
-**Domain language only.** A term a domain expert reasons about — an entity, a state, a process, a policy with a project-specific meaning. Skip generic programming vocabulary ("service", "repository", "controller", "handler"); that's architecture discussion, not domain language, and it belongs in the spec's prose, not a term note.
+**Domain language only.** A term a domain expert reasons about — an entity, a state, a process, a project-specific policy. Skip generic programming vocabulary ("service", "repository", "controller", "handler"); that's architecture discussion, and it belongs in the spec's prose.
 
-The test: *would two people on this project argue about what this word means, or use two different words for it?* If yes, it's a glossary term. If it's a universal CS concept used in its textbook sense, it isn't.
+The test: *would two people on this project argue about what this word means, or use two different words for it?* If yes, it's a glossary term; if it's a universal CS concept in its textbook sense, it isn't.
 
 ## What a note captures
 
@@ -53,10 +51,7 @@ A rename is incomplete until downstream references match. After renaming: update
 
 ## Rules
 
-- **Atomic notes, never a monolith** — one term, one file. A single `glossary.md` listing every term is the failure mode this type exists to avoid.
-- **The glossary defines; everyone else cites** — specs, PRD, and stories cite `[[term-slug]]`; the note is the single source of the term's meaning. A citing doc never restates the definition. A spec's Key concepts is an index of citations, not a second definitions list.
 - **A used term needs a note** — a domain term referenced in a spec, PRD, story, or code identifier with no glossary note is a coverage gap. The interactive sweep and the `qa` coverage check surface these.
-- **Domain language only** — skip generic programming terms; those are architecture discussion, not domain vocabulary.
 
 ## Reference
 

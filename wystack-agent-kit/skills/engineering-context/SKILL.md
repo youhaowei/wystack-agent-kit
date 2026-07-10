@@ -7,7 +7,7 @@ description: "Gather spec-anchored context for engineering work by delegating to
 
 Return a spec-anchored context block so downstream work (reviews, tests, fixes, breakdowns, design decisions) measures code against intent, not guesswork.
 
-Without this step, reviewers flag intentional design as bugs, test-writers encode implementation as contract, and architects re-litigate decisions that already happened. Run this once upfront; every downstream consumer gets the same framing.
+Run once upfront; every downstream consumer gets the same framing.
 
 `$ARGUMENTS` —
 
@@ -39,9 +39,7 @@ Scan the current conversation for context already loaded — re-fetching wastes 
 | `Explore` (repo)                 | A recent `Explore` agent report, or substantial reads of `CLAUDE.md` / `DESIGN.md` + multiple files in the affected modules |
 | Knowledge base (prior decisions) | Recent knowledge-base search output, or loaded project memory files                                                         |
 
-State what you found inline so the user can override: _"Freshness check: PRD is already in context from the earlier fetch. Skipping wiki-librarian. Dispatching task-manager + Explore + kb."_
-
-When unsure, err toward re-fetching — stale context is worse than one extra subagent call. But don't re-fetch a PRD whose content is visibly in the transcript.
+State what you found inline so the user can override. When unsure, err toward re-fetching — stale context is worse than one extra subagent call, but don't re-fetch a PRD visibly in the transcript.
 
 ### 2. Parallel dispatch
 
@@ -63,7 +61,7 @@ Pass:
 - Feature/phase name for title-search if URLs aren't available.
 - Instruction: return **full content** of PRDs/Specs + Stories (when `storyHome = docs`, stories are docs here; when `storyHome = tasks`, stories arrive via task-manager) + one hop of Related/Prior-art links. Not summaries — downstream consumers quote from it. **Always resolve the glossary terms the changed area uses** — the docs cite `[[term-slug]]`; return those notes so the canonical definitions travel with the context (a reviewer measuring code against intent needs the term meanings, not a guess). A term used in the code or docs with no glossary note is a coverage gap — flag it. When `adr` is enabled (`docs.types`), also pull ADRs the spec links via `expands:` as part of that one hop — they carry the contested-decision rationale the spec one-liner compresses, the context that stops a reviewer re-litigating a settled call.
 
-The librarian is the right agent for reads, not just writes — it knows the doc-store schema and finds docs the task-manager can't.
+The librarian is the right agent for reads, not just writes — it finds docs the task-manager can't.
 
 #### c. `Explore` (medium thoroughness) → codebase
 
@@ -87,19 +85,19 @@ kb search "<feature-name / task-title keywords>" --ns default --limit 20 --json
 kb search "<same keywords>" --ns retro --limit 10 --json
 ```
 
-It returns memories that captured prior decisions (_"we rejected Redux"_) and retro findings (known bugs in the area). These often explain _"why is the code like this?"_ better than PRDs do.
+It returns memories capturing prior decisions and retro findings — these often explain _"why is the code like this?"_ better than PRDs do.
 
 If there is no knowledge-base CLI, or it fails, note it and continue. Not critical path.
 
 ### 3. Synthesize and return
 
-Produce the structured block in [CONTEXT-BLOCK.md](CONTEXT-BLOCK.md). Pass it **verbatim** — do not paraphrase the spec. Downstream reviewers need the exact wording to check findings against.
+Produce the structured block in [CONTEXT-BLOCK.md](CONTEXT-BLOCK.md). Pass it **verbatim** — downstream reviewers check findings against the exact spec wording, not a paraphrase.
 
 ### 4. Gate
 
 After presenting the block, state back one short confirmation: _"Context captured: {feature name}, Phase {N}, {M} goals / {K} non-goals / {D} decisions. Proceeding to {downstream step}."_
 
-If anything critical is missing — no PRD found and no user-provided fallback, or the spec has open questions that directly affect the downstream work — pause and ask. Don't plow ahead with a shaky foundation; the downstream step will amplify the gap.
+If anything critical is missing — no PRD found and no user-provided fallback, or the spec has open questions that directly affect the downstream work — pause and ask; the downstream step will amplify the gap.
 
 ## Mode auto-detection
 
@@ -110,15 +108,7 @@ Infer from, in priority order:
 3. **User's latest message verbs.** _"review", "findings", "check this branch"_ → `review`. _"write tests", "coverage"_ → `test`. _"why is this broken", "failing", "regression"_ → `fix`. _"plan", "break down", "estimate", "groom"_ → `plan`.
 4. **Ambiguous or no signal** → default to `review`. It's the widest mode; the others are narrower subsets.
 
-State the detection inline so the caller can redirect:
-
-> _"Detected mode: `fix` (signals: recent stack trace, user said 'why is this failing'). Proceeding — reply with a different mode if that's wrong."_
-
-Never silently categorize. If signals disagree (invoking skill says `review` but the conversation reads as a bug hunt), surface that: _"Invoked from code-review but conversation reads like a fix — going with `review` since it's broader; say `fix` if you want the narrower Explore."_ Let the user break the tie once; don't ping on every inference.
-
-## Reference
-
-- [CONTEXT-BLOCK.md](CONTEXT-BLOCK.md) — the synthesized output template returned in step 3.
+State the detection inline so the caller can redirect; never silently categorize. If signals disagree, surface it and go with the broader mode — let the user break the tie once, don't ping on every inference.
 
 ## Fallback paths
 

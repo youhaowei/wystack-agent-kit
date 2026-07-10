@@ -15,11 +15,9 @@ Walk the codebase. Find shallow modules and propose **deepening opportunities** 
 5. Once chosen, drop into a grilling loop on the design — constraints, dependencies, the deepened interface, what survives in tests. As it crystallizes, record any new term as a glossary note (`wystack-agent-kit:glossary`) and any decision in the relevant spec's Decisions section (`wystack-agent-kit:spec`).
 6. **Structural refactors get dedicated tickets** — never bundled into feature work. When the user picks a candidate to pursue, propose the ticket via `wystack-agent-kit:new-task` rather than starting work.
 
-Use the [LANGUAGE.md](LANGUAGE.md) vocabulary **exactly**, referring to each term by name — don't drift into generic synonyms like "component", "service", or "boundary."
-
 ## Reference files
 
-- [LANGUAGE.md](LANGUAGE.md) — full vocabulary, principles, and rejected framings. Read once; refer to terms by name afterward.
+- [LANGUAGE.md](LANGUAGE.md) — full vocabulary, principles, and rejected framings. Use these terms **exactly**; don't drift into generic synonyms like "component", "service", or "boundary." Read once; refer to terms by name afterward.
 - [DEEPENING.md](DEEPENING.md) — how to deepen given the dependency category (in-process, local-substitutable, remote-but-owned, true-external).
 - [CATALOG.md](CATALOG.md) — Fowler's named refactorings as a cheat sheet. Use when the user asks "how do I actually move from here to there."
 - [INTERFACE-DESIGN.md](INTERFACE-DESIGN.md) — "Design It Twice" — spawn parallel sub-agents to produce radically different interfaces for a chosen candidate. Use when the user wants to explore alternatives before committing.

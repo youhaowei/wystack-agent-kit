@@ -10,10 +10,10 @@ Prefer OKLCH — perceptually uniform (equal lightness steps look equal, unlike 
 --color-primary-dark: oklch(35% 0.12 250);
 ```
 
-Key: reduce chroma toward white/black. High chroma at extreme lightness looks garish.
+Key: reduce chroma toward white/black — high chroma at extreme lightness looks garish.
 
 ## Tinted Neutrals
-Pure gray is dead. Add brand hue at minimal saturation:
+Add brand hue at minimal saturation:
 ```css
 /* OKLCH */
 --gray-100: oklch(95% 0.01 250);

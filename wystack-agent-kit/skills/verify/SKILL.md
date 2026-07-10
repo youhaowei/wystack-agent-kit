@@ -29,16 +29,7 @@ Every field is optional. `checks` is the extension point — anything `ui`/`cli`
 
 1. **Define the contract** — golden path plus key edge cases, from the ticket's acceptance criteria or the change itself.
 2. **Pick the surfaces** — UI, CLI, server, checks, per `verify.json`.
-3. **Dispatch a worker per surface** — in parallel, single message. UI → the installed browser-automation subagent (e.g. `agent-browser`); CLI / server / checks → a worker subagent. Each gets its contract slice, the relevant `verify.json` entry, and the run's evidence directory (`artifacts/verify/<run>/` in the workspace):
-
-   ```
-   Exercise the {surface} surface for this verification run.
-   Contract items: {the items this surface covers}
-   Config: {the verify.json entry for this surface}
-   Capture all evidence — screenshots, GIFs, output, exit codes, logs — into {evidence dir}.
-   Return per contract item: PASS / FAIL / UNREACHABLE, plus the evidence path.
-   Do not judge whether the feature works — report what you observed.
-   ```
+3. **Dispatch a worker per surface** — in parallel, single message. UI → the installed browser-automation subagent (e.g. `agent-browser`); CLI / server / checks → a worker subagent. Brief each with its contract slice, its `verify.json` entry, and the run's evidence directory (`artifacts/verify/<run>/` in the workspace). Each captures all evidence (screenshots, GIFs, output, exit codes, logs) there and returns, **per contract item, `PASS` / `FAIL` / `UNREACHABLE` plus the evidence path — never a verdict on whether the feature works, only what it observed.**
 
    Evidence is transient — `wystack-agent-kit:cleanup` prunes old runs.
 4. **Close gaps** — any `UNREACHABLE` item is a setup gap: report what's missing and the fix (a `checks` script, a tool, an instruction). Don't skip it, don't hand it off.

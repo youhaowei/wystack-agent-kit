@@ -10,13 +10,11 @@ Functional in-product copy. Clarity > persuasion. Terse, action-oriented, system
 
 <what-to-do>
 
-1. **Identify the surface.** Button, error, empty state, loading state, form field, tooltip, system message? Each has its own pattern set.
-2. **Identify the moment.** Success, error, neutral, destructive, onboarding? Tone shifts per moment.
-3. **Apply the relevant pattern** from the references — don't invent from scratch. Microcopy has well-established patterns; deviation usually means reinventing badly.
-4. **Test against the three error questions** when writing errors: What happened? Why? How to fix it?
-5. **Check terminology consistency** with the rest of the product. Use the canonical terms where they already exist; flag drift.
-6. **Apply accessibility checks**: link text standalone-meaningful, alt text describes information, icon buttons labeled, status changes announced.
-7. **Account for translation expansion** if the product is or might be translated.
+1. **Identify the surface** (button, error, empty state, loading, form field, tooltip, system message) and **the moment** (success, error, neutral, destructive, onboarding) — each has its own patterns and tone.
+2. **Apply the relevant reference pattern** — don't invent; deviation from established microcopy patterns usually means reinventing badly.
+3. **For errors, answer the three questions**: What happened? Why? How to fix it?
+4. **Mirror existing terminology**; flag drift.
+5. **Pass accessibility checks** (below) and account for translation expansion if the product is or may be translated.
 
 </what-to-do>
 
@@ -32,29 +30,19 @@ Functional in-product copy. Clarity > persuasion. Terse, action-oriented, system
 
 ## Cognitive mode (don't drift to marketing)
 
-UX writing serves the user task. It is not the place for:
-
-- Brand storytelling
-- Persuasive narrative
-- Excitement / hype
-- Marketing superlatives ("supercharge", "unlock", "transform")
-- Humor (especially in errors)
-
-If the surface is a marketing landing page or a hero block, hand off to `wystack-agent-kit:copywriting`. The line: in-app, in-flow, mid-task → ux-writing. On the marketing site, pre-conversion → copywriting.
+UX writing serves the task — no brand storytelling, persuasive narrative, hype, marketing superlatives ("supercharge", "unlock", "transform"), or humor (especially in errors). Marketing landing page or hero block → hand off to `wystack-agent-kit:copywriting`. The line: in-app, mid-task → ux-writing; marketing site, pre-conversion → copywriting.
 
 ## Terminology consistency
 
-When writing for a project that already has terminology choices (Sign in vs Log in, Settings vs Preferences, Delete vs Remove vs Trash), mirror what's there. If terminology is inconsistent across the product, flag it — variety is confusion, not richness.
+Mirror the product's existing choices (Sign in vs Log in, Settings vs Preferences, Delete vs Remove vs Trash). If they're inconsistent across the product, flag it — variety is confusion, not richness.
 
 ## Voice anchor
 
-`wystack-agent-kit:establish-design` writes the brand voice to `DESIGN.md` when run for a project. Read it before writing — voice is project-defined, not generic.
-
-If `DESIGN.md` is missing or has no voice section, ask the user to define voice in 2 examples (one positive, one to avoid) before drafting.
+Read brand voice from `DESIGN.md` before writing — it's project-defined, written by `wystack-agent-kit:establish-design`, not generic. If missing or has no voice section, ask the user for 2 examples (one positive, one to avoid) before drafting.
 
 ## Accessibility is non-negotiable
 
-Every label, every error, every alt text passes accessibility checks before shipping:
+Every label, error, and alt text passes before shipping:
 
 - Link text has standalone meaning out of context.
 - Icon buttons have `aria-label`.

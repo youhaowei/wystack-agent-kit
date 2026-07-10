@@ -4,21 +4,16 @@ description: Create production-grade frontend interfaces — pages, components, 
 ---
 # Frontend
 
-Primary skill for creating distinctive frontend interfaces that avoid generic AI aesthetics. Loads the project's design context, applies the anti-pattern catalog, and produces production-grade code.
+Primary skill for distinctive frontend interfaces that avoid generic AI aesthetics.
 
 ## What to do
 
-<what-to-do>
-
-1. **Load project context.** Read `DESIGN.md` if present (tokens, register, primitives mapping, project-specific anti-refs). If missing, recommend running `wystack-agent-kit:establish-design` first — but proceed if the user wants greenfield exploration.
-2. **Confirm register** for the surface — brand mode (marketing/landing/editorial) vs product mode (app/dashboard/admin). Different rules.
+1. **Load project context.** Read `DESIGN.md` if present (tokens, register, primitives, project anti-refs). If missing, recommend `wystack-agent-kit:establish-design` — but proceed for greenfield exploration.
+2. **Confirm register** for the surface — brand vs product (below). Different rules.
 3. **Commit to a bold aesthetic direction** before writing code. Indecision in the middle reads as templated.
-4. **Compose from `@wystack/ui` primitives.** No raw `<button>` / `<input>` / `<dialog>` in feature code. See [`references/ui-primitives.md`](../../references/ui-primitives.md).
-5. **Apply the anti-pattern catalog** continuously. Named patterns at [`references/anti-patterns.md`](../../references/anti-patterns.md).
-6. **Use semantic tokens, never raw values.** Color, spacing, type, radii, shadows all from `--color-*` / `--space-*` / `--text-*` / `--radius-*` / `--shadow-*`.
-7. **Run the AI Slop Test before declaring done.** See below.
-
-</what-to-do>
+4. **Compose from `@wystack/ui-react` primitives** ([`references/ui-primitives.md`](../../references/ui-primitives.md)), tokens from `@wystack/ui-core`. No raw `<button>` / `<input>` / `<dialog>` in feature code.
+5. **Use semantic tokens, never raw values** — `--color-*` / `--space-*` / `--text-*` / `--radius-*` / `--shadow-*`.
+6. **Apply the anti-pattern catalog** continuously ([`references/anti-patterns.md`](../../references/anti-patterns.md)), and run the AI Slop Test before declaring done.
 
 ## Brand vs Product register
 
@@ -27,11 +22,11 @@ Primary skill for creating distinctive frontend interfaces that avoid generic AI
 | **Brand** | Marketing pages, landing, portfolios, editorial | Bold visual statement, asymmetry, distinctive type, hero typography, scroll choreography |
 | **Product** | App UI, dashboards, admin tools, settings, forms | Density, scannability, predictable affordances, restraint, system fidelity |
 
-A landing page and a dashboard can't follow the same playbook. `wystack-agent-kit:establish-design` records register in `DESIGN.md`. Confirm if ambiguous.
+A landing page and a dashboard can't follow the same playbook. `establish-design` records register in `DESIGN.md`; confirm if ambiguous.
 
 ## Bold aesthetic direction
 
-Pick an extreme — *brutally minimal*, *maximalist chaos*, *retro-futuristic*, *organic/natural*, *luxury/refined*, *playful/toy-like*, *editorial/magazine*, *brutalist/raw*, *art deco/geometric*, *soft/pastel*, *industrial/utilitarian*. Bold maximalism and refined minimalism both work — the failure mode is hedging in the middle.
+Pick an extreme — *brutally minimal*, *maximalist chaos*, *retro-futuristic*, *organic/natural*, *luxury/refined*, *playful/toy-like*, *editorial/magazine*, *brutalist/raw*, *art deco/geometric*, *soft/pastel*, *industrial/utilitarian*. Bold maximalism and refined minimalism both work — the failure mode is hedging in the middle. Match implementation intensity to the vision: maximalist → elaborate animation, layered effects, density; minimalist → restraint, precise spacing and type. Mismatched intensity reads as confused. Two designs from the same prompt should not converge on the same defaults.
 
 ## References
 
@@ -53,16 +48,4 @@ Craft detail (reach for the dimension you're composing):
 
 > If you showed this interface to someone and said "AI made this," would they believe you immediately? If yes, redesign.
 
-A distinctive interface should make someone ask "how was this made?" — not "which AI made this?"
-
-Review the anti-pattern catalog ([`references/anti-patterns.md`](../../references/anti-patterns.md)) — those DON'Ts are the fingerprints of AI-generated work from 2024–2025.
-
-## Implementation
-
-Match implementation complexity to the aesthetic vision:
-- Maximalist designs → elaborate animations, layered effects, density.
-- Minimalist designs → restraint, precision, careful spacing and typography.
-
-Mismatched intensity (minimalist aesthetic with maximalist code, or vice versa) reads as confused.
-
-Interpret creatively. Two designs from the same prompt should not converge on the same defaults. Vary themes, fonts, color, motion. The model is capable of distinct creative output — don't hold back.
+A distinctive interface makes someone ask "how was this made?" — not "which AI made this?" The anti-pattern catalog ([`references/anti-patterns.md`](../../references/anti-patterns.md)) is the fingerprint list of AI-generated work from 2024–2025.

@@ -61,5 +61,4 @@ Deliver a structured pick of the top ~4 tasks — preceded by a one-line context
 ## Principles
 
 - **Roles, not literal statuses** — the configured vocabulary maps project statuses to ready/open/in-flight/blocked/deferred; never hardcode status names.
-- **Delegate** — `task-manager` owns discovery; this skill owns only the ranking.
-- **Bounded provider calls** — one search plus a few targeted fetches, never one search plus N full fetches.
+- **Bounded provider calls** — one search plus a few targeted fetches, never N full fetches.
