@@ -81,7 +81,7 @@ One story, one canonical home, one status authority. No mixed mode.
 
 **The PRD links, it does not mirror.** The PRD's story index is a link per story; status is read through the link. Surface status inline only when the link alone wouldn't make it obvious (a *Superseded* story the reader shouldn't follow). Mirroring status into the PRD duplicates state the home owns, and duplicated state drifts.
 
-**Quality bar.** A story is *Valuable, Negotiable, Testable*, with *unambiguous acceptance criteria*, and states the *goal, not the how*. INVEST's *Estimable* and *Small* are delivery properties — they live on the tickets `breakdown` slices off the story, not on the requirement.
+**Quality bar.** A story is *Valuable, Negotiable, Testable*, with *unambiguous acceptance criteria*, and states the *goal, not the how*. *Estimable* and *Small* are delivery-granularity — meaningless for a requirement, so they don't apply to the story. The full INVEST bar applies to the tickets `breakdown` slices off it — and *Valuable* is re-tested per slice, not inherited: a Valuable story can slice into worthless horizontal fragments, so each ticket must itself be independently valuable (`breakdown` uses this as its brake on over-splitting).
 
 ## Requirements in the repo
 

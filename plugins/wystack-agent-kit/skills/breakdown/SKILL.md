@@ -29,7 +29,7 @@ Prerequisite: load `wystack-agent-kit:workspace` first for configured task/doc p
 
 When a slice is too big, split on a SPIDR axis: spike, paths, interfaces, data, rules.
 
-Size tickets on INVEST's delivery half — a ticket must be **Estimable** and **Small**. *Valuable*, *Negotiable*, and *Testable* are inherited from the story it's sliced off (`docs/doc-model.md` § Story); don't re-litigate them at the ticket.
+Every ticket holds INVEST — and here INVEST is a brake on splitting, not a push toward it. *Small* is a ceiling, not a target; *Valuable* and *Independent* bound how far you slice. A ticket that isn't independently valuable is a horizontal fragment (a lone DB column, an API stub) — merge it back. Prefer the fewest vertical slices that each ship value. See `docs/doc-model.md` § Story.
 
 ## Reference
 
