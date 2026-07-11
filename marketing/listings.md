@@ -29,7 +29,7 @@ Honest guardrails when using this framing:
 ### skills.sh
 Format: skill/plugin directory listing. List the **plugin as a unit**, not decomposed skills.
 
-> **WyStack Agent Kit** — one portable lifecycle for coding agents. Brainstorm → PRD → spec → build → review → verify → ship, as one connected method rather than scattered skills. The agent does the work; you make the decisions at every gate. 37 skills + 10 role agents, runs on Claude Code, Codex, Cursor, and Pi. Supervised by default, autonomous (`orchestrate`) when you want it. MIT.
+> **WyStack Agent Kit** — one portable lifecycle for coding agents. Brainstorm → PRD → spec → build → review → verify → ship, as one connected method rather than scattered skills. The agent does the work; you make the decisions at every gate. 35 skills + 10 role agents, runs on Claude Code, Codex, Cursor, and Pi. Supervised by default, autonomous (`orchestrate`) when you want it. MIT.
 >
 > Install: `/plugin marketplace add github.com/youhaowei/wystack-agent-kit`
 
@@ -45,7 +45,7 @@ Submission: PR adding one list line. Keep it to the list's existing format (name
 
 PR description to accompany the entry:
 
-> Adds WyStack Agent Kit — an MIT lifecycle plugin (37 skills + 10 role agents) that runs one connected method across Claude Code, Codex, Cursor, and Pi. It complements discipline-primitive sets already on this list (e.g. mattpocock/skills) by wrapping primitives in an end-to-end lifecycle with decision gates and optional parallel autonomy. Published to npm as `@wystack/agent-kit`; install path and full skill reference in the README.
+> Adds WyStack Agent Kit — an MIT lifecycle plugin (35 skills + 10 role agents) that runs one connected method across Claude Code, Codex, Cursor, and Pi. It complements discipline-primitive sets already on this list (e.g. mattpocock/skills) by wrapping primitives in an end-to-end lifecycle with decision gates and optional parallel autonomy. Published to npm as `@wystack/agent-kit`; install path and full skill reference in the README.
 
 ### llms.txt
 Written to repo root (`/llms.txt`). Ships nothing to npm; sits at the repo root for AI crawlers reading the GitHub repo. No further action — verify it renders on the repo's default branch after commit.
@@ -59,14 +59,14 @@ These three already index mattpocock/skills, which is evidence they carry traffi
 ### claudepluginhub.com
 Format: plugin card (name, tagline, install, tags).
 
-> **WyStack Agent Kit** — the lifecycle layer for coding agents. One method from idea to merge, with the human in the loop at every gate. 37 skills, 10 role agents, 4 harnesses (Claude Code · Codex · Cursor · Pi). Auditable by design; autonomous when you allow it.
+> **WyStack Agent Kit** — the lifecycle layer for coding agents. One method from idea to merge, with the human in the loop at every gate. 35 skills, 10 role agents, 4 harnesses (Claude Code · Codex · Cursor · Pi). Auditable by design; autonomous when you allow it.
 >
 > Tags: `claude-code`, `plugin`, `lifecycle`, `code-review`, `agentic-workflows`, `mit`
 
 ### agentconn.com
 Format: agent/tool review entry. Emphasize the multi-agent / role-agent angle (their audience skews agent-infra).
 
-> **WyStack Agent Kit** — a portable agent workforce for the whole software lifecycle. Ships 10 universal role agents (pm, principal, qa, devops, designer, and more) plus 37 lifecycle skills, all under one charter: the agent does the work, the human owns the decisions. `orchestrate` dispatches parallel agents per ticket and brings results back for you to gate. Runs on Claude Code, Codex, Cursor, and Pi. MIT.
+> **WyStack Agent Kit** — a portable agent workforce for the whole software lifecycle. Ships 10 universal role agents (pm, principal, qa, devops, designer, and more) plus 35 lifecycle skills, all under one charter: the agent does the work, the human owns the decisions. `orchestrate` dispatches parallel agents per ticket and brings results back for you to gate. Runs on Claude Code, Codex, Cursor, and Pi. MIT.
 
 ### crossaitools.com
 Format: setup/how-to listing (their mattpocock entry is a "Setup …" page). Mirror that shape.
@@ -98,7 +98,7 @@ With 0 stars today, these are first-traction levers. Prep assets and launch-day 
 **Description:**
 > WyStack Agent Kit takes a coding agent through the whole job — plan a feature, build it, review it, verify it, ship it — as one connected method instead of scattered commands. The rule holds at every stage: the agent does the work, you make the decisions (scope, trade-offs, what merges).
 >
-> - 37 lifecycle skills + 10 role agents, one behavioral charter
+> - 35 lifecycle skills + 10 role agents, one behavioral charter
 > - Auditable by design — decisions, review verdicts, and run evidence become durable project state under `.wystack/`, not chat history
 > - Supervised by default; `orchestrate` scales to parallel multi-ticket work when you want it — you still gate every merge
 > - Runs identically on Claude Code, Codex, Cursor, and Pi
@@ -128,7 +128,7 @@ With 0 stars today, these are first-traction levers. Prep assets and launch-day 
 > I turned my plan→build→review→ship loop into one portable Claude Code plugin (also runs on Codex/Cursor/Pi)
 
 **Body:**
-> Sharing WyStack Agent Kit — an MIT plugin that runs the whole software lifecycle as one method instead of loose slash-commands. The everyday loop is four skills (`brainstorm`, `start-task`, `code-review`, `finish-task`); there are 33 more for depth (PRD/spec, verify, orchestrate parallel tickets, design system, product copy).
+> Sharing WyStack Agent Kit — an MIT plugin that runs the whole software lifecycle as one method instead of loose slash-commands. The everyday loop is four skills (`brainstorm`, `start-task`, `code-review`, `finish-task`); there are 31 more for depth (PRD/spec, verify, orchestrate parallel tickets, design system, product copy).
 >
 > The thing I care most about: the agent does the work and surfaces the decisions that are yours, and every claim of "done" leaves auditable evidence under `.wystack/`. If you already use discipline skills like mattpocock/skills, this sits on top of them as the lifecycle layer — they compose.
 >
