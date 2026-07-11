@@ -90,12 +90,12 @@ Everything else is depth for when you need it — drafting a PRD, verifying runt
 
 | Group | Skills |
 |-------|--------|
-| **Planning** | `brainstorm`, `prd`, `spec`, `breakdown`, `groom`, `estimation`, `reprioritize`, `next-task`, `new-task` |
+| **Planning** | `brainstorm`, `prd`, `spec`, `adr`, `story`, `glossary`, `breakdown`, `groom`, `estimation`, `reprioritize`, `next-task`, `new-task` |
 | **Execution** | `start-task`, `worktree`, `orchestrate`, `finish-task`, `cleanup`, `handoff` |
 | **Review + verification** | `code-review`, `full-review`, `critique`, `verify`, `perspective`, `retro`, `improve-codebase` |
 | **Design** | `establish-design`, `frontend-design`, `polish-design` |
 | **Writing + distribution** | `ux-writing`, `copywriting`, `discoverability` |
-| **Workspace** | `setup-agent-kit`, `workspace`, `engineering-context` |
+| **Workspace** | `setup-agent-kit`, `workspace`, `engineering-context`, `upgrade` |
 
 Plus 10 universal role agents — `pm`, `principal`, `qa`, `devops`, `task-manager`, `wiki-librarian`, `designer`, `ux-writer`, `copywriter`, `marketing-specialist`.
 
