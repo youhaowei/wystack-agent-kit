@@ -38,8 +38,9 @@ rm -rf "$staging"
 mkdir -p "$staging"
 
 for p in "${plugins[@]}"; do
-  if [ ! -f "$p/.claude-plugin/plugin.json" ]; then
-    echo "skip: $p has no .claude-plugin/plugin.json" >&2
+  src="plugins/$p"
+  if [ ! -f "$src/.claude-plugin/plugin.json" ]; then
+    echo "skip: $src has no .claude-plugin/plugin.json" >&2
     continue
   fi
 
@@ -52,7 +53,7 @@ for p in "${plugins[@]}"; do
     --exclude='.git' \
     --exclude='.codex-plugin' \
     --exclude='.agents' \
-    "$p/" "$dst/"
+    "$src/" "$dst/"
 
   bun --eval '
 const [path, newName] = Bun.argv.slice(1);

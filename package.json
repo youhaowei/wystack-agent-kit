@@ -32,7 +32,7 @@
     "README.md",
     "UPSTREAM.md",
     "LICENSE",
-    "wystack-agent-kit",
+    "plugins/wystack-agent-kit",
     "pi",
     "scripts/build-dist.sh",
     "scripts/deploy.sh",
@@ -48,7 +48,7 @@
       "pi/extensions/agent-browser.ts"
     ],
     "skills": [
-      "wystack-agent-kit/skills"
+      "plugins/wystack-agent-kit/skills"
     ]
   },
   "scripts": {

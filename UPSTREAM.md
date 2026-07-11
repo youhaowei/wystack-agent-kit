@@ -37,7 +37,7 @@ Baseline: [`wystack-agent-kit/UPSTREAM-BASELINE.json`](wystack-agent-kit/UPSTREA
 
 - Heavy local workspace integration. Historically this was WyStack/Notion-specific; current direction is `.wystack` setup plus provider adapters.
 - Custom doc model (`docs/doc-model.md`) — promoted specs in repo, drafts in wiki.
-- Two-label severity model (MUST / SUGGEST) with a "near-term-trigger" test for ticket creation. See `wystack-agent-kit/skills/code-review/SEVERITY.md`.
+- Two-label severity model (MUST / SUGGEST) with a "near-term-trigger" test for ticket creation. See `plugins/wystack-agent-kit/skills/code-review/SEVERITY.md`.
 - Lifecycle skills (`groom`, `swarm`, `start`, `finish`, `next`, `new`, `project`, `workspace`) with `.wystack` storage setup and private-provider adapters.
 - `improve-codebase` skill (Ousterhout vocabulary + Fowler catalog + WyStack constraints) — added 2026-05-01.
 - `competitor-analysis` skill — owned by `pm`, derived from coreyhaines31/marketingskills `competitor-profiling` + `competitor-alternatives`. Added 2026-05-02, removed 2026-07-01.

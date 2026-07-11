@@ -86,7 +86,7 @@ function listPluginManifests(repoRoot) {
 
 function buildRepoSkillIndex() {
   const index = new Map();
-  for (const manifest of listPluginManifests(REPO_ROOT)) {
+  for (const manifest of listPluginManifests(join(REPO_ROOT, "plugins"))) {
     const pluginRoot = dirname(dirname(manifest));
     const pluginDir = pluginRoot.split("/").pop();
     if (!PLUGIN_DIRS.includes(pluginDir)) {

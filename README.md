@@ -46,11 +46,11 @@ brainstorm → prd → spec → breakdown → start-task → code-review → ver
 | `verify` | Runs the app, gathers runtime evidence | Whether the behavior is acceptable |
 | `finish-task` | Lands the branch, cleans up, updates the tracker | The go/no-go to ship |
 
-That split is enforced, not aspirational. Every skill inherits a [constitution](wystack-agent-kit/docs/constitution.md): the agent never hands you a checklist of chores, never silently makes a call that's yours, and never claims success it can't show evidence for.
+That split is enforced, not aspirational. Every skill inherits a [constitution](plugins/wystack-agent-kit/docs/constitution.md): the agent never hands you a checklist of chores, never silently makes a call that's yours, and never claims success it can't show evidence for.
 
-**It leaves a trail.** Decisions, review verdicts, and run evidence are written as durable [run records](wystack-agent-kit/docs/run-record.md) — typed, queryable project state under `.wystack/`, not chat history that dies with the session. A later `retro` or review reads what an earlier run found instead of forgetting it.
+**It leaves a trail.** Decisions, review verdicts, and run evidence are written as durable [run records](plugins/wystack-agent-kit/docs/run-record.md) — typed, queryable project state under `.wystack/`, not chat history that dies with the session. A later `retro` or review reads what an earlier run found instead of forgetting it.
 
-**It scales when you let it.** Running one task is `start-task`. Running many is [`orchestrate`](wystack-agent-kit/skills/orchestrate/SKILL.md) — a conductor that dispatches parallel agents per ticket and brings the results back for you to gate. Supervised by default; autonomous when you choose.
+**It scales when you let it.** Running one task is `start-task`. Running many is [`orchestrate`](plugins/wystack-agent-kit/skills/orchestrate/SKILL.md) — a conductor that dispatches parallel agents per ticket and brings the results back for you to gate. Supervised by default; autonomous when you choose.
 
 ## First run
 
@@ -124,7 +124,7 @@ Reload Codex to pick up plugin metadata.
 ```bash
 git clone https://github.com/youhaowei/wystack-agent-kit.git
 # point your host's plugin config at the inner plugin directory:
-# { "type": "local", "path": "/abs/path/to/wystack-agent-kit/wystack-agent-kit" }
+# { "type": "local", "path": "/abs/path/to/wystack-agent-kit/plugins/wystack-agent-kit" }
 ```
 
 ### Pi
@@ -141,7 +141,7 @@ Loads plugin skills, role agents, the `wystack_agent` subagent tool, and an `age
 
 One skill body runs on every harness because behavior and adapter are separated. Skill and agent bodies are **portable principles** — generic, project-agnostic. Frontmatter carries the per-harness adapter: `name`, `description`, top-level `model`, and a nested `delegation.<harness>.*` block. Claude Code reads top-level; Codex reads the nested block. Porting to a new harness is that harness reading the same frontmatter — never rewriting the method.
 
-Every skill inherits the shared methodology docs in [`wystack-agent-kit/docs/`](wystack-agent-kit/docs/):
+Every skill inherits the shared methodology docs in [`plugins/wystack-agent-kit/docs/`](plugins/wystack-agent-kit/docs/):
 
 - `constitution.md` — the behavioral charter: the agent carries work; the human owns decisions.
 - `communication-contract.md` — output shape and interactive checkpoints.
@@ -179,7 +179,7 @@ Verify: `codex plugin list` should include `wystack-agent-kit`. Tell the user to
 1. Clone outside the project: `git clone https://github.com/youhaowei/wystack-agent-kit.git ~/code/wystack-agent-kit`
 2. Register the plugin source in the host's plugin config:
    ```json
-   { "type": "local", "path": "~/code/wystack-agent-kit/wystack-agent-kit" }
+   { "type": "local", "path": "~/code/wystack-agent-kit/plugins/wystack-agent-kit" }
    ```
 3. Reload the host.
 

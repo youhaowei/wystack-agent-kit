@@ -83,7 +83,7 @@ function realpathIfExists(path) {
 function discoverPlugins(cacheRoot, names) {
   const selected = names.length > 0 ? names : PLUGIN_DIRS;
   return selected.map((pluginName) => {
-    const source = resolve(REPO_ROOT, pluginName);
+    const source = resolve(REPO_ROOT, "plugins", pluginName);
     const manifest = join(source, ".codex-plugin", "plugin.json");
     if (!existsSync(manifest)) {
       throw new Error(`Missing plugin manifest: ${manifest}`);

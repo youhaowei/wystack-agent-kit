@@ -41,7 +41,7 @@ for (let i = 0; i < args.length; i++) {
 }
 
 const repoRoot = resolve(import.meta.dir, "..");
-const src = join(repoRoot, plugin);
+const src = join(repoRoot, "plugins", plugin);
 if (!existsSync(join(src, ".claude-plugin", "plugin.json"))) {
   console.error(`no plugin source at ${src} (missing .claude-plugin/plugin.json)`);
   process.exit(1);

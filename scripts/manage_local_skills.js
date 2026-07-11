@@ -124,7 +124,7 @@ function discoverSurface(root, surface) {
 
 function buildRepoSkillIndex(repoRoot) {
   const index = new Map();
-  for (const manifest of listPluginManifests(repoRoot)) {
+  for (const manifest of listPluginManifests(join(repoRoot, "plugins"))) {
     const pluginRoot = dirname(dirname(manifest));
     const skillsRoot = join(pluginRoot, "skills");
     for (const [skillName, source] of discoverSkillDirs(skillsRoot)) {
@@ -136,7 +136,7 @@ function buildRepoSkillIndex(repoRoot) {
 
 function buildRepoPluginOverlapIndex(repoRoot) {
   const plugins = new Map();
-  for (const manifest of listPluginManifests(repoRoot)) {
+  for (const manifest of listPluginManifests(join(repoRoot, "plugins"))) {
     const pluginRoot = dirname(dirname(manifest));
     const pluginName = pluginRoot.split("/").pop();
     const skills = [];
@@ -228,7 +228,7 @@ function printOverlapSection(title, overlaps) {
 }
 
 function codexLocalPluginsStatus(repoRoot) {
-  return listPluginManifests(repoRoot).map((manifest) => {
+  return listPluginManifests(join(repoRoot, "plugins")).map((manifest) => {
     const pluginName = dirname(dirname(manifest)).split("/").pop();
     const localPlugin = join(LOCAL_PLUGIN_ROOT, pluginName);
     if (!existsSync(localPlugin)) {

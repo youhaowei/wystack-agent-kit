@@ -40,7 +40,7 @@ for (let i = 0; i < args.length; i++) {
 }
 
 const repoRoot = resolve(import.meta.dir, "..");
-const src = join(repoRoot, plugin);
+const src = join(repoRoot, "plugins", plugin);
 if (!existsSync(join(src, ".cursor-plugin", "plugin.json"))) {
   console.error(`no Cursor plugin source at ${src} (missing .cursor-plugin/plugin.json)`);
   process.exit(1);

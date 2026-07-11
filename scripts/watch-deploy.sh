@@ -23,7 +23,8 @@ echo "initial deploy..."
 
 echo
 echo "watching: ${plugins[*]} (Ctrl-C to stop)"
-fswatch -o --event Updated --event Created --event Removed --event Renamed "${plugins[@]}" \
+watch_paths=(); for p in "${plugins[@]}"; do watch_paths+=("plugins/$p"); done
+fswatch -o --event Updated --event Created --event Removed --event Renamed "${watch_paths[@]}" \
   | while read -r _; do
       ts=$(date +%T)
       echo "[$ts] change — redeploying..."
