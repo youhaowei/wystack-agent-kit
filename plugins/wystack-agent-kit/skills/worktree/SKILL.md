@@ -9,12 +9,7 @@ Create an isolated workspace for a task branch and verify it is ready before imp
 
 ## Resolve the workspace first
 
-A worktree's gitignored files (including a per-project `.wystack/`) are not checked out. Resolve the workspace before anything else — the canonical procedure is `docs/storage-contract.md` § Location and resolution:
-
-1. Run `git rev-parse --show-toplevel` to get the repo root. Read `.wystack.json` there; resolve its `root` **relative to the repo root** (for relative paths) or expand `~` (for global `~/.wystack/<project>` paths). Never resolve relative to `cwd` — in a worktree that lands on an empty directory.
-2. If absent, fall back to `git rev-parse --path-format=absolute --git-common-dir` → the main worktree, and look for `.wystack/` there.
-
-All project-specific config — worktree directory, setup commands — is read from the resolved workspace. The skill hardcodes nothing project-specific.
+A worktree's gitignored files (including a per-project `.wystack/`) are not checked out — resolve the workspace before anything else. Run the resolver block in `docs/storage-contract.md` § Location and resolution; its `--git-common-dir` fallback is what recovers a per-project `.wystack/` that the worktree never checked out. All project-specific config — worktree directory, setup commands — is read from the resolved workspace; the skill hardcodes nothing project-specific.
 
 ## Directory selection
 

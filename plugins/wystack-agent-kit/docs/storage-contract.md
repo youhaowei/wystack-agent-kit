@@ -38,10 +38,37 @@ The workspace location is project-configured, not fixed. One tracked file at the
 | Per-project (legacy)  | `.wystack`             | Gitignored workspace in the repo — requires repo-root resolution |
 | Custom                | any path               | Escape hatch                                    |
 
-**Resolving the workspace** — the canonical procedure every resolver skill (`workspace`, `worktree`, `setup-agent-kit`) executes, from any directory including a worktree:
+**Resolving the workspace** — the canonical procedure every resolver skill (`workspace`, `worktree`, `setup-agent-kit`) executes. Run this block from any directory, including a worktree. It prints `{ root, mode, storageJson, exists }` as JSON and resolves against the repo root, never `cwd`:
 
-1. **Primary** — run `git rev-parse --show-toplevel` to get the repo root. Read `.wystack.json` there. Resolve `root` **relative to the repo root** for relative paths, or expand `~` for home-relative paths. Never resolve `root` relative to `cwd` — in a worktree, `cwd` is the worktree directory and a relative `.wystack` would resolve to an empty path.
-2. **Fallback** — if `.wystack.json` is absent, resolve the main worktree with `git rev-parse --path-format=absolute --git-common-dir` and look for `.wystack/` beside it.
+```bash
+read_root() { [ -f "$1" ] && sed -n 's/.*"root"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$1" | head -1; }
+repo=$(git rev-parse --show-toplevel 2>/dev/null)
+if [ -z "$repo" ]; then
+  echo '{"root":"","mode":"none","storageJson":"","exists":false}'
+else
+  raw=$(read_root "$repo/.wystack.json")
+  if [ -z "$raw" ]; then
+    common=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+    [ -n "$common" ] && raw=$(read_root "$(dirname "$common")/.wystack.json")
+  fi
+  if [ -z "$raw" ]; then
+    echo '{"root":"","mode":"unconfigured","storageJson":"","exists":false}'
+  else
+    case "$raw" in
+      "~")   root=$HOME ;;
+      "~/"*) root="$HOME/${raw#\~/}" ;;
+      /*)    root=$raw ;;
+      *)     root="$repo/$raw" ;;
+    esac
+    case "$root/" in "$repo/"*) mode=per-project ;; *) mode=global ;; esac
+    [ -f "$root/storage.json" ] && ex=true || ex=false
+    printf '{"root":"%s","mode":"%s","storageJson":"%s","exists":%s}\n' "$root" "$mode" "$root/storage.json" "$ex"
+  fi
+fi
+```
+
+- `mode` — `global` (root outside the repo) · `per-project` (root inside the repo, legacy) · `unconfigured` (no `.wystack.json`; tell the caller to run `setup-agent-kit`) · `none` (not a git repo).
+- Resolving `root` against `cwd` instead of the repo root is the top cause of agents forking a fresh workspace: in a worktree `cwd` is the worktree directory and a relative `.wystack` resolves to an empty path. The block resolves against `git rev-parse --show-toplevel`, with a `--git-common-dir` fallback for worktrees whose gitignored `.wystack.json` isn't checked out.
 
 Because `.wystack.json` is committed, every worktree carries it — skill-created or harness-created (`orchestrate` execution agents run in harness worktrees). With global mode the workspace path is absolute and unambiguous; the per-project `.wystack` symlink the `worktree` skill drops is a defense-in-depth ergonomic for legacy setups only.
 

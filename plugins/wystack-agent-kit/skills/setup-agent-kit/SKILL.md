@@ -26,11 +26,7 @@ defines its own; no private workspace dependency.
 
 ### 1. Explore
 
-**Workspace detection — always resolve via the repo root, never via `cwd`.**
-
-Run `git rev-parse --show-toplevel` for the repo root; read `.wystack.json` there and resolve its `root` **relative to the repo root** (or expand `~`), never relative to `cwd`. This is the canonical resolution procedure — `docs/storage-contract.md` § Location and resolution — including the worktree/`cwd` pitfall and the `--git-common-dir` fallback.
-
-After resolving the workspace root, check whether `storage.json` exists there before treating this as a fresh setup.
+**Workspace detection.** Run the resolver block in `docs/storage-contract.md` § Location and resolution; it returns `{ root, mode, storageJson, exists }`. `exists: true` → an existing workspace (update run, below). `mode: unconfigured` or `exists: false` → treat as a fresh setup.
 
 Then explore the repo: `git remote -v`; root `AGENTS.md` / `CLAUDE.md` / `README.md` / `CONTEXT.md`; `docs/`, `.github/ISSUE_TEMPLATE/`; signs of a task system (GitHub/GitLab Issues, Linear, Jira, Notion, local markdown).
 

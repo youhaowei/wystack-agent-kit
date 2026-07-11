@@ -23,7 +23,7 @@ You may touch only: {declared file globs}. If the plan forces you outside that s
 {key files, existing patterns, relevant types}
 
 ### Process
-1. Resolve the workspace — you are in a worktree. Run `git rev-parse --show-toplevel` to get the repo root. Read `.wystack.json` there and resolve its `root` **relative to the repo root** (for relative paths) or expand `~` (for global paths like `~/.wystack/<project>`). Never resolve relative to `cwd` — in a worktree that lands on an empty directory and causes you to create a fresh workspace instead of finding the existing one. Read the project CLAUDE.md for conventions.
+1. Resolve the workspace — you are in a worktree, so run the resolver block in `docs/storage-contract.md` § Location and resolution rather than reading `.wystack.json` from `cwd` (which would fork a fresh workspace instead of finding the existing one). Read the project CLAUDE.md for conventions.
 2. Execute the plan via the installed execution skill (`executing-plans` or equivalent).
 3. Add tests only per the strategic test gate (`docs/testing-philosophy.md`): hidden edge case, spec contract, regression, system boundary.
 4. Capture red→green evidence — the golden-path test failing before your change, passing after — for the PR body.
