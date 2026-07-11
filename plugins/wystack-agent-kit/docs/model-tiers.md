@@ -1,6 +1,6 @@
 # Model Tiers
 
-WyStack Agent Kit skills run on multiple harnesses (Claude Code, Codex, and any harness that loads agent definitions from `agents/*.md` frontmatter). A skill cannot name a specific provider model — `haiku`, `sonnet`, `opus`, `gpt-5`, etc. — without breaking portability. Skills reference **tiers**; this contract owns the mapping to concrete models per harness.
+WyStack Agent Kit skills run on multiple harnesses (Claude Code, Codex, and any harness that loads agent definitions from `agents/*.md` frontmatter). Provider model classes are equivalent capability labels, not a shared portable vocabulary: Claude uses `haiku` / `sonnet` / `opus`, while Codex 5.6 uses `luna` / `terra` / `sol`. Skills reference **tiers**; this contract owns the mapping to model classes per harness.
 
 Two axes that are easy to confuse but live separately:
 
@@ -21,17 +21,28 @@ Two axes that are easy to confuse but live separately:
 - _"Does this require weighing options against each other?"_ → `standard` minimum.
 - _"Would a senior engineer pause to think for more than 30 seconds?"_ → `deep`.
 
-Reviewer-style agents (read code, write findings) default to `standard` — sonnet-class models handle most review well. Bump to `deep` for architectural/principal-level review, security-sensitive diffs, or when an effort dial on the calling skill escalates. QA/verify agents (checking observable behavior against a spec) stay `standard`.
+Reviewer-style agents (read code, write findings) default to `standard` — Sonnet/Terra-class models handle most review well. Bump to `deep` for architectural/principal-level review, security-sensitive diffs, or when an effort dial on the calling skill escalates. QA/verify agents (checking observable behavior against a spec) stay `standard`.
 
 ## Per-harness mapping
 
 | Harness            | `light`            | `standard`           | `deep`             |
 | ------------------ | ------------------ | -------------------- | ------------------ |
 | Claude Code        | `haiku` (e.g. `claude-haiku-4-5`) | `sonnet` (e.g. `claude-sonnet-4-6`) | `opus` (e.g. `claude-opus-4-7`) |
-| Codex              | harness-default cheap tier         | harness default                     | strongest available |
+| Codex 5.6          | `luna`             | `terra`              | `sol`              |
 | Generic (any other LLM API harness) | provider's cheapest reasonable | provider's default | provider's strongest |
 
-Versioned model IDs (`claude-haiku-4-5`, `claude-sonnet-4-6`, `claude-opus-4-7`) drift over time. The harness adapter resolves the tier to whatever the current best-in-class is for that harness; skills never bake in a versioned ID.
+The class equivalences are `haiku` = `luna`, `sonnet` = `terra`, and `opus` = `sol`. They express the same three capability bands; one provider's names do not replace another's.
+
+Some models sit between those anchor classes:
+
+| Model and runtime            | Capability placement       | Three-tier routing guidance |
+| ---------------------------- | -------------------------- | --------------------------- |
+| Composer 2.5                 | Haiku/Luna–Sonnet/Terra    | Upper `light`; use for bounded `standard` work when the task is well specified. |
+| Grok 4.5 through Grok CLI    | Sonnet/Terra–Opus/Sol      | Upper `standard`; use for bounded `deep` work, but keep highest-assurance deep reasoning on Opus/Sol. |
+
+These intermediate placements do not add portable tier values such as `light+` or `standard+`. Skills still request `light`, `standard`, or `deep`; a harness adapter may choose an intermediate model when its capability is sufficient for the bounded task.
+
+Versioned model IDs (`claude-haiku-4-5`, `claude-sonnet-4-6`, `claude-opus-4-7`, or the concrete models behind Codex 5.6 classes) drift over time. The harness adapter resolves the tier to the current class for that harness; skills never bake in a versioned ID.
 
 ## How skills reference tiers
 

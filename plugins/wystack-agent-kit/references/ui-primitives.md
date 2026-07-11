@@ -1,4 +1,4 @@
-# @wystack/ui Primitive Mapping
+# @wystack/ui-core + @wystack/ui-react Primitive Mapping
 
 What to compose from when building. Loaded by `frontend-design`, `polish-design`, `establish-design`.
 
@@ -6,13 +6,13 @@ What to compose from when building. Loaded by `frontend-design`, `polish-design`
 
 ## When primitives apply
 
-- **Feature components** in any consumer app: must use stdui primitives.
-- **Marketing pages / landing components**: stdui primitives are still preferred but bespoke styling is allowed; document the deviation.
+- **Feature components** in any consumer app: must use @wystack/ui-react primitives (tokens from @wystack/ui-core).
+- **Marketing pages / landing components**: @wystack/ui primitives are still preferred but bespoke styling is allowed; document the deviation.
 - **One-off prototypes**: anything goes; mark the file as a prototype.
 
 ## Primitive families
 
-> **Note**: Verify exports in the `@wystack/ui` source before assuming a primitive exists. This list reflects the canonical families; exact component names may differ. Check `~/Projects/stdui/` or the consumer's `node_modules/@wystack/ui` for current exports.
+> **Note**: Verify exports in the `@wystack/ui-core` (core) and `@wystack/ui-react` source before assuming a primitive exists. Check `~/Projects/stdui/` or the consumer's node_modules.
 
 ### Interactives
 - Button (primary, secondary, ghost, destructive)
@@ -82,9 +82,9 @@ If a feature needs a value not in the token set, **add to the token set first**,
 
 When a needed primitive is missing:
 
-1. Check `@wystack/ui` source for unexported variants.
+1. Check `@wystack/ui-core` (tokens) and `@wystack/ui-react` source for unexported variants.
 2. Check the consumer for a local-only `components/` directory — sometimes a primitive lives there pre-promotion.
-3. If genuinely missing, file a stdui ticket and stub it locally with a `// TODO(wystack/ui): promote` comment.
+3. If genuinely missing, file a @wystack/ui ticket and stub it locally with a `// TODO(wystack/ui): promote` comment.
 4. Never silently fork a primitive into the feature directory.
 
 ## Theming is structural
