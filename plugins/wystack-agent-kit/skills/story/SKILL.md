@@ -10,7 +10,7 @@ The canonical artifact for one requirement: its goal and acceptance bar, in user
 
 `$ARGUMENTS` — a story to author or refine (sentence, PRD reference, or requirement ID), or empty (work the configured home's open stories).
 
-**Prerequisite.** Load `wystack-agent-kit:workspace` for the configured `requirements.storyHome`, doc/work-item providers, and status vocabulary. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
+**Prerequisite.** Load `wystack-agent-kit:workspace` for the doc store provider and the doc status vocabulary. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
 
 ## Goal, not how
 
@@ -24,40 +24,37 @@ A Story commits to an *outcome*, not a *method*: acceptance criteria define *don
 - **Story sentence** — one line: "As a [role], I want [goal], so that [value]."
 - **Details** — the requirement's substance: what the behavior is, who it serves, what it depends on.
 - **Scenarios + edge cases** — concrete examples and a what-if / expected-behavior table (owned here, not in the PRD).
-- **Acceptance criteria** — the canonical acceptance bar for this requirement. Tickets *reference* these; they don't restate or own them.
+- **Product acceptance** — the user-language done statement ("done = user can X"). It's the requirement bar the delivery tickets trace up to; the *concrete testable ACs* belong to the tickets (`breakdown`), not the Story.
 - **Status** — on the shared ladder (see below).
-- **Links** — the linked specs (the design that realizes it), the delivery tasks (created by `breakdown`), and the verifying tests (its verification trace).
+- **Links** — the linked specs (the design that realizes it), the delivery tickets (created by `breakdown`), and the verifying tests (its verification trace).
 
-## The canonical home owns ID and status
+## The doc store owns the story
 
-`requirements.storyHome` selects where a Story lives — and the home owns its ID and status. The kit never mints IDs. One story, one canonical home, one status authority; no mixed mode.
-
-- **`docs` (default)** — a doc in the doc store. Its stable ID (e.g. `ST-42`, allocated by the adapter) is the requirement ID. The kit owns status on the shared ladder and **derives Implemented from verifying tests**.
-- **`tasks`** — a work-item in the tracker (distinct issue type or label, delivery tasks as sub-issues). The issue's stable ID (e.g. `ENG-128`) is the requirement ID. **The tracker owns status** — the issue's state *is* the story status, mapped onto the ladder for display; the kit reads, never overrides.
+A Story is a **PM-owned requirement** that complements the PRD — the PRD indexes it, the Story details it; the ticket that implements it is an **engineer-owned** work item (`breakdown` → `task-manager`). Story and ticket are two artifacts in two stores — see `docs/doc-model.md` § Story for the full split. The **doc store** owns the story's reference, status, and body, the same way it owns every doc type. The kit never mints references — the store's adapter allocates (`ST-42` local, `ENG-128` when the store is tracker-backed). Status moves on the shared doc ladder and **Implemented is derived from verifying tests** — a requirement can't be marked done without a test that proves it.
 
 ## Status — the shared ladder
 
 `Draft → Proposed → Accepted → Implemented → Superseded` (+ `Archived`), the same ladder every doc type uses (`docs/doc-model.md` § The shared status ladder). Story-specific notes:
 
 - **Accepted** — committed, ready for tasks. *Not frozen* — refine in place as understanding sharpens.
-- **Implemented** — built and verified. In `docs` mode this is **derived** from the verifying tests; don't hand-flip where a trace exists. In `tasks` mode the tracker's done-state maps here.
+- **Implemented** — built and verified. **Derived** from the verifying tests; don't hand-flip where a trace exists.
 - **Superseded** — replaced by a *different* requirement (new story, new ID) via a `supersedes:` link. Correcting the same requirement is an in-place edit, not a supersession.
 
 ## Quality bar
 
-The full **INVEST** bar — *Independent, Negotiable, Valuable, Estimable, Small, Testable* — plus **unambiguous ACs** ("done" isn't a judgment call) and **goal, not how**. Story and task are one unit at two granularities: both carry their own ACs, both size on `wystack-agent-kit:estimation`'s scale. *Small* is that estimate — a story below the split threshold (seed XXL/21) *is* its own ticket, completed directly; a story at or over it goes to `wystack-agent-kit:breakdown`, which SPIDR-splits it into tasks. The story owns the requirement ID and requirement-level ACs (the coverage loop closes here); a task owns its slice-level ACs and references the parent for the ID.
+The requirement bar: **Valuable, Negotiable, Testable**, with unambiguous **product acceptance** ("done = user can X") and **goal, not how**. A Story is *not sized* — *Estimable* and *Small* are the ticket's axes, not the story's. `wystack-agent-kit:breakdown` decomposes the Story into natural vertical slices (one ticket each; floor INVEST *Valuable*/*Independent*, never a fragment below a shippable slice), and each ticket owns its concrete testable ACs, implementation guidance, and estimate. The coverage loop closes here — the story's requirement ID is what the verifying tests cite. See `docs/doc-model.md` § Story.
 
 ## Workflow
 
-1. **Resolve the home.** Read `requirements.storyHome` and the relevant provider. Know whether you're writing a doc or a work-item before authoring.
+1. **Load the doc store.** Resolve its provider via `wystack-agent-kit:workspace` — you're authoring a requirement doc (a tracker-backed store holds it as a requirement-type issue: same artifact, different provider).
 2. **Research.** Read the parent PRD (intent, the index entry this fleshes out) and any linked spec. A Story **cites, never owns**: cite canonical terms as `[[term-slug]]` (never define one — that's the glossary note's job; a term with no note yet gets one via `wystack-agent-kit:glossary` first), and hold no *how*-decision (the `goal-not-how` wall keeps contested decisions in the linked spec, never the Story). See `docs/doc-model.md` § Terms.
-3. **Author the requirement.** Story sentence, details, scenarios + edge cases, acceptance criteria. Goal-not-how throughout. Set status (typically Proposed on first author, Accepted once committed).
-4. **Save in the canonical home.** Delegate to `wystack-agent-kit:wiki-librarian` (docs mode) or `wystack-agent-kit:task-manager` (tasks mode) — never call provider APIs directly. The home allocates the stable ID; record it.
+3. **Author the requirement.** Story sentence, details, scenarios + edge cases, product acceptance. Goal-not-how throughout. Set status (typically Proposed on first author, Accepted once committed).
+4. **Save in the doc store.** Delegate to `wystack-agent-kit:wiki-librarian` — never call provider APIs directly. The store allocates the stable reference; record it.
 5. **Cross-link (mandatory, verified)** — per `docs/doc-model.md` § Cross-linking (verify backlinks resolve, report gaps as fixes). Link the Story to: the parent PRD's index (the index entry resolves to this story), the spec(s) that design it, and — as they appear — its delivery tasks and verifying tests. Update the PRD's story index so its link to this story resolves.
 
 ## Reference
 
 - `docs/doc-model.md` § Story, § The shared status ladder, § Terms, § Cross-linking.
 - `wystack-agent-kit:prd` — owns intent + the story index that links here.
-- `wystack-agent-kit:breakdown` — slices delivery tickets off this story; tickets reference its ACs.
-- `wystack-agent-kit:wiki-librarian` / `wystack-agent-kit:task-manager` — provider adapters; never call provider APIs directly.
+- `wystack-agent-kit:breakdown` — plans implementation off this story; each ticket references its requirement ID and owns its concrete ACs.
+- `wystack-agent-kit:wiki-librarian` — the doc store adapter; never call provider APIs directly.

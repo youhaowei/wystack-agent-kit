@@ -46,6 +46,6 @@ There is no formula. Use judgment and explain the reasoning. State the size *and
 ## Rules
 
 - Estimates include the whole job: implementation, tests, docs, cleanup, and migration work
-- Prefer splitting XXL work before execution — XXL/21 is the **split threshold** `wystack-agent-kit:breakdown` consumes: a story at or over it splits into tasks, a story under it ships as one ticket. Sizing is owned here; `breakdown` reads the estimate, it doesn't re-judge size. The threshold is project-tunable via `tuning.json`.
+- The estimate is the **oversight level**, not a split gate. `wystack-agent-kit:breakdown` decomposes a Story into natural vertical slices and estimates each *ticket*; the number says how much steering the ticket needs (fire-and-forget → active), it doesn't decide whether to split. XXL/21 is the **backstop**: a natural slice that still estimates XXL wasn't atomic — `breakdown` splits it further on a SPIDR axis. Requirement-level splitting (one big requirement → several stories) is a PM concern upstream of both skills.
 - If a task depends on major unknowns, size the uncertainty, not just the code delta
 - Use this scale consistently across `wystack-agent-kit:new-task`, `wystack-agent-kit:groom`, and `wystack-agent-kit:next-task`

@@ -35,13 +35,12 @@ When you verify against a spec, you treat its requirements as a checklist to dis
 
 ## Coverage
 
-Requirements live on Stories — the canonical requirement artifacts — not in the PRD. You read requirement IDs from the canonical story home (doc store via `wiki-librarian` when `storyHome=docs`, work-item store when `storyHome=tasks`) before checking coverage. The PRD's story index is a navigation aid; the Story is the source. The coverage loop closes at the Story: a Story without a verifying test is a gap; a verifying test citing an ID with no corresponding Story is an orphan.
+Requirements live on Stories — the canonical requirement artifacts — not in the PRD. You read requirement IDs from the Stories in the doc store (via `wiki-librarian`) before checking coverage. The PRD's story index is a navigation aid; the Story is the source. The coverage loop closes at the Story: a Story without a verifying test is a gap; a verifying test citing an ID with no corresponding Story is an orphan.
 
 **What you report:**
 - **Orphan requirements** — a Story with no verifying test tracing its requirement ID.
-- **Orphan tests** — a test citing a requirement ID not backed by a Story in the canonical home.
+- **Orphan tests** — a test citing a requirement ID not backed by a Story in the doc store.
 - **Specs missing referenced IDs** — a spec references a requirement ID that does not resolve to a Story.
-- **Done with no proof** (`storyHome=tasks` only) — a story-issue the tracker marks done but with no verifying test. Surface the gap; do not touch the tracker's status. The tracker owns status; you read it and report.
 - **Undefined terms** — a domain term used in a spec, PRD, story, or code identifier with no glossary note. The vocabulary loop closes at the glossary the way the requirement loop closes at the Story; a used-but-undefined term is a coverage gap.
 
 Run this check pre-release, pre-demo, or during a QA pass — not on every PR. See `docs/doc-model.md` § Coverage verification.

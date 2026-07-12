@@ -3,6 +3,30 @@
   "manifestVersion": 1,
   "releases": [
     {
+      "version": "0.13.0",
+      "summary": "Story and ticket split into two artifacts — a PM-owned requirement in the doc store, an engineer-owned implementation in the task store. requirements.storyHome is removed: the story is always the requirement doc in the doc store, whose provider may be tracker-backed. The estimate applies per-ticket (oversight level), no longer as a story-split gate.",
+      "steps": [
+        {
+          "id": "0.13.0-drop-storyhome",
+          "version": "0.13.0",
+          "description": "Remove requirements.storyHome from storage.json. The two-artifact model (story = requirement doc, ticket = work item) makes the docs-vs-tasks toggle incoherent — the story is now always the requirement doc in the doc store. Also migrate conventions.requirementIdFormat from the legacy {storyHome.id} token to {story.id} (same meaning: use whatever the doc store calls the story). Pure config cleanup for the default (storyHome=docs) case; drop the now-empty requirements block.",
+          "type": "structural",
+          "target": "config",
+          "applyMode": "auto",
+          "skipIfPresent": "requirements.storyHome absent and requirementIdFormat does not use the {storyHome.id} token"
+        },
+        {
+          "id": "0.13.0-tasks-mode-requirements-to-doc-store",
+          "version": "0.13.0",
+          "description": "Only for a project whose removed storyHome was \"tasks\" (stories lived as tracker issues): the requirement now belongs in the doc store. Two paths, the user's choice — (a) back the doc store with that tracker, so stories stay as requirement-type issues and delivery tickets remain separate work items, or (b) move the story bodies into the configured doc store as Story docs, keeping their existing IDs as citations. Guided because it rewrites where requirements resolve. No-op when the prior storyHome was docs.",
+          "type": "data",
+          "target": "doc-store",
+          "applyMode": "guided",
+          "skipIfPresent": "prior storyHome was docs, or no requirement issues remain in the task store"
+        }
+      ]
+    },
+    {
       "version": "0.12.0",
       "summary": "Glossary becomes the core term spine (single canonical home for every domain term); ADR is the one optional doc type via docs.types.",
       "steps": [

@@ -8,7 +8,7 @@ How WyStack Agent Kit treats product and engineering documentation.
 - **The repo holds code, tests, and requirement-ID traces** — not docs. Requirements enter the repo through E2E tests, not mirrored PRD files. The test is the executable proof of the requirement.
 - **The glossary is the term spine.** Every domain term lives in exactly one place — a glossary note (`glossary/<term>.md`) — and every other doc *cites* it (`[[term-slug]]`), never redefines it. PRD says what, Spec says how, and both draw their vocabulary from the glossary. The glossary is core: without it the ubiquitous language has no canonical home and the docs drift. See [Terms](#terms-and-ubiquitous-language).
 - **Docs reference each other.** A doc is single-purpose; links are the connective tissue. See [Cross-linking](#cross-linking).
-- **The repo trace is the canonical home's stable ID.** A test cites the story's requirement ID — whatever its canonical home provides as a stable identifier. Tool-neutrality is a **provider-selection property**, not a kit guarantee: the default local-markdown home yields neutral IDs (`ST-42`); a team that makes a tracker the story home has chosen tracker-shaped IDs (`ENG-128`) in its test traces, knowingly. No other tool identity — wiki URLs, page IDs, provider names beyond the requirement ID — belongs in committed code. Provenance lives in git history.
+- **The repo trace is the doc store's stable ID for the story.** A test cites the story's requirement ID — whatever the doc store provides as the story's stable identifier. Tool-neutrality is a **provider-selection property**, not a kit guarantee: the default local-markdown store yields neutral IDs (`ST-42`); a team that backs the doc store with a tracker has chosen tracker-shaped IDs (`ENG-128`) in its test traces, knowingly. No other tool identity — wiki URLs, page IDs, provider names beyond the requirement ID — belongs in committed code. Provenance lives in git history.
 - **The workspace declares storage.** Lifecycle skills resolve the workspace via the tracked `.wystack.json` pointer and read its `storage.json` before assuming where tasks or docs live.
 
 ## Write the artifact, not the document
@@ -30,11 +30,11 @@ PRD, Spec, Story, and Glossary live in the configured doc store. They share one 
 |---|---|---|
 | **PRD** | Doc store | Planning/commitment artifact. Stakeholder-editable. Captures intent, not implementation. Holds purpose, users, goals/non-goals, dependencies, and a **story index** — a link per story, not the story bodies. Cites domain terms as `[[term-slug]]` into the glossary, never re-defining them. References the specs that design it. Product-level decisions live in the PRD itself, as _what / alternatives / why_. |
 | **Spec** | Doc store | Living design document — current-state architecture and the decisions behind it, edited freely. Its **Key concepts** section is a per-spec *index* into the glossary — the terms this spec leans on, each cited as `[[term-slug]]`, not redefined. Records its own load-bearing decisions inline (a Decisions section: _what / alternatives / why_, edited in place as the design evolves). References the PRD it implements and the tickets that carry it. |
-| **Story** | Canonical home (doc store by default, work-item store if configured) | The canonical requirement artifact: one requirement's goal and acceptance bar in user language. Owns its body (sentence, details, scenarios, edge cases), acceptance criteria, status, and the links to delivery tasks, verifying tests, and specs. States the *what*, not the *how* — see [Story](#story). |
+| **Story** | Requirement store (the doc store; provider may be tracker-backed) | The PM-owned requirement artifact: one requirement's goal, value, and acceptance bar in user language. Owns its body (sentence, details, scenarios, edge cases), product acceptance, status, requirement ID, and links to delivery tickets, verifying tests, and specs. States the *what*, not the *how*; the concrete testable ACs and the *how* live on the ticket — see [Story](#story). |
 | **Glossary** | Doc store, `glossary/<term>.md` | The **term spine**: the single canonical home for *every* domain term, one atomic note per term — never a monolith. Each note defines the canonical name; every other doc (PRD, Spec, Story) cites it as `[[term-slug]]`. A domain term used anywhere with no glossary note is a coverage gap. See [Terms](#terms-and-ubiquitous-language). |
 | **ADR** _(optional)_ | Doc store, `adrs/` | Dated record of a **contested** decision — the deliberation a one-liner can't hold: alternatives, trade-offs, the moment in time. **Append-only.** Points UP to the spec it expands (`serves:` link); the spec's inline one-liner points down (`expands:`). Written *only* when full deliberation would bloat the spec's Decisions section. Does not replace inline one-line decisions — it is their optional expanded home. See [Doc-type registry](#doc-type-registry). |
-| **Tasks, initiatives** | Work-item store | Ops-layer. Cross-repo, cross-functional, includes non-code work. |
-| **Requirement IDs** | Provided by the story's canonical home, referenced in repo test JSDoc | The canonical home's own stable ID is the requirement ID. The kit never mints it — the adapter allocates (local-markdown `ST-42`, a tracker issue `ENG-128`). Format per `conventions.requirementIdFormat`. The only requirement trace in the repo. |
+| **Tasks, initiatives** | Work-item store | Ops-layer. Cross-repo, cross-functional, includes non-code work. A **ticket** — the engineer-owned delivery slice `breakdown` cuts from a Story — is a work item here: it owns its concrete testable ACs and implementation guidance, and references the story's requirement ID. |
+| **Requirement IDs** | The story's stable reference in the doc store, cited in repo test JSDoc | Every doc has a stable reference; the story's is what a test cites to anchor the coverage trace — that role makes it the requirement ID. The kit never mints it — the adapter allocates (local-markdown `ST-42`, a tracker issue `ENG-128`). Format per `conventions.requirementIdFormat`. The only requirement trace in the repo. |
 
 ### Doc-type registry
 
@@ -70,18 +70,23 @@ A whole doc supersedes the same way: write the replacement, point it at the old 
 
 ## Story
 
-A Story is the canonical artifact for one requirement: its goal and its acceptance bar, in user language. It states *what* the system should do and *how we'll know it's done* — never *how to build it*. Prescribing the how inside a requirement smuggles implementation into the wrong artifact and forecloses the implementer's judgment; that belongs to the spec (architecture) and the tickets (delivery slices).
+A Story is the canonical artifact for one requirement — its goal, its value, and how we'll know it's done, in user language. It states *what* the system should do and *how we'll know it's done*, never *how to build it*. Prescribing the how inside a requirement smuggles implementation into the wrong artifact and forecloses the implementer's judgment; the how belongs to the spec (architecture) and the tickets (delivery slices).
 
-**The canonical home owns the story** — its ID, its status, and its body. `requirements.storyHome` (see `storage-contract.md`) selects the home:
+**Story and ticket are two artifacts, not one thing in two stores.** A Story is a **PM-owned requirement**; a ticket is an **engineer-owned implementation**. They live in different stores, carry different acceptance, and answer to different owners:
 
-- **`docs` (default)** — the story is a doc in the doc store. The kit owns its status on the shared ladder and *derives* Implemented from verifying tests.
-- **`tasks`** — the story is a work-item in the tracker (a distinct issue type or label; delivery tasks are its sub-issues). The **tracker owns status** — the issue's state *is* the story status, mapped onto the ladder for display. The kit reads it and never overrides.
+| | Story | Ticket |
+|---|---|---|
+| Owner | PM | Engineer |
+| Store | doc store (as the requirement doc) | task store |
+| Owns | goal, value, scenarios, product acceptance ("done = user can X"), requirement ID, requirement status | concrete testable ACs, implementation guidance (the *how*, from the spec), delivery, work-item status |
+| Sizing | not estimated — decomposed into natural slices | estimated (the oversight level) |
+| References | — | the story's requirement ID |
 
-One story, one canonical home, one status authority. No mixed mode.
+**The doc store owns the story** — its reference, its status, its body — the same way it owns every doc type. Status moves on the shared doc ladder, and *Implemented is derived from verifying tests*: a requirement can't be called done without a test that proves it, so a "done with no proof" state is impossible by construction. The store's provider may be tracker-backed (stories as requirement-type tracker issues) — that shapes only the reference form (`ST-42` local · `ENG-128` tracker), not the ownership or the status authority. One story, one home, one requirement ID.
 
-**The PRD links, it does not mirror.** The PRD's story index is a link per story; status is read through the link. Surface status inline only when the link alone wouldn't make it obvious (a *Superseded* story the reader shouldn't follow). Mirroring status into the PRD duplicates state the home owns, and duplicated state drifts.
+**The PRD links, it does not mirror.** The PRD's story index is a link per story; status is read through the link. Surface status inline only when the link alone wouldn't make it obvious (a *Superseded* story the reader shouldn't follow). Mirroring status into the PRD duplicates state the store owns, and duplicated state drifts.
 
-**Quality bar.** A story is held to the full **INVEST** bar — *Independent, Negotiable, Valuable, Estimable, Small, Testable* — with *unambiguous acceptance criteria*, stating the *goal, not the how*. Story and task are one unit at two granularities, not two sizing regimes: both carry their own acceptance criteria and both size on `estimation`'s scale. *Small* is that estimate — a story below the split threshold (seed XXL/21, "split first"; project-tunable via `tuning.json`) needs no breaking down, and *is* its own ticket. A story at or over the threshold, `breakdown` splits on a SPIDR axis into tasks, each re-estimated below the threshold and held to the same bar — *Valuable* and *Independent* keeping every split independently worth shipping (`breakdown`'s brake on over-splitting). The only irreducible story/task difference is mapping: a **story** is 1:1 with a requirement — it owns the requirement ID and the requirement-level ACs, and the coverage loop closes there; a **task** is a split beneath a story — it owns its slice-level ACs and references the parent for the requirement ID, never restating the requirement bar.
+**Quality bar.** A Story is a well-formed requirement: **Valuable, Negotiable, Testable**, with unambiguous **product acceptance** ("done = user can X") and **goal, not how**. It is *not sized* — *Estimable* and *Small* are the ticket's axes, not the story's. `breakdown` decomposes a Story into natural vertical slices — the smallest *complete* pieces that each ship value — and emits one ticket per slice; the floor is INVEST *Valuable*/*Independent* (never fragment below a slice that's independently worth shipping). Each ticket owns its concrete testable ACs, its implementation guidance, and its estimate (the oversight level from `estimation` — not a split gate). The coverage loop closes at the Story: its requirement ID is what the verifying tests cite, whatever set of tickets delivered it.
 
 ## Requirements in the repo
 
@@ -101,13 +106,13 @@ test("applicant can save draft and resume", async () => {
 });
 ```
 
-The cited ID is the story's requirement ID, provided by its canonical home. The test *verifies the story*: the story's verification trace records which tests prove it, and the coverage loop closes at the Story (not the PRD).
+The cited ID is the story's requirement ID, provided by the doc store. The test *verifies the story*: the story's verification trace records which tests prove it, and the coverage loop closes at the Story (not the PRD).
 
 Why this beats a mirrored PRD:
 - **Zero drift**: can't document a requirement without a test demonstrating it.
 - **Tight traceability**: requirement ID → test → implementation code, no intermediate doc.
 - **Executable**: tests can't lie about what shipped. A mirrored PRD can.
-- **Provider-portable by default**: with a neutral home the repo says nothing about where the ID originated; with a tracker home, the trace names the tracker by deliberate choice.
+- **Provider-portable by default**: with a neutral doc store the repo says nothing about where the ID originated; with a tracker-backed store, the trace names the tracker by deliberate choice.
 
 ## Doc store layout
 
@@ -120,7 +125,7 @@ Docs live where the configured doc provider declares (`docs.path`). For the defa
   specs/
     0001-feature-name.md
     0002-other-feature.md
-  stories/                       # when storyHome = docs
+  stories/                       # the requirement doc type (local-markdown provider)
     ST-42-resume-draft.md
   glossary/                      # core — the term spine, one note per term
     tenant.md
@@ -129,7 +134,7 @@ Docs live where the configured doc provider declares (`docs.path`). For the defa
     0007-co-locate-wire-and-channel.md
 ```
 
-A remote provider (Notion, Linear, …) holds the same artifacts as native pages; the layout above is the local form. Skills resolve the path through `wiki-librarian` and never assume `.wystack/docs` directly. (With `storyHome = tasks`, stories live in the work-item store instead, not here.)
+A remote provider (Notion, Linear, …) holds the same artifacts as native pages; the layout above is the local form. Skills resolve the path through `wiki-librarian` and never assume `.wystack/docs` directly. A tracker-backed doc store holds stories as native requirement issues; the tickets that deliver them are separate work items in the task store.
 
 Frontmatter carries the doc identity and links:
 
@@ -159,11 +164,10 @@ supersedes: ADR-0004       # when it replaces an earlier decision (append-only)
 
 A requirement without a matching test — or a domain term without a glossary note — is a coverage gap. Checking both is the `qa` agent's job — on-demand, not continuous.
 
-`qa` reads requirement IDs from the **canonical story home** (the doc store via `wiki-librarian`, or the work-item store when `storyHome = tasks`), greps the repo for each, and reports:
+`qa` reads requirement IDs from the **stories in the doc store** (via `wiki-librarian`), greps the repo for each, and reports:
 - Orphan requirements (story with no verifying test)
 - Orphan tests (requirement ID not backed by a story)
 - Specs missing referenced requirement IDs
-- In `tasks` mode, a story-issue marked done with no verifying test — a coverage gap, surfaced without touching the tracker's status (the tracker owns status).
 - Undefined terms (a domain term used in a spec, PRD, story, or code identifier with no glossary note) — the vocabulary loop closes at the glossary the way the requirement loop closes at the Story.
 
 Run pre-release, pre-demo, during QA passes. Not every PR.
@@ -227,12 +231,12 @@ The reader should follow the text *without clicking*, and click only for depth. 
 
 - `setup-agent-kit/` — creates `.wystack/` workspace and storage setup for a repo
 - `prd/` — writes PRDs in the configured doc store; holds a story index (links, not bodies); cites glossary terms (`[[term-slug]]`), never defines; references designing specs; records product-level decisions inline
-- `story/` — writes/updates Story artifacts in the configured canonical home; owns the requirement body, acceptance criteria, status, and traceability links; cites glossary terms (`[[term-slug]]`), owns none
+- `story/` — writes/updates Story artifacts in the doc store; owns the requirement body, product acceptance, status, requirement ID, and traceability links; cites glossary terms (`[[term-slug]]`), owns none
 - `spec/` — writes the living design doc in the doc store; its Key concepts section is a glossary index (terms cited `[[term-slug]]`, not defined); Decisions section; references the PRD and tickets; carries optional Domain Model section for DDD-committed projects; when `adr` is enabled, offers an ADR for a contested decision and links it `expands:`
 - `glossary/` — writes one atomic term-note per domain term (`glossary/<term>.md`); the single canonical home for the project's ubiquitous language, cited everywhere as `[[term-slug]]`
 - `adr/` _(when `adr` enabled)_ — writes append-only decision records in the doc store, each `serves:` the spec it expands; owns ADR-to-ADR supersession at decision granularity
-- `breakdown/` — slices tickets off stories; tickets reference the story's ACs and add delivery checks; reads linked ADRs for decision context when `adr` is enabled
-- `qa` agent — runs coverage verification on demand, reading requirement IDs from the canonical story home
+- `breakdown/` — plans implementation: decomposes a story into vertical-slice tickets; each ticket references the story's requirement ID and owns its concrete ACs, implementation guidance, and estimate; reads linked ADRs for decision context when `adr` is enabled
+- `qa` agent — runs coverage verification on demand, reading requirement IDs from the stories in the doc store
 - `wiki-librarian` agent — document-store CRUD; plugin skills delegate here
 - `upgrade/` — reconciles a project to the installed kit version by replaying declared migration steps
 - `groom/`, `start-task/` — read specs from the configured doc store via `wiki-librarian`

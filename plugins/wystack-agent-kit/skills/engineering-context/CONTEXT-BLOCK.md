@@ -16,8 +16,8 @@ The structured output this skill returns. Pass **verbatim** to downstream consum
 ### Non-Goals (from PRD)
 {verbatim bullets — critical. Reviewers must check findings against these.}
 
-### Requirements / Stories (from canonical story home)
-{requirement IDs, goals, and acceptance criteria for stories in scope — sourced from the story home (wiki-librarian when `storyHome = docs`, task-manager when `storyHome = tasks`). Downstream consumers (qa, pm) check findings against these ACs.}
+### Requirements / Stories (from the doc store)
+{requirement IDs, goals, and product acceptance for stories in scope — sourced from the Stories in the doc store (via wiki-librarian). Downstream consumers (qa, pm) check findings against these, and against the concrete ACs on the delivery tickets.}
 
 ### Phase scope
 {which stories / tasks belong to *this* phase vs future phases. Findings that flag "missing feature X" when X is a future phase are noise.}
