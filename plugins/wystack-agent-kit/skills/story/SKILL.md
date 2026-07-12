@@ -45,7 +45,7 @@ A Story commits to an *outcome*, not a *method*: acceptance criteria define *don
 
 ## Quality bar
 
-**Valuable** (visible user value, not a technical task) · **Negotiable** (editable even when Accepted) · **Testable** (a verifying test can be named immediately) · **unambiguous ACs** ("done" isn't a judgment call) · **goal, not how**. INVEST's *Estimable* and *Small* are delivery properties — they live on the tickets, not the requirement.
+The full **INVEST** bar — *Independent, Negotiable, Valuable, Estimable, Small, Testable* — plus **unambiguous ACs** ("done" isn't a judgment call) and **goal, not how**. Story and task are one unit at two granularities: both carry their own ACs, both size on `wystack-agent-kit:estimation`'s scale. *Small* is that estimate — a story below the split threshold (seed XXL/21) *is* its own ticket, completed directly; a story at or over it goes to `wystack-agent-kit:breakdown`, which SPIDR-splits it into tasks. The story owns the requirement ID and requirement-level ACs (the coverage loop closes here); a task owns its slice-level ACs and references the parent for the ID.
 
 ## Workflow
 
