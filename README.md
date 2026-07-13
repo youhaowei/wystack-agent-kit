@@ -90,9 +90,9 @@ Everything else is depth for when you need it — drafting a PRD, verifying runt
 
 | Group | Skills |
 |-------|--------|
-| **Planning** | `brainstorm`, `prd`, `spec`, `adr`, `story`, `glossary`, `breakdown`, `groom`, `estimation`, `reprioritize`, `next-task`, `new-task` |
+| **Planning** | `brainstorm`, `prd`, `spec`, `adr`, `story`, `glossary`, `breakdown`, `groom`, `estimate`, `reprioritize`, `next-task`, `new-task` |
 | **Execution** | `start-task`, `worktree`, `orchestrate`, `finish-task`, `cleanup`, `handoff` |
-| **Review + verification** | `code-review`, `full-review`, `critique`, `verify`, `perspective`, `retro`, `improve-codebase` |
+| **Review + verification** | `code-review`, `full-review`, `critique`, `verify`, `perspective`, `retro`, `calibrate`, `improve-codebase` |
 | **Design** | `establish-design`, `frontend-design`, `polish-design` |
 | **Writing + distribution** | `ux-writing`, `copywriting`, `discoverability` |
 | **Workspace** | `setup-agent-kit`, `workspace`, `engineering-context`, `upgrade` |

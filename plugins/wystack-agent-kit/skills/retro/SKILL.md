@@ -27,9 +27,7 @@ Read every record in the workspace `calibration/` directory — `TASK-*.json` re
 
 #### Backfill (opt-in)
 
-Reconstruct **estimation-accuracy records only** from already-closed tickets. Ask the user first — it costs a fetch sweep across the task store, git, and PRs.
-
-For each closed ticket: take the predicted size from grooming, and an actual-effort proxy from git and PR data — commit count, diff stat, rework commits, review rounds, time on branch. Write one record per ticket to `calibration/`, marked `"source": "reconstructed"`.
+Estimation-accuracy records are reconstructed by `wystack-agent-kit:calibrate` (its backfill stage) — run it, then return here. Ask the user first — it costs a fetch sweep across the task store, git, and PRs.
 
 Backfill does **not** reconstruct the other signals — perspective verdicts and per-ticket outcomes aren't recoverable from history. Those rows stay fed by live `perspective` and `finish-task` records.
 
@@ -41,7 +39,7 @@ Look for where the seed policy and reality diverge:
 
 | Signal | Question | Evidence in calibration data |
 |---|---|---|
-| **Estimation accuracy** | Are sizes predicting effort? | review rounds / rework as a proxy for "harder than sized" |
+| **Estimation accuracy** | Are sizes predicting argument size? | delegated — `wystack-agent-kit:calibrate` owns backfill, anchor verification, and the `estimate` tuning entry |
 | **Perspective credibility** | Are configured perspectives worth following? | how often `findings` were acted on vs overridden |
 | **Outcome by size** | Which ticket sizes/shapes run clean vs need rework? | merged-vs-reworked outcome grouped by size |
 
@@ -53,15 +51,12 @@ Present what the data shows — each finding with its evidence, not a bare claim
 
 ### 4. Propose tuning
 
-Recommend a `tuning.json` — **deltas from the seed defaults only**, never a full restatement. Each proposed change carries the evidence behind it. If a delta rests on reconstructed records, say so in its `why` — the user is accepting proxy-grade evidence.
+Recommend a `tuning.json` — **deltas from the seed defaults only**, never a full restatement. Each proposed change carries the evidence behind it. If a delta rests on reconstructed records, say so in its `why` — the user is accepting proxy-grade evidence. The `estimate` entry is `calibrate`'s to propose — invoke it rather than deriving estimation deltas here.
 
 ```json
 {
   "updated": "2026-05-15",
   "tickets_analyzed": 14,
-  "estimate": {
-    "why": "M tickets consistently needed check-ins — the 3/M anchor reads optimistic for this project"
-  },
   "perspective": { "why": "findings acted on in 80% of invocations — credible, keep weighting it" }
 }
 ```

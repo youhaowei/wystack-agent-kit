@@ -28,7 +28,7 @@ Size the **correctness argument**, not the code — what a skeptical reviewer mu
 | 13 | XL | argument spans subsystems with cross-cutting invariants |
 | 21 | XXL | a very large argument — large but may still be coherent |
 
-The structural column is the portable definition; the concrete anchor is the **per-project reference set** — one past ticket per rung, in `workspace.md` § Estimation Anchors (seeded by `wystack-agent-kit:setup-agent-kit`). Missing rung → size against the structural column and record the ticket as that rung's provisional anchor. `wystack-agent-kit:retro` recalibrates from predicted-vs-actual.
+The structural column is the portable definition; the concrete anchor is the **per-project reference set** — 1–3 past tickets per rung, diverse in kind, in `workspace.md` § Estimation Anchors (established and refined by `wystack-agent-kit:calibrate`). Compare against the reference nearest in kind. Missing rung → size against the structural column and record the ticket as that rung's provisional anchor.
 
 **Anchor 3** is defined by the *work* (bounded argument, known path), never by who or what implements it.
 
@@ -38,5 +38,5 @@ The structural column is the portable definition; the concrete anchor is the **p
 
 - **Complexity is the only output.** Risk, oversight, execution strategy, splitting — the consumer's reads; don't emit them here.
 - **Novelty isn't complexity.** Major unknowns → timebox a spike; the spike's output is the estimate.
-- **Never re-anchor the ladder.** `tuning.json` (written by `retro`) adjusts the project's anchor read; the scale itself moves only by deliberate manual re-anchor.
+- **Never re-anchor the ladder.** `tuning.json` (written by `calibrate`) adjusts the project's anchor read; the scale itself moves only by deliberate manual re-anchor.
 - Use consistently across `wystack-agent-kit:new-task`, `:groom`, `:next-task`.
