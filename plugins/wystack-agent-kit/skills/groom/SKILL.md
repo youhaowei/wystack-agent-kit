@@ -8,7 +8,7 @@ Refine tasks and write implementation plans — one task or a batch.
 
 `$ARGUMENTS` — work-item URL/path (single-task), project name (batch), or empty (batch, project from CWD).
 
-**Prerequisites.** Load `wystack-agent-kit:workspace` (resolves the workspace) and `wystack-agent-kit:estimation` (applies `tuning.json` calibration). If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
+**Prerequisites.** Load `wystack-agent-kit:workspace` (resolves the workspace) and `wystack-agent-kit:estimate` (applies `tuning.json` calibration). If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
 
 ## Single-task
 

@@ -59,7 +59,7 @@ Recommend a `tuning.json` — **deltas from the seed defaults only**, never a fu
 {
   "updated": "2026-05-15",
   "tickets_analyzed": 14,
-  "estimation": {
+  "estimate": {
     "why": "M tickets consistently needed check-ins — the 3/M anchor reads optimistic for this project"
   },
   "perspective": { "why": "findings acted on in 80% of invocations — credible, keep weighting it" }
@@ -68,7 +68,7 @@ Recommend a `tuning.json` — **deltas from the seed defaults only**, never a fu
 
 ### 5. Accept and report
 
-The user reviews each recommendation — accept, edit, or reject per item. Write only the accepted deltas to the workspace `tuning.json`; `orchestrate`, `estimation`, and `groom` read it on their next run — no skill edit, no restart. Then summarize what was tuned and what the skills will now do differently.
+The user reviews each recommendation — accept, edit, or reject per item. Write only the accepted deltas to the workspace `tuning.json`; `orchestrate`, `estimate`, and `groom` read it on their next run — no skill edit, no restart. Then summarize what was tuned and what the skills will now do differently.
 
 ## Rules
 

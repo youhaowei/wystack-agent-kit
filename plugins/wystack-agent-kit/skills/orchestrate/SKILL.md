@@ -10,7 +10,7 @@ The cockpit. A persistent thread where you conduct a project: survey the work, d
 
 ## Prerequisites
 
-Load `wystack-agent-kit:workspace` (resolves the project, the work-item provider, and the constitution) and `wystack-agent-kit:estimation` (sizes the work — strategy selection reads it).
+Load `wystack-agent-kit:workspace` (resolves the project, the work-item provider, and the constitution) and `wystack-agent-kit:estimate` (sizes the work — strategy selection reads it).
 
 ## The cockpit
 
@@ -23,7 +23,7 @@ You are the conductor — PM and Principal Engineer for this project, strategic 
 
 ## Strategy selection
 
-Read the work; pick the strategy; recommend it to the user, who confirms. Size and reversibility come from `wystack-agent-kit:estimation`.
+Read the work; pick the strategy; recommend it to the user, who confirms. Size comes from `wystack-agent-kit:estimate`; reversibility you read off the work itself at selection time.
 
 | The work is… | Strategy |
 |---|---|

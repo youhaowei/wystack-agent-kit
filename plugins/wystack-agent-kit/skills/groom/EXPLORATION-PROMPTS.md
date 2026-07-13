@@ -10,7 +10,7 @@ Prompt for the `Explore` subagent during step 2 of single-task mode:
 Task: "{title}"
 {description}
 
-Using the estimation scale (XS through XXL — see wystack-agent-kit:estimation), analyze:
+Using the estimation scale (XS through XXL — see wystack-agent-kit:estimate), analyze:
 
 1. **Affected files** — paths + brief rationale.
 2. **Implementation complexity** — files changed, new vs existing patterns, test infrastructure.

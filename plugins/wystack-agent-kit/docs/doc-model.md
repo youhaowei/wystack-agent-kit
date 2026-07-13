@@ -79,14 +79,14 @@ A Story is the canonical artifact for one requirement — its goal, its value, a
 | Owner | PM | Engineer |
 | Store | doc store (as the requirement doc) | task store |
 | Owns | goal, value, scenarios, product acceptance ("done = user can X"), requirement ID, requirement status | concrete testable ACs, implementation guidance (the *how*, from the spec), delivery, work-item status |
-| Sizing | not estimated — decomposed into natural slices | estimated (the oversight level) |
+| Sizing | not estimated — decomposed into natural slices | estimated (complexity) |
 | References | — | the story's requirement ID |
 
 **The doc store owns the story** — its reference, its status, its body — the same way it owns every doc type. Status moves on the shared doc ladder, and *Implemented is derived from verifying tests*: a requirement can't be called done without a test that proves it, so a "done with no proof" state is impossible by construction. The store's provider may be tracker-backed (stories as requirement-type tracker issues) — that shapes only the reference form (`ST-42` local · `ENG-128` tracker), not the ownership or the status authority. One story, one home, one requirement ID.
 
 **The PRD links, it does not mirror.** The PRD's story index is a link per story; status is read through the link. Surface status inline only when the link alone wouldn't make it obvious (a *Superseded* story the reader shouldn't follow). Mirroring status into the PRD duplicates state the store owns, and duplicated state drifts.
 
-**Quality bar.** A Story is a well-formed requirement: **Valuable, Negotiable, Testable**, with unambiguous **product acceptance** ("done = user can X") and **goal, not how**. It is *not sized* — *Estimable* and *Small* are the ticket's axes, not the story's. `breakdown` decomposes a Story into natural vertical slices — the smallest *complete* pieces that each ship value — and emits one ticket per slice; the floor is INVEST *Valuable*/*Independent* (never fragment below a slice that's independently worth shipping). Each ticket owns its concrete testable ACs, its implementation guidance, and its estimate (the oversight level from `estimation` — not a split gate). The coverage loop closes at the Story: its requirement ID is what the verifying tests cite, whatever set of tickets delivered it.
+**Quality bar.** A Story is a well-formed requirement: **Valuable, Negotiable, Testable**, with unambiguous **product acceptance** ("done = user can X") and **goal, not how**. It is *not sized* — *Estimable* and *Small* are the ticket's axes, not the story's. `breakdown` decomposes a Story into natural vertical slices — the smallest *complete* pieces that each ship value — and emits one ticket per slice; the floor is INVEST *Valuable*/*Independent* (never fragment below a slice that's independently worth shipping). Each ticket owns its concrete testable ACs, its implementation guidance, and its estimate (complexity from `estimate`; not a split gate). The coverage loop closes at the Story: its requirement ID is what the verifying tests cite, whatever set of tickets delivered it.
 
 ## Requirements in the repo
 

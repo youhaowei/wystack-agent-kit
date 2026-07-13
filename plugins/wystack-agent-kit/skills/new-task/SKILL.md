@@ -8,13 +8,13 @@ Create a codebase-informed work item — gather, dedup, explore, size, create.
 
 `$ARGUMENTS` — task description, or empty (ask).
 
-**Prerequisites.** Load `wystack-agent-kit:workspace` — resolves the workspace, the task provider, the project identity, and the status vocabulary. Load `wystack-agent-kit:estimation` — the sizing scale plus `tuning.json` calibration. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
+**Prerequisites.** Load `wystack-agent-kit:workspace` — resolves the workspace, the task provider, the project identity, and the status vocabulary. Load `wystack-agent-kit:estimate` — the sizing scale plus `tuning.json` calibration. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
 
 ## Architecture
 
 | Concern | Where | Why |
 |---|---|---|
-| Orchestration, user interaction, sizing | **Main agent** | Needs conversation history and the loaded `estimation` scale |
+| Orchestration, user interaction, sizing | **Main agent** | Needs conversation history and the loaded `estimate` scale |
 | Codebase exploration | **`Explore` subagent** | File contents stay out of the main context |
 | Task-store search + writes | **`wystack-agent-kit:task-manager`** | Provider quirks and confirmation noise stay out |
 
@@ -52,7 +52,7 @@ Exploration depth: "quick" for a likely small task, "medium" for likely large/cr
 
 ### 5. Size and present the proposal
 
-Apply the loaded `wystack-agent-kit:estimation` scale to the Explore signals — pick the size; estimation owns the rubric and the calibration.
+Apply the loaded `wystack-agent-kit:estimate` scale to the Explore signals — pick the size; estimation owns the rubric and the calibration.
 
 Present the proposal: title, type, priority (Medium unless clearly urgent), estimate, a description refined by the codebase analysis, acceptance criteria (one code-referencing, one verification — strategic test / runtime check / screenshot / typecheck / lint), and affected files. Confirm via the question UI: create as-is / edit first / cancel. On "edit first", ask what to change, update, re-present.
 
