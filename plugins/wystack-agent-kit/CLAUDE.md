@@ -26,6 +26,19 @@ The plugin is a **portable framework** — skills carry generic, project-agnosti
 
 Every skill operates under `docs/constitution.md` — the agent does the work, the human supervises. `wystack-agent-kit:workspace` and `wystack-agent-kit:engineering-context` load it at runtime; the methodology docs realize it. Skills inherit it — they do not restate it.
 
+## Skill style
+
+How to write a `SKILL.md` (distilled from the estimate/calibrate/retro surgery, 2026-07):
+
+- **Every line is an action, a definition the actions use, or a trap flag.** No rationale, no design defense, no restated philosophy — if a sentence argues *why*, cut it; the why lives in commits and articles.
+- **Trust the model.** Don't re-teach what a capable model knows, don't fence it in ("don't improvise"), don't script procedure it can derive. State the goal and the constraints; frame accumulated knowledge as a floor, not a ceiling.
+- **One skill owns one act.** If a step starts re-describing another skill's method, invoke that skill instead and pass it better context.
+- **Principles over magic numbers.** "The smallest set that spans the rung", not "1–3 per rung"; "too few records → say so", not "~4". A number survives only as a scale definition (ladder rungs), never as a behavioral threshold.
+- **Sections don't overlap.** Workflow = what to do; a knowledge section = hard-won domain facts (traps that cost real runs to learn); Rules = invariants that hold at every step. A rule that restates a step gets cut.
+- **Vocabulary obeys the principles.** A step name that contradicts a rule (a "backfill" in a forward-only skill) gets renamed, not explained.
+- **Data has homes.** Evidence → workspace records; reference data → `workspace.md`; portable rules → the skill. Never a log-shaped config file; never provenance flags that a record's own fields already imply.
+- **Description = the job + when to invoke.** Nothing else reaches the model before the file body, so neither belongs anywhere else.
+
 ## Agent definitions — the portable principles model
 
 An agent definition is **principles**: the role's identity, values, and universal disciplines — fully portable, baked into `<name>.md`. It carries no method (the working procedure is derived at runtime from principles plus the project's conventions), no hand-picked tool list, and no restated communication contract (that is inherited from `docs/communication-contract.md`).
