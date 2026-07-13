@@ -28,7 +28,7 @@ Size the **correctness argument**, not the code — what a skeptical reviewer mu
 | 13 | XL | argument spans subsystems with cross-cutting invariants |
 | 21 | XXL | a very large argument — large but may still be coherent |
 
-The structural column is the portable definition; the concrete anchor is the **per-project reference set** — one past ticket per rung. Seed on first use; `wystack-agent-kit:retro` calibrates it from predicted-vs-actual.
+The structural column is the portable definition; the concrete anchor is the **per-project reference set** — one past ticket per rung, in `workspace.md` § Estimation Anchors (seeded by `wystack-agent-kit:setup-agent-kit`). Missing rung → size against the structural column and record the ticket as that rung's provisional anchor. `wystack-agent-kit:retro` recalibrates from predicted-vs-actual.
 
 **Anchor 3** is defined by the *work* (bounded argument, known path), never by who or what implements it.
 
