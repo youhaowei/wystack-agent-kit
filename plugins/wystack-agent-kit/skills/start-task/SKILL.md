@@ -4,98 +4,42 @@ description: "Run the full engineering task lifecycle from configured work-item 
 ---
 # Start Task
 
-State-machine orchestrator for the work-item lifecycle — routes by the task's current status role.
+State-machine orchestrator for the work-item lifecycle — routes by status role.
 
-`$ARGUMENTS` — work-item URL/path, task ID (e.g. `TASK-42` or `42`), pasted structured ticket data (any format), or empty (falls back to `wystack-agent-kit:next-task`). May also include:
-- `--interactive` — pause at each decision point for confirmation instead of taking the recommended path.
-- `branch <name>` — use this exact branch name instead of deriving one from the task ID and title.
+`$ARGUMENTS` — work-item URL/path, task ID (`TASK-42` / `42`), pasted ticket data, or empty (→ `wystack-agent-kit:next-task`). Modifiers: `--interactive` (ask at each decision), `branch <name>` (exact branch name).
 
-**Prerequisites.** Load `wystack-agent-kit:workspace` — it resolves the task provider and the status vocabulary (the mapping from project statuses to the roles below). If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
+**Modes.** Default takes the recommended path at every decision; only hard stops (blocked task, `needs-human`) pause it. `--interactive` asks instead.
+
+**Prerequisites.** Load `wystack-agent-kit:workspace` — task provider + status vocabulary. Not set up → `wystack-agent-kit:setup-agent-kit`.
 
 ## Workflow
 
-### 1. Resolve the task
+1. **Resolve** — fetch via the provider adapter (pasted data: extract directly, authoritative for this session; empty: `wystack-agent-kit:next-task`). Extract title, status, priority, estimate, type, ID, blocked-by relations, `## Plan` / `## Acceptance Criteria` / `## Scope`. Any blocker not in a done/cancelled role → hard stop in every mode: report it and stop.
 
-- **URL/path** — fetch via the configured provider adapter.
-- **Task ID** — search the work-item store by ID, then fetch.
-- **Pasted ticket data** — extract title, ID, status, description, scope, acceptance criteria, and relations directly from the provided content; skip the provider fetch. Treat the extracted data as authoritative for this session.
-- **Empty** — invoke `wystack-agent-kit:next-task`; continue from step 2 with the selected task.
+2. **Review** (`--interactive` only; skip if planned this session) — summarize the ticket; recommend **proceed** / update the ticket first / pick another.
 
-Extract: title, status, priority, estimate, type, task ID, URL/path, blocked-by relations, and body sections (`## Plan`, `## Acceptance Criteria`, `## Scope`).
+3. **Route by status role** (per the configured vocabulary):
 
-**Blocker check.** If the task has `blocked-by` relations, verify each blocker's status via the provider adapter. Any blocker that is not in a done/cancelled role is a hard stop: report the blocking task(s) and stop. This applies in both default and `--interactive` mode — a blocked task is never safe to start.
+   | Role | Action |
+   |---|---|
+   | not-started / planning | 4 — plan |
+   | ready | 5 — set up |
+   | in-flight | 6 — resume |
+   | in-review | 8 — finish |
+   | done / cancelled | report and stop |
+   | deferred | revive → 4 |
 
-### 2. Review the ticket
+4. **Plan** — no `## Plan` → `wystack-agent-kit:groom <task>` (`--interactive` may quick-start to 5 or pick another). A plan already in a planning role → confirm it's ready, set the ready status. → 5.
 
-Default: skip — proceed directly to step 3.
+5. **Set up** — isolation per the workspace worktree preference: worktree → `wystack-agent-kit:worktree` · cwd → current directory · unset → worktree (`--interactive`: ask, offer to record the choice). Branch: a `branch` hint verbatim; else reuse a `*{id}*` match from `git worktree list` / `git branch --list`; else create `{id}-{slug}` (first 3–4 title words, kebab-cased). The broad `{id}` match catches `YW-56` and `task-56-*` alike. Set the in-progress status.
 
-`--interactive`: skip if the task was just planned this session — the user already knows it. Present a concise summary — title, ID, status/priority/estimate/type, a 5–8 line description, files in scope, dependencies, whether a plan exists — and ask, recommending **proceed**: proceed / update the ticket first / pick another. On "update", discuss and apply changes via the provider adapter, then re-confirm. On "pick another", invoke `wystack-agent-kit:next-task`.
+6. **Resume** — matching worktree → offer to switch; matching branch → check out; neither → create per 5. → 7.
 
-### 3. Route by status role
+7. **Execute** — with a plan: the installed `executing-plans` skill or equivalent (`--interactive` may pick subagent-driven or manual instead). Without: implement from description + ACs.
 
-The workspace's status vocabulary maps each project status to a role:
-
-| Role | Action |
-|---|---|
-| **not-started / planning** | Step 4 — plan |
-| **ready** | Step 5 — set up workspace |
-| **in-flight** | Step 6 — resume |
-| **in-review** | Step 8 — finish |
-| **done / cancelled** | report status and stop |
-| **deferred** | Default: revive and plan → step 4. `--interactive`: ask — revive and plan, or pick another |
-
-### 4. Plan
-
-Default: if the task has no `## Plan` section, invoke `wystack-agent-kit:groom <task>` (full planning); on completion → step 5. If a plan already exists, proceed directly to step 5.
-
-`--interactive`: if the task has no `## Plan` section, ask how to proceed — recommend **Full planning** unless the task is trivial:
-
-- **Full planning** *(recommended)* — invoke `wystack-agent-kit:groom <task>`; on completion the task is groomed and ready → step 5.
-- **Quick start** — skip to step 5.
-- **Pick another** — invoke `wystack-agent-kit:next-task`.
-
-If a plan already exists (planning role), show its summary; if the user confirms it's ready, set the task to the configured ready status via the provider adapter → step 5.
-
-### 5. Set up workspace
-
-1. **Pick isolation** — consult the workspace's worktree preference: **worktree** → invoke `wystack-agent-kit:worktree` for an isolated checkout; **cwd** → work in the current directory; **ask / unset** → default to worktree; `--interactive`: ask the user and offer to record the choice in the workspace.
-2. **Branch** — if a `branch <name>` hint was supplied, use it exactly. Otherwise: `git worktree list` and `git branch --list "*{id}*"`; reuse a match if one exists, else create `{id}-{slug}` (slug = first 3–4 title words, kebab-cased).
-3. Set the work item to the configured in-progress status via the provider adapter.
-
-### 6. Resume (in-flight)
-
-`git worktree list` — if a matching worktree exists, report its location and offer to switch. Otherwise `git branch --list "*{id}*"`; check out a match, or follow step 5.2 to create a branch. Then → step 7.
-
-### 7. Execute
-
-Default: if the task has a `## Plan`, use **Batch** execution (the installed `executing-plans` skill or equivalent). If no plan, implement directly from the description and acceptance criteria.
-
-`--interactive`: if the task has a `## Plan` (work-item body or local plan doc), ask how to execute — recommend **Batch** for most planned work:
-
-- **Batch** *(recommended)* — the installed `executing-plans` skill or equivalent (step-by-step with review checkpoints).
-- **Subagent-driven** — the installed `subagent-driven-development` skill or equivalent (parallel execution).
-- **Manual** — implement directly, task context kept loaded.
-
-### 8. Finish
-
-When implementation is complete, invoke `wystack-agent-kit:finish-task <task> pr` — it owns the git lifecycle, quality gate, PR creation, and calibration record.
-
-**Shepherd loop.** After `finish-task` exits, inspect its Shepherd State:
-- `ready-to-merge` — report and stop. Notify the user that the PR is ready; humans merge.
-- `needs-human` — report the blocker(s) and stop. The user must unblock before re-invoking.
-- `shepherding` — schedule a wakeup via `ScheduleWakeup` (delay: 900s, reason: "PR shepherd pass — waiting on CI/review") passing this same `start-task <task>` prompt so the next firing re-enters at step 8 and runs another finish-task pass. Then stop — do not busy-wait.
-
-`--interactive`: finish-task's report stands on its own; the user drives re-invocation.
+8. **Finish** — `wystack-agent-kit:finish-task <task> pr` (owns git lifecycle, quality gate, PR, calibration record), then route its Shepherd State: `ready-to-merge` → merged under gate policy, else report for the human merge; stop · `needs-human` → report blockers, stop · `shepherding` → schedule a delayed re-entry with this same prompt (host wakeup/scheduler when available — e.g. Claude `ScheduleWakeup`, Grok background/monitor; otherwise report and stop for the user to re-invoke). Never busy-wait; repeated passes without progress → exit `needs-human`. `--interactive`: no wakeups, the user re-invokes.
 
 ## Edge cases
 
-- **Task is blocked** — hard stop regardless of mode (default or `--interactive`); report the blocking task(s) and stop.
-- **Worktree exists for a different task** — don't overwrite; use a unique branch name.
-- **User wants to pause** — keep the branch, leave the task in-flight, report how to resume.
-- **Shepherd loop exceeds 5 wakeup passes without reaching `ready-to-merge`** — exit `needs-human`; do not schedule further wakeups.
-
-## Notes
-
-- Main entry point — composes `wystack-agent-kit:next-task`, `wystack-agent-kit:groom`, an execution skill, and `wystack-agent-kit:finish-task`.
-- The `{id}` branch-matching pattern is intentionally broad — it matches provider-native names (`YW-56`) as well as the derived `task-56-*`, so resume detection works either way.
-- Default mode eliminates every confirmation prompt except hard stops (blocked task, `needs-human` shepherd exit); other decisions take the recommended path. `--interactive` restores the prompts.
+- Worktree exists for another task → unique branch name, never overwrite.
+- User pauses → keep the branch, task stays in-flight, report how to resume.

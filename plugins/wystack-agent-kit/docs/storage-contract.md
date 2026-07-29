@@ -70,13 +70,13 @@ fi
 - `mode` — `global` (root outside the repo) · `per-project` (root inside the repo, legacy) · `unconfigured` (no `.wystack.json`; tell the caller to run `setup-agent-kit`) · `none` (not a git repo).
 - Resolving `root` against `cwd` instead of the repo root is the top cause of agents forking a fresh workspace: in a worktree `cwd` is the worktree directory and a relative `.wystack` resolves to an empty path. The block resolves against `git rev-parse --show-toplevel`, with a `--git-common-dir` fallback for worktrees whose gitignored `.wystack.json` isn't checked out.
 
-Because `.wystack.json` is committed, every worktree carries it — skill-created or harness-created (`orchestrate` execution agents run in harness worktrees). With global mode the workspace path is absolute and unambiguous; the per-project `.wystack` symlink the `worktree` skill drops is a defense-in-depth ergonomic for legacy setups only.
+Because `.wystack.json` is committed, every worktree carries it — skill-created or harness-created (dispatched execution agents run in harness worktrees). With global mode the workspace path is absolute and unambiguous; the per-project `.wystack` symlink the `worktree` skill drops is a defense-in-depth ergonomic for legacy setups only.
 
 ## Structure, providers, and extensions
 
-The framework names the **concepts** — task store, doc store, calibration, tuning, artifacts, decisions. The project configures **where each lives** in `storage.json`. Skills ask the config for a location; they never hardcode `.wystack/docs/` or `.wystack/tasks/`.
+The framework names the **concepts** — task store, doc store, run records, artifacts, decisions. The project configures **where each lives** in `storage.json`. Skills ask the config for a location; they never hardcode `.wystack/docs/` or `.wystack/tasks/`.
 
-Stores are **provider-driven** — the task store and doc store are not necessarily filesystem. Providers: `local-markdown`, `notion`, `github`, `kb`, etc. `storage.json` selects the provider and its config (path for filesystem, database ID for Notion, namespace for `kb`). Only operational local data — config, `calibration/`, `artifacts/`, `tuning.json` — is always filesystem under the workspace root.
+Stores are **provider-driven** — the task store and doc store are not necessarily filesystem. Providers: `local-markdown`, `notion`, `github`, `kb`, etc. `storage.json` selects the provider and its config (path for filesystem, database ID for Notion, namespace for `kb`). Only operational local data — config, run records (`calibration/`, `perspective/`, …), `artifacts/` — is always filesystem under the workspace root.
 
 Extensions are the broader capability layer. A provider backs a specific store;
 an extension can also observe records, execute bounded actions, normalize
@@ -213,6 +213,7 @@ act safely.
         "host": "github",
         "cli": "gh",
         "stacked": false,
+        "mergePolicy": "human",
         "commands": {}
     }
 }
@@ -231,7 +232,7 @@ lifecycle skills read instead of hardcoding:
 | `docs.types`                      | `spec`, `breakdown`, `engineering-context`, `setup-agent-kit` | Enabled **optional** doc types beyond the always-on core (PRD/Spec/Story/Glossary). An array of type IDs — `["adr"]` opts in; absent or `[]` = core-only, no loss (a contested decision stays a spec one-liner). The core types are always-on and never appear here. Skills read it and adapt **only when an optional type is enabled** (offer an ADR for a contested decision, link it `expands:`); a project with no `docs.types` sees no new prose for it. New optional types register by adding an ID + a layout descriptor. Local layout adds `<path>/adrs/` per enabled type. See `doc-model.md` § Doc-type registry. |
 | `docs.specTemplate`               | `spec`                                      | Optional ordered list of section names a spec should follow, e.g. `["Purpose","Component boundaries","Data flow","Decisions"]`. When set, the `spec` skill uses it as the section skeleton; when unset, the skill chooses sections per spec (agent judgment). The cite-in-context and level-of-detail rules apply either way — the template governs structure only.                                                                                              |
 | `conventions.requirementIdFormat` | `prd`, `story`, `breakdown`, `spec`, `code-review`   | Template for requirement IDs. The **doc store** (where stories live) provides the story's stable reference — the kit never mints it (the adapter allocates: local-markdown `ST-{n}`, a tracker-backed store `ENG-{n}`). `{story.id}` means "use whatever the doc store calls the story"; a project may still pin an explicit template (e.g. `ST-{n}`) for a neutral local form. Tool-neutrality is a provider-selection property, not a kit guarantee. |
-| `worktree.preference`             | `start-task`, `orchestrate`, `worktree`     | Whether task work is isolated in a git worktree: `worktree` (always), `cwd` (never), `ask` (decide per task).                                                                                                                                                                                                        |
+| `worktree.preference`             | `start-task`, `worktree`                    | Whether task work is isolated in a git worktree: `worktree` (always), `cwd` (never), `ask` (decide per task).                                                                                                                                                                                                        |
 | `worktree.directory`              | `worktree`                                  | Optional override for where worktree directories are created. When unset, falls back to `~/worktrees/<project>/<branch>` — outside the working tree, so file watchers, editor pickers, and `node_modules` resolution don't recurse into them. Set this field only to override the global default with a custom path. |
 | `quality.preflight`               | `code-review`, `finish-task`, `full-review` | Project-defined commands that must pass before review/finish flows treat the branch as ready for judgment. Empty means "no configured preflight", not "invent a broad test sweep".                                                                                                                                   |
 | `extensions`                      | extension-aware skills                      | Enabled capability providers and their descriptors. Registry entries say what a tool can do; bindings say what this repo allows it to do.                                                                                                                                                                            |
@@ -239,6 +240,7 @@ lifecycle skills read instead of hardcoding:
 | `actionPolicy`                    | every skill that invokes `execute.action`   | Risk gates for read-only observation, local writes, worktree edits, external mutation, and destructive actions.                                                                                                                                                                                                      |
 | `retention`                       | record-producing skills and graph stores    | How long operational evidence stays full fidelity before coalescing, archiving, or expiring duplicate noise.                                                                                                                                                                                                         |
 | `vcs`                             | `finish-task`, `code-review`, `engineering-context` | The repo's git host and CLI — picks which commands lifecycle skills run to open PRs, watch CI, read review state. See "VCS configuration" below.                                                                                                                                                                     |
+| `vcs.mergePolicy`                 | `finish-task`, external conductors          | Who holds merge authority. `human` (default): agents drive a PR to ready-to-merge and stop. `gate`: the agent merges exactly when the merge gate is **independently verified against the remote** — head is the reviewed SHA, required CI green, approvals present, no open non-outdated threads, mergeable. Gate passes → merge without asking; gate fails → send back without asking. The gate is the authority in both directions — the agent never asks permission for a verified-green merge and never merges past a failed condition. |
 
 ### Extensions and bindings
 
@@ -452,6 +454,10 @@ shared source, but harnesses consume it differently:
 - Codex keeps using its built-in transports (`explorer`, `worker`, `default`)
   and injects the file as role-brief prompt context. Plugin agents do not
   become new custom Codex agent types.
+- Grok Build loads the file as a plugin agent type (`wystack-agent-kit:<name>`).
+  Record preferred models under `delegation.grok.model` (`inherit` or a Grok
+  model id such as `grok-4.5`). Until a host adapter applies that field, Grok
+  inherits the parent session model — same as any unset subagent model.
 
 The repo layout is one `<name>.md` per agent under `agents/`:
 body = portable principles, frontmatter = identity plus harness-scoped runtime
@@ -480,10 +486,13 @@ delegation:
     codex:
         transport: explorer
         reasoning_effort: high
+    grok:
+        model: grok-4.5   # or inherit
 ```
 
 Do not use a top-level `model`: it is harness-specific and misleading when a
-different harness consumes the same file. Do not hardcode `tools:` lists or MCP
-tool IDs in these shared files; capability comes from the executing harness and
-the workspace's provider adapter. No separate per-harness source file is
-required.
+different harness consumes the same file. (Existing files may still carry a
+top-level Claude class for Claude Code; treat `delegation.<harness>` as the
+portable adapter.) Do not hardcode `tools:` lists or MCP tool IDs in these
+shared files; capability comes from the executing harness and the workspace's
+provider adapter. No separate per-harness source file is required.

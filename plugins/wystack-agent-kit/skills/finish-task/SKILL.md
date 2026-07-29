@@ -5,143 +5,51 @@ description: "Finish an engineering task by running the final quality gate, land
 
 # Finish Task
 
-Own the final lifecycle: verify, apply the landing strategy, execute the git path, shepherd the PR, update the work item.
+Own the final lifecycle: verify, land, shepherd the PR, update the work item.
 
-`$ARGUMENTS` — a work-item URL/path (or empty — detect from the current branch name, expects `task-{id}-*`), and optionally a landing strategy (`merge` | `pr` | `keep`). A caller that has already decided how to land — the orchestrate executor-brief supplies `pr` — passes it here so Step 3 never asks.
+`$ARGUMENTS` — work-item URL/path (or empty — detect from the `task-{id}-*` branch), plus an optional landing strategy (`merge` | `pr` | `keep`) from a caller that has already decided (a dispatching conductor passes `pr`).
 
-**Context-blind.** finish-task doesn't introspect who runs it (interactive user or dispatched agent) — it consumes inputs, emits a report. It asks only for a missing required input, never "who are you"; whoever holds the user channel supplies inputs and consumes the report.
-
-**Prerequisites.** Load `wystack-agent-kit:workspace`. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit` before updating work-item status.
+**Prerequisites.** Load `wystack-agent-kit:workspace`. Not set up → `wystack-agent-kit:setup-agent-kit`.
 
 ## Workflow
 
-### 1. Resolve task
+1. **Resolve** — from the URL/path or the branch's task ID; else ask.
 
-URL/path given → keep it for later updates. Empty → `git branch --show-current`; if it matches `task-{id}-*`, extract the ID and search the work-item store, else ask the user. Fetch title/status/path via the provider adapter if not known.
+2. **Gate** — commit pending work via the installed `commit` skill, then converge per `docs/review-loop.md`, cheap loop first: `wystack-agent-kit:code-review` until zero MUST, then `wystack-agent-kit:full-review` (subsumes runtime verification) until its verdict is ship. Triage unfixed SUGGESTs as deferral candidates — file via `wystack-agent-kit:task-manager` only what the user approves; no user → carry them into the report. Surface compatible extension actions as options — never auto-run.
 
-### 2. Quality gate — staged convergence
+3. **Landing strategy** — an input, not a question; ask only when absent (the one prompt this skill makes): merge locally / open-update PR / keep branch / discard (interactive only, explicit typed confirmation).
 
-Two fix loops, both per `docs/review-loop.md` (assess → fix → re-assess until zero MUST), cheap loop first. On a resume pass (branch already has a PR) this gate does not blanket re-run — see Edge cases.
+4. **Execute** — *merge:* update base, merge, re-test, `wystack-agent-kit:cleanup` · *PR:* commit, push (on `main`/`master`, branch first), the `prCreate` capability or update the existing PR (`cli: manual` → emit the resolved command as text, exit `needs-human`) · *keep:* preserve as-is · *discard:* confirm, note why, then clean up. Track the outcome — steps 5–7 consume it.
 
-1. **Repo state** — commit any uncommitted changes via the installed `commit` skill before landing; a clean tree is always required, so this is done, not offered.
-2. **Loop 1 — code review.** Converge `wystack-agent-kit:code-review` over the diff: review → fix MUSTs and cheap in-scope SUGGESTs → re-review, until zero MUST. Gets the code clean fast.
-3. **Loop 2 — full review.** Converge `wystack-agent-kit:full-review` (code review + QA against ACs + PM acceptance + runtime verification): review → fix → re-review, until full-review's verdict is ship. This subsumes runtime verification — no separate `wystack-agent-kit:verify` step.
-4. **Triage deferred findings.** Every unfixed SUGGEST is a deferral _candidate_, not a filed ticket. Present each (finding, location, do-now vs. defer rec); file a follow-up via `wystack-agent-kit:task-manager` only for candidates the user approves. A dispatched finish-task has no user — it files nothing, carrying the candidates into its Step 8 report for the cockpit to triage. Findings never evaporate: filed, fixed, or surfaced.
-5. **Surface extension actions.** For accepted claims or stale external records, query enabled extensions for compatible `execute.action` descriptors (`verify_record`, `apply_fix`, provider status updates). Never auto-run them — they're options for the main agent, bounded by `actionPolicy`, freshness, and write-scope.
-6. **Record summary inputs** — why the change exists, what changed, verification evidence, computed workflow facts, extension provenance, and any follow-up ticket links (or the deferral candidates carried into the report).
+5. **Shepherd** (PR path only) — one bounded pass toward green CI + comments resolved + approved. Fix what's clear and in-scope, reply on each addressed thread with the fix commit, re-request review. Await machine latency (CI); never human latency — exit the moment only reviewer-paced waiting remains; the caller re-invokes for the next pass. Exit at exactly one state and emit the status block:
 
-### 3. Landing strategy
+   | Exit | Condition |
+   |---|---|
+   | `ready-to-merge` | mergeable + approved + green. `vcs.mergePolicy: gate` → re-verify the gate against the remote and merge now (outcome `merged`); `human` → report for the human merge |
+   | `needs-human` | conflict on a published branch (never resolve it), unclear infra/CI failure, a product/scope decision, conflicting reviewers, fixes not converging |
+   | `shepherding` | only human-paced waiting remains — never wait for a reviewer |
 
-The landing strategy is an **input**, not a question. If `$ARGUMENTS` carried one — a dispatched agent's brief supplies `pr` — use it. If none was supplied, ask the user to pick; this is the one prompt finish-task makes, and only because a required input is absent.
+   ```
+   ### PR Shepherd Status
+   PR: {url}   State: {…}   CI: {…}   Reviews: {…}   Unresolved threads: {n}   Pass: {n}
+   {needs-human → one line per blocker · shepherding → what the next pass waits on}
+   ```
 
-- **Merge locally** — integrate into the base branch now.
-- **Open or update PR** — commit, push, open/update the PR.
-- **Keep branch** — preserve as-is, stop after status/report.
-- **Discard work** — interactive only: requires explicit typed confirmation, so it is never a supplied input — a dispatched brief never carries `discard`.
+6. **Update the work item** — status role (`merged` → done · `pr-created` → in-review · `kept` → in-progress · `discarded` → backlog); a completion summary (date, action, branch, base, PR url, changes vs base); the calibration record `TASK-{id}.json` in workspace `calibration/` per `docs/run-record.md` — updated in place across passes; a `shepherding` exit leaves it open.
 
-### 4. Execute
+7. **Report and stop** — readiness with reasons, verification evidence, status `{old} → {new}`, PR url + Shepherd State, deferral candidates. Close with a plain-text recommendation (next-task / handoff / retro / another pass) — text, no question UI, same for a dispatched caller and a user.
 
-**Merge locally** — update the base branch, merge, re-run tests on the result, then `wystack-agent-kit:cleanup` to remove merged local branches.
+## Rules
 
-**PR** — commit pending work via the installed `commit` skill (don't bundle unrelated changes); push (`git push -u origin <branch>`; if on `main`/`master`, branch first); invoke the workspace's `prCreate` capability with a concise summary, testing notes, follow-ups — or push into the existing PR. For `cli: manual`, emit the resolved command as text and exit `needs-human` instead of running it. Then **Step 5** before status updates.
-
-**Keep branch** — preserve the branch/worktree as-is.
-
-**Discard** — explicit confirmation; preserve a brief note on why; clean up the branch/worktree only after.
-
-Track the outcome as `{merged | pr-created | kept | discarded}` plus branch, base, PR url, and worktree state — Steps 6–8 consume it.
-
-If an extension action was chosen before landing, record it as an event: provider, action, target, constraints, files/state touched, result, follow-up validation. Provider validation is action-level evidence, not task readiness — finish-task still computes readiness from CI, preflight, review state, work-item requirements, and accepted claims.
-
-### 5. Shepherd PR — one bounded pass (PR path only)
-
-Drive the PR toward **green CI + comments resolved + approved**. Never merge the PR — humans merge, regardless of host.
-
-Procedural steps below name **capabilities** (`prChecks`, `prView`, etc.) — the workspace's `vcs.commands` table resolves them to concrete commands. See `docs/storage-contract.md`. Skills must never hardcode `gh`, `gt`, `glab`, or any other vendor verb in their own prose.
-
-**One bounded pass**, not a blocking loop. Await machine latency (CI runs in minutes); never block on human latency (reviewers take hours to days) — the moment only human-paced waiting remains, exit with the status block. The loop lives in the caller: re-invoking finish-task on a branch with a PR resumes into another pass (see Edge cases) — the cockpit re-invokes when dispatched, the user otherwise (optionally via `/loop`).
-
-**a) Watch CI** — invoke `prChecks` (machine-paced — fine to await). On failure, classify:
-
-| Class                                               | Action                                                                                                                                                                       |
-| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mechanical (lint, format, type, deterministic test) | Fix, commit, push, await the re-run                                                                                                                                          |
-| Flaky (known intermittent)                          | Invoke `ciRerunFailed`, note in the status block; a _recurring_ flake is a setup gap — report it with a fix (quarantine the test, fix the CI config), don't just rerun        |
-| Logic / behavior failure                            | Read logs; fix only if the cause is clear and in-scope                                                                                                                       |
-| Infra / external, or cause unclear after one pass   | A `needs-human` exit — don't silently rerun                                                                                                                                  |
-
-**b) Pull review state** — invoke `prView` for review decision, mergeability, and merge-state status; `prCommentsInline` and `prCommentsTop` for the comment streams.
-
-**c) Triage every unresolved comment:**
-
-| Class                                            | Action                                             |
-| ------------------------------------------------ | -------------------------------------------------- |
-| Actionable, clear, in-scope                      | Fix, commit referencing the comment, push          |
-| Nit / style in touched code                      | Fix unless trivially low-value                     |
-| Needs a product/scope decision, or expands scope | A `needs-human` exit; recommend a follow-up ticket |
-| Speculative (no observed bug)                    | Reply with rationale, recommend a follow-up ticket |
-| Conflicting reviewer opinions                    | A `needs-human` exit                               |
-
-Reply on each addressed thread (`prThreadReply`) with a one-line pointer to the fix commit, then re-request review — `prReady` if the PR is still a draft, otherwise `prRequestReview`.
-
-**d) Pick the exit** — the pass ends at exactly one, read from `mergeStateStatus` and review state:
-
-| Exit             | Condition                                                                                                                                                                                                                                                                                     |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ready-to-merge` | `CLEAN` + approved + green                                                                                                                                                                                                                                                                    |
-| `needs-human`    | a genuine blocker — `DIRTY` conflict (don't resolve conflicts on a published branch); infra/external CI failure unclear after one pass; a comment needing a product/scope decision; conflicting reviewers; or >3 fix-push commits accumulated on the branch without reaching green + approved |
-| `shepherding`    | CI handled and comments triaged, but human-paced waiting remains — review pending, or a re-request just sent. Exit now; never wait for a reviewer                                                                                                                                             |
-
-`BEHIND` — invoke `prUpdateBranch`, await the re-triggered CI, then pick the exit. `UNSTABLE` — treat as a CI failure (step a).
-
-**e) Emit the status block** — always, at whichever exit:
-
-```
-### PR Shepherd Status
-PR: {url}   State: {ready-to-merge | shepherding | needs-human}
-CI: {green | failing: <checks>}
-Reviews: {approved by X | changes requested by Y | pending}
-Unresolved threads: {count} ({links})   Pass: {n}
-{needs-human → Action needed: one line per blocker, with link}
-{shepherding → Waiting on: what, and what triggers the next pass}
-```
-
-### 6. Map outcome to work-item status
-
-| Outcome                                                    | Status role               |
-| ---------------------------------------------------------- | ------------------------- |
-| `merged`                                                   | **done**                  |
-| `pr-created` (ready-to-merge, shepherding, or needs-human) | **in-review**             |
-| `kept`                                                     | **in-progress**           |
-| `discarded`                                                | **backlog / not-started** |
-
-Map each role onto the project's configured status vocabulary — never write a literal status the project doesn't use.
-
-### 7. Update work item
-
-Via the provider adapter:
-
-**a) Status** — set to the Step 6 role.
-
-**b) Completion summary** — append to the task page: date, action, branch, base, PR url (if any); a `Changes` section from `git log --oneline {base}..HEAD`; a `Files Changed` section from `git diff --stat {base}..HEAD`. If discarded, instead write a brief note on why.
-
-**c) Calibration record** — write `TASK-{id}.json` to the workspace `calibration/` directory (create it if absent), conforming to the run-record contract in `docs/run-record.md` — the oracle `wystack-agent-kit:retro` reads:
-
-```json
-{ "task": "TASK-{id}", "size": "{predicted size}", "source": "live",
-  "review_rounds": {count}, "outcome": "{merged|pr-created|kept|discarded}" }
-```
-
-`review_rounds` = shepherd passes summed across every finish-task invocation for this task, or the Step 2 gate's rounds for a local merge. If a prior pass already wrote the record, update it in place — accumulate `review_rounds`, set `outcome` to the latest. A `shepherding` exit leaves the record open; a later pass closes it.
-
-### 8. Report
-
-Deliver the report and stop — don't ask what to do next. Lead with workflow truth: computed readiness, primary reasons, verification evidence, extension provenance, available actions. Report `TASK-{id}: {title}`, status `{old} → {new}`, PR url and Shepherd State if any. Close with a plain-text recommendation — `next-task` (`wystack-agent-kit:next-task`), `handoff` (`wystack-agent-kit:handoff`), `retro` (`wystack-agent-kit:retro`), or another shepherd pass on a `shepherding` state. Recommendation as text, no question UI — it routes to a dispatched caller and an interactive user alike.
+- **Merge authority is workspace policy** (`vcs.mergePolicy`), never the skill's own judgment: `human` → stop at ready-to-merge; `gate` → the independently verified gate decides both ways — merge on pass without asking, send back on fail without asking.
+- **Context-blind** — consume inputs, emit a report; ask only for a missing required input, never "who are you".
+- **Capabilities, not vendor verbs** — resolve `prChecks`, `prView`, … via the workspace `vcs.commands` table; never hardcode `gh`/`gt`/`glab`.
+- **Findings never evaporate** — filed, fixed, or surfaced in the report.
+- **Roles, not literal statuses** — map onto the configured vocabulary.
+- **A recurring CI flake is a setup gap** — report it with a fix, don't just rerun.
 
 ## Edge cases
 
-- **No branch match** — ask for the work-item URL/path.
 - **Task already done** — warn, confirm before finishing again.
-- **PR already exists — resume the shepherd.** Skip Step 4's PR creation, run one more Step 5 pass. Step 2's review loops don't blanket re-run — check `.wystack/reviews/` for a record whose `diff_sha` matches HEAD and `verdict` is `ship`; a match means the loops can skip. No matching record (older work, PR opened elsewhere, force-push) falls back to the proxy "PR exists → trust it was reviewed once". Step 2.1 still runs: commit pending work. Re-run Step 2's code-review only on a substantive shepherd fix (altered logic, shared signature, control flow); escalate to whole-PR review if it ripples beyond scope or the branch state is unclear. Uncertainty defaults to the whole-PR review.
-- **Discard on a not-started task** — leave status unchanged.
-- **Force-push during shepherd** — avoid unless a reviewer asks; it loses review history.
+- **PR already exists — resume.** Skip creation; run another shepherd pass. Gate loops skip only on a `.wystack/reviews/` record matching HEAD (`diff_sha`, verdict ship); re-run code-review on a substantive shepherd fix — uncertainty defaults to whole-PR review.
+- **Force-push during shepherd** — only if a reviewer asks; it loses review history.
