@@ -8,77 +8,23 @@ Create a codebase-informed work item — gather, dedup, explore, size, create.
 
 `$ARGUMENTS` — task description, or empty (ask).
 
-**Prerequisites.** Load `wystack-agent-kit:workspace` — resolves the workspace, the task provider, the project identity, and the status vocabulary. Load `wystack-agent-kit:estimate` — the sizing scale plus `tuning.json` calibration. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
-
-## Architecture
-
-| Concern | Where | Why |
-|---|---|---|
-| Orchestration, user interaction, sizing | **Main agent** | Needs conversation history and the loaded `estimate` scale |
-| Codebase exploration | **`Explore` subagent** | File contents stay out of the main context |
-| Task-store search + writes | **`wystack-agent-kit:task-manager`** | Provider quirks and confirmation noise stay out |
+**Prerequisites.** Load `wystack-agent-kit:workspace` and `wystack-agent-kit:estimate`. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
 
 ## Workflow
 
-### 1. Gather the request
+1. **Gather** — type (Bug / Feature / Tech Debt / Research) and description from `$ARGUMENTS` or ask via the question UI. Project from the arguments or conversation, else the workspace identity; unresolvable → ask, never guess.
 
-If `$ARGUMENTS` is empty, ask via the harness question UI — type (Bug / Feature / Tech Debt / Research), then a brief description of the work.
+2. **Dedup** — spawn `wystack-agent-kit:task-manager` to search the task store for similar-titled items. Near-match → surface it and ask: extend the existing task (recommended on a strong match) / create anyway / cancel.
 
-### 2. Resolve the project
+3. **Explore** — spawn `Explore`; it reports observations, not judgments: affected files, the correctness surface (cases and invariants the change must hold, cross-cutting reach, design decisions required), potential blockers, and suggested ACs referencing real paths (tests per `docs/testing-philosophy.md` — no test criterion unless a concrete risk earns one).
 
-`$ARGUMENTS` or conversation context may name the project; otherwise take the project identity from the workspace.
+4. **Size and propose** — size per `wystack-agent-kit:estimate` from the observations. Present: title, type, priority (Medium unless clearly urgent), estimate, description refined by the analysis, ACs (one code-referencing, one verification), affected files. Confirm via the question UI: create as-is / edit first / cancel.
 
-### 3. Check for duplicates
+5. **Create** — delegate to `wystack-agent-kit:task-manager`: title, status (configured backlog role; Research defaults to the deferred role), priority, estimate, type, project; body `## Description` / `## Acceptance Criteria` (numbered) / `## Scope` (Files / Tests / Docs). Require the created work-item URL/ID back.
 
-Before exploring, spawn `wystack-agent-kit:task-manager` to search the task store for similar-titled items. If a near-match exists, surface it and ask, recommending **extend the existing task** on a strong match: extend / create anyway / cancel.
+6. **Report** — `{id} — {title}` and location, then offer: plan it (`wystack-agent-kit:groom`) / start working (`wystack-agent-kit:start-task`) / done.
 
-### 4. Explore codebase impact
-
-Spawn an `Explore` subagent. It returns observations, not judgments:
-
-```
-Task: "{description}"
-Project: {project}
-
-Report:
-1. Affected files — paths + brief rationale.
-2. Implementation complexity — files touched, new vs existing patterns, design decisions required, cross-cutting reach.
-3. Potential blockers — dependencies, unknowns, prerequisites.
-4. Suggested acceptance criteria — concrete, verifiable, referencing actual file paths.
-   Apply `docs/testing-philosophy.md`: do not invent a test criterion unless a concrete risk earns one.
-
-Exploration depth: "quick" for a likely small task, "medium" for likely large/cross-cutting.
-```
-
-### 5. Size and present the proposal
-
-Apply the loaded `wystack-agent-kit:estimate` scale to the Explore signals — pick the size; estimation owns the rubric and the calibration.
-
-Present the proposal: title, type, priority (Medium unless clearly urgent), estimate, a description refined by the codebase analysis, acceptance criteria (one code-referencing, one verification — strategic test / runtime check / screenshot / typecheck / lint), and affected files. Confirm via the question UI: create as-is / edit first / cancel. On "edit first", ask what to change, update, re-present.
-
-### 6. Create
-
-Delegate to `wystack-agent-kit:task-manager` — a provider-neutral create:
-
-```
-Fields: title, status (configured backlog/not-started role), priority, estimate, type, project.
-Body:
-  ## Description
-  ## Acceptance Criteria   (numbered)
-  ## Scope                 — Files / Tests / Docs (per the estimation tier)
-```
-
-Research-type tasks default to the configured deferred/backlog status. Require the created work-item URL/ID back.
-
-### 7. Offer next steps
-
-Report `{id} — {title}` and location, then ask: plan it (`wystack-agent-kit:groom`) / start working (`wystack-agent-kit:start-task`) / done.
-
-## Edge cases
-
-- **XXL estimate** — recommend splitting into sub-tasks before creating.
-- **No project resolvable** — ask the user which project rather than guessing.
-
-## Principles
+## Rules
 
 - **Roles, not literal statuses** — map onto the configured status vocabulary; never hardcode status names.
+- **XXL estimate** — likely bundles more than one independently valuable outcome; offer `wystack-agent-kit:breakdown` before creating. Size alone never forces a split.

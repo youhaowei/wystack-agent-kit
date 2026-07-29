@@ -14,7 +14,7 @@ Run once upfront; every downstream consumer gets the same framing.
 - Branch name (ticket-ID detection patterns: `task-{id}`, `{PROJECT}-{id}` like `WS-123`/`ENG-456`, bare leading digits, path-style prefixes like `feat/{id}-*`).
 - Work-item URL/path or `TASK-###` ID.
 - Feature/phase name for title-based search.
-- Empty → infer from current branch + `git log -20 --oneline` (commits often carry an ID even when the branch doesn't).
+- Empty → infer from the current branch + its recent commits (`git log --oneline` — commits often carry an ID even when the branch doesn't).
 
 When a ticket ID is detected (from args, branch, or commits), `task-manager` MUST be dispatched with that ID — do not let the freshness check skip on title-match alone.
 
@@ -22,7 +22,7 @@ When a ticket ID is detected (from args, branch, or commits), `task-manager` MUS
 
 ## Load the constitution
 
-This is the entrance for review and analysis work. Before gathering context, read `docs/constitution.md` (plugin root) — the WyStack Agent's behavioral constitution: a core principle and three tenets every skill operates under. It stays in effect for the rest of the session; this is the runtime delivery point for review-side skills — no skill restates it.
+Before gathering context, read `docs/constitution.md` (plugin root) — it stays in effect for the session. This is the runtime delivery point for review-side skills; no skill restates it.
 
 ## Pipeline
 
@@ -59,7 +59,7 @@ Pass:
 
 - Task's linked PRD/Spec/Story URLs (if known upfront — pass through, don't make it search).
 - Feature/phase name for title-search if URLs aren't available.
-- Instruction: return **full content** of PRDs/Specs + Stories (all doc-store docs — the Story is the requirement doc) + one hop of Related/Prior-art links. Not summaries — downstream consumers quote from it. **Always resolve the glossary terms the changed area uses** — the docs cite `[[term-slug]]`; return those notes so the canonical definitions travel with the context (a reviewer measuring code against intent needs the term meanings, not a guess). A term used in the code or docs with no glossary note is a coverage gap — flag it. When `adr` is enabled (`docs.types`), also pull ADRs the spec links via `expands:` as part of that one hop — they carry the contested-decision rationale the spec one-liner compresses, the context that stops a reviewer re-litigating a settled call.
+- Instruction: return **full content** of PRDs/Specs + Stories (all doc-store docs — the Story is the requirement doc) + one hop of Related/Prior-art links. Not summaries — downstream consumers quote from it. **Always resolve the glossary terms the changed area uses** — the docs cite glossary notes (wiki links or markdown links into `glossary/`, per the doc store); return those notes so the canonical definitions travel with the context (a reviewer measuring code against intent needs the term meanings, not a guess). A term used in the code or docs with no glossary note is a coverage gap — flag it. When `adr` is enabled (`docs.types`), also pull ADRs the spec links via `expands:` as part of that one hop — they carry the contested-decision rationale the spec one-liner compresses, the context that stops a reviewer re-litigating a settled call.
 
 The librarian is the right agent for reads, not just writes — it finds docs the task-manager can't.
 
@@ -74,7 +74,7 @@ Scope based on mode:
 | `plan`   | Architecture of the area to be changed, extension points, recent churn in the module                                              |
 | `fix`    | Entry points, error paths, and existing tests around the bug site                                                                 |
 
-Cap the report at ≤400 words. Reviewers don't need a tour — they need the load-bearing conventions.
+Keep the report tight — reviewers don't need a tour, they need the load-bearing conventions.
 
 #### d. Knowledge-base search → prior decisions (via Bash)
 

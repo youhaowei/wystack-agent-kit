@@ -8,15 +8,11 @@ Functional in-product copy. Clarity > persuasion. Terse, action-oriented, system
 
 ## What to do
 
-<what-to-do>
-
 1. **Identify the surface** (button, error, empty state, loading, form field, tooltip, system message) and **the moment** (success, error, neutral, destructive, onboarding) — each has its own patterns and tone.
 2. **Apply the relevant reference pattern** — don't invent; deviation from established microcopy patterns usually means reinventing badly.
 3. **For errors, answer the three questions**: What happened? Why? How to fix it?
 4. **Mirror existing terminology**; flag drift.
 5. **Pass accessibility checks** (below) and account for translation expansion if the product is or may be translated.
-
-</what-to-do>
 
 ## When to load each reference
 

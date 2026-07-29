@@ -6,13 +6,9 @@ description: "Confirm a feature works at runtime — exercise its golden path an
 
 Prove a feature works by running it; tests passing is not proof. verify orchestrates and judges — subagents exercise the runtime and return evidence, never a verdict.
 
-## Input
+`$ARGUMENTS` — a feature, ticket, branch, or "what I just changed". A ticket in context supplies the golden path and edge cases through its acceptance criteria.
 
-`verify [target]` — a feature, ticket, branch, or "what I just changed". A ticket in context supplies the golden path and edge cases through its acceptance criteria.
-
-## Setup
-
-Load `wystack-agent-kit:workspace`; it provides `verify.json` — how to exercise this project's runtime — and the artifacts directory.
+**Prerequisites.** Load `wystack-agent-kit:workspace` — it provides `verify.json` (how to exercise this project's runtime) and the artifacts directory.
 
 ```json
 {

@@ -1,16 +1,14 @@
 ---
 name: critique
-description: "Adversarially pressure-test a finished design, plan, spec, or PRD — walk every branch, attack every assumption, surface holes, unresolved dependencies, and unstated risks. Findings only, no rewrite. Use when the user says 'critique this', 'poke holes', or 'red-team this design/plan/spec'. For code, see wystack-agent-kit:code-review. For whether a feature works at runtime, see wystack-agent-kit:verify. To turn a fuzzy idea into a design, see wystack-agent-kit:brainstorm."
+description: "Adversarially pressure-test a finished design, plan, spec, or PRD — walk every branch, attack every assumption, surface holes, unresolved dependencies, and unstated risks. Every finding maps to a proposed change; critique applies nothing. Use when the user says 'critique this', 'poke holes', or 'red-team this design/plan/spec'. For code, see wystack-agent-kit:code-review. For whether a feature works at runtime, see wystack-agent-kit:verify. To turn a fuzzy idea into a design, see wystack-agent-kit:brainstorm."
 ---
 # Critique
 
-Attack a finished design artifact until only the strong structure survives. Findings only — critique surfaces holes, it does not rewrite the doc.
+Attack a finished design artifact until only the strong structure survives. Every hole ships with a proposed fix; critique applies none of them.
 
 The design-phase analog of `code-review`: `code-review` adversarially reads code, `critique` adversarially reads a design, plan, spec, or PRD.
 
-## Input
-
-`critique [target]` — the artifact under attack: a path, a doc-store URL, or the design in context. Critique needs a *finished artifact* to attack — if there is only a fuzzy idea, stop and point the user at `wystack-agent-kit:brainstorm`.
+`$ARGUMENTS` — the artifact under attack: a path, a doc-store URL, or the design in context. Critique needs a *finished artifact* — only a fuzzy idea → stop and point the user at `wystack-agent-kit:brainstorm`.
 
 ## Workflow
 
@@ -18,7 +16,7 @@ The design-phase analog of `code-review`: `code-review` adversarially reads code
 2. **Restate the claim** — in one or two lines, what this artifact decides and why. A precise restatement is what makes the attack precise; a vague one produces vague findings.
 3. **Attack** — see [What to attack](#what-to-attack). Walk every branch and every dependency. Stopping at the first hole is the failure mode.
 4. **Perspective pass (optional)** — `wystack-agent-kit:perspective` on the artifact with `red-team` intent. Advisory; fold its findings into triage. Skip if unavailable.
-5. **Triage + report** — separate load-bearing holes from nits, then deliver the findings. Name each hole and where it lives; do not rewrite the doc.
+5. **Triage + report** — separate load-bearing holes from nits, then deliver findings grouped by the artifact that owns the fix. Each finding: the hole, where it lives, and the proposed change that resolves it — the sentence to add, the invariant to state, the story to create — not a rewrite of the doc. Findings stay atomic; remedies need not be 1:1 — one structural change often resolves several findings. Name that change once and reference it from each finding it resolves, rather than fragmenting it into per-finding patches.
 
 ## What to attack
 
@@ -43,6 +41,6 @@ When the artifact is a spec or PRD, also attack its **doc discipline** (`docs/do
 
 ## Rules
 
-- **Findings only — never rewrite.** Fixing belongs to the artifact's owner; findings-only keeps critique safe by construction — it edits nothing.
+- **Propose, never apply.** Every finding maps to a proposed remedy — shared remedies are fine — but critique edits nothing; fixing belongs to the artifact's owner, and apply-nothing keeps critique safe by construction.
 - **Attack the structure, not the person.** Adversarial toward the artifact, collaborative toward its author.
 - **Ground every finding.** Cite the section or claim. "This feels weak" with no pointer is noise.

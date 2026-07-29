@@ -34,13 +34,13 @@ For existing per-project setups: migrate by updating `.wystack.json`'s `root` to
 
 ### 3. Structure — configurable paths, fixed concepts
 
-The framework names the **concepts** — task store, doc store, calibration, tuning, artifacts, decisions. The project configures **where each lives** via `storage.json`. Skills ask the config for a location; they never hardcode `.wystack/docs/`.
+The framework names the **concepts** — task store, doc store, run records, artifacts, decisions. The project configures **where each lives** via `storage.json`. Skills ask the config for a location; they never hardcode `.wystack/docs/`.
 
 ### 4. Stores are provider-driven
 
 Task store and doc store are not necessarily filesystem. Providers: `local-markdown`, `notion`, `github`, `kb`, etc. — one adapter each. `storage.json` selects the provider and its config (path for filesystem, database ID for Notion, namespace for `kb`).
 
-Only **operational local data** — config, `calibration/`, `artifacts/`, `tuning.json` — is always filesystem under the workspace root. The user-facing stores (tasks, docs) can live anywhere a provider reaches.
+Only **operational local data** — config, run records (`calibration/`, `perspective/`, …), `artifacts/` — is always filesystem under the workspace root. The user-facing stores (tasks, docs) can live anywhere a provider reaches.
 
 ### 5. Init interviews for it
 

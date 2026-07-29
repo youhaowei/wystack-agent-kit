@@ -56,11 +56,9 @@ Composition scales with change type:
 | Polish, docs, comments                  | lens panel alone                                                          |
 | Security-sensitive                      | Full composition + `ultra` sampling (run reviews twice; LLM sampling insurance) |
 
-The **lens panel** is whichever lenses the [effort dial](#effort-dial) selects (or `--lens` overrides); it replaces the historical single generic `code-reviewer` subagent. Don't spawn a separate `code-reviewer` on top of the panel — that double-spawns the correctness/simplify questions and contradicts the role-scope clause in the [reviewer brief](#reviewer-brief).
+The **lens panel** is whichever lenses the [effort dial](#effort-dial) selects (or `--lens` overrides). Don't spawn a separate generic `code-reviewer` on top of the panel — that double-spawns the correctness/simplify questions and contradicts the role-scope clause in the [reviewer brief](#reviewer-brief).
 
-### Advisory reviewers
-
-`wystack-agent-kit:perspective` runs as an advisory reviewer on every composition when configured providers are present; it does not replace the main roster. Extension participation is explicit — the skill asks which enabled extensions participate in `review` and can `observe.records` for the diff; no extension runs as an implicit lifecycle hook. Any extension-proposed action (`verify_record`, `apply_fix`) is surfaced as an available action, not auto-invoked. The review controller triages all such output as claims.
+**Advisory reviewers.** `wystack-agent-kit:perspective` and extensions augment the roster, never replace it. Extension participation is explicit — ask which enabled extensions participate in `review` and can `observe.records` for the diff; none runs as an implicit lifecycle hook, and any extension-proposed action (`verify_record`, `apply_fix`) is surfaced as an available action, not auto-invoked. All such output enters triage as claims.
 
 ## Lens roster
 
@@ -101,7 +99,7 @@ Lenses are the *what-question* axis. Each lens is a scoped reviewer — one ques
 
 ## Context gathering
 
-Before invoking the skill, extract every ticket ID from the branch name and last ~20 commit messages (case-insensitive): `task-{id}` / `task/{id}` / `task_{id}`; `{PROJECT}-{id}` (2–6 letter prefix + dash + digits); bare leading digits `{id}-{slug}`; path-style `feat/{id}-*`, `fix/{id}-*`, `{user}/{id}-*`.
+Before invoking the skill, extract every ticket ID from the branch name and the branch's commit messages (case-insensitive): `task-{id}` / `task/{id}` / `task_{id}`; `{PROJECT}-{id}` (2–6 letter prefix + dash + digits); bare leading digits `{id}-{slug}`; path-style `feat/{id}-*`, `fix/{id}-*`, `{user}/{id}-*`.
 
 Pass `"<branch-name> <id1> <id2> ... review"` as the skill arguments. If a ticket ID was found, instruct context that task-manager MUST be dispatched with that ID — title-only freshness is unreliable.
 
@@ -158,10 +156,8 @@ Out-of-diff findings are **never** posted as PR comments. On zero MUSTs, post a 
 Match the tier to the work, not to the step number. Tier vocabulary and per-harness mapping are owned by [docs/model-tiers.md](../../docs/model-tiers.md); skills name tiers, never provider models.
 
 - **`light`** — mechanical, no judgment: CLAUDE.md path enumeration (step 1), PR snapshot synthesis from branch/commits when `prView` is unavailable (step 2 fallback).
-- **`standard`** — default for almost everything else: eligibility precheck (step 0) and recheck (step 9 `--comment`), **lens reviewers**, **`qa`**, **`perspective`**. Sonnet/Terra-class models handle these well; reaching higher by default burns cost without lifting quality.
-- **`deep`** — architectural reasoning and highest-effort runs: **`principal`** always; at `--effort=high` the `security` and `correctness` lenses escalate (false negatives most costly there); at `--effort=ultra` all reviewers escalate *and* run the [Effort dial](#effort-dial) double-sampling pass.
-
-The lowest tier is for *no-judgment* work, `deep` for work where reasoning is the bottleneck. See [docs/model-tiers.md](../../docs/model-tiers.md) for the sharp tests.
+- **`standard`** — default for everything else: eligibility precheck (step 0) and recheck (step 9 `--comment`), **lens reviewers**, **`qa`**, **`perspective`**.
+- **`deep`** — where reasoning is the bottleneck: **`principal`** always; at `--effort=high` the `security` and `correctness` lenses escalate (false negatives most costly there); at `--effort=ultra` all reviewers escalate *and* run the double-sampling pass.
 
 ## Harness portability
 
@@ -177,13 +173,6 @@ No workspace → skip the write and append one line to the report footer: _"No w
 
 `wystack-agent-kit:full-review` writes its unified verdict to the same store with `"skill": "full-review"` and merged findings from all lenses. `wystack-agent-kit:finish-task` resume reads the store first, then `.wystack/reviews/`, as evidence of a converged pass on this `diff_sha` (`verdict` + `diff_sha` only — findings are for audit and retro, not the skip gate).
 
-## Reference
-
-- [SEVERITY.md](SEVERITY.md) — MUST/SUGGEST model + near-term-trigger test. Shared with `wystack-agent-kit:full-review`.
-- [REPORT-FORMAT.md](REPORT-FORMAT.md) — reviewer output spec + final report template.
-- [RECORD-FORMAT.md](RECORD-FORMAT.md) — durable run-record schema (findings, patterns, verdicts).
-- [../../docs/extension-contract.md](../../docs/extension-contract.md) — generic extension record/action contract.
-
 ## Edge cases
 
 - **No ticket/PRD/spec** → stop, ask the user for URLs; don't review without spec context.
@@ -198,4 +187,4 @@ No workspace → skip the write and append one line to the report footer: _"No w
 - **Zero MUST + all reviewers SHIP** → recommend merge; SUGGEST items don't force another round.
 - **Mixed verdicts** → lead the report with the BLOCK arguments; the disagreement is the signal.
 - **Multi-round / convergence** → follow `docs/review-loop.md`: round structure, zero-MUST gate, scope-drift signal, round budget, stall handling.
-- **100+ findings** → top 10 by severity, offer the full list.
+- **Overwhelming finding count** → lead with the most severe few, offer the full list.

@@ -8,16 +8,12 @@ Persuasive marketing copy. Two modes in one skill: write new (greenfield) and ed
 
 ## What to do
 
-<what-to-do>
-
 1. **Identify mode**: greenfield write, or edit existing draft? Process differs per mode (below).
 2. **Read brand voice** from `DESIGN.md` if present. If the voice section is missing, ask for two examples (one positive, one anti-pattern) before drafting.
 3. **Gather context** — page purpose, audience, primary action, proof points, traffic source. Skip what project docs (PRD, spec, DESIGN.md) already answer.
 4. **Apply the six core principles** on the first draft; **run the seven sweeps** on every draft before declaring done, your own included.
 5. **Deliver** per the output format: alternatives for headlines and CTAs, annotations for non-obvious choices.
 6. **Hand off** meta tags / structured data / discoverability to `wystack-agent-kit:discoverability`.
-
-</what-to-do>
 
 ## Cognitive mode (don't drift to UX writing)
 

@@ -4,7 +4,7 @@ description: "Reconcile a project's workspace to the installed kit version by re
 ---
 # Upgrade
 
-Reconcile this project to the installed kit version. "Upgrade" is not a download — the host owns that (Claude Code marketplace, Codex, Cursor caches). This skill replays the **migration steps** the project is behind on, against its workspace and stores.
+Reconcile this project to the installed kit version. "Upgrade" is not a download — the host owns that (Claude Code marketplace, Codex/Cursor caches, `grok plugin update`, Pi install). This skill replays the **migration steps** the project is behind on, against its workspace and stores.
 
 `$ARGUMENTS` — empty (reconcile to the installed version), or a target version.
 
@@ -21,7 +21,7 @@ Never make an unsupervised outward write. `guided` steps respect the workspace `
 
 ## The migration manifest drives everything
 
-Don't infer what changed — read it. The manifest is a framework asset at `migrations/MIGRATIONS.json` in the plugin root, versioned with the plugin. Each kit release that touches a contract ships declarative migration steps there (`docs/storage-contract.md` § Migrations). A step declares `id`, `version`, `description`, `type`, `target`, `applyMode` (`auto` | `guided`), and an optional `skipIfPresent` no-op guard. The release author — who knows whether a step writes a live store — declares the mode; this skill is a pure executor. No prose-parsing, no risk-guessing.
+Don't infer what changed — read it. The manifest is a framework asset at `migrations/MIGRATIONS.json` in the plugin root, versioned with the plugin. Each kit release that touches a contract ships declarative migration steps there (`docs/storage-contract.md` § Migrations; the marketplace `publish` skill enforces this). A step declares `id`, `version`, `description`, `type`, `target`, `applyMode` (`auto` | `guided`), and an optional `skipIfPresent` no-op guard. The release author — who knows whether a step writes a live store — declares the mode; this skill is a pure executor. No prose-parsing, no risk-guessing.
 
 ## The ledger is the truth
 
@@ -41,8 +41,6 @@ Don't infer what changed — read it. The manifest is a framework asset at `migr
 4. **Walk `guided` steps.** For each: explain, show scope, apply through the provider adapter on confirmation, verify it landed, record the outcome (applied / skipped / deferred). Honor skip/defer/stop.
 5. **Finalize.** Update `kitVersion` to the highest version whose steps are all applied. Report what was applied, skipped, and deferred, and what an idempotent re-run would pick up.
 
-## Reference
+## Rules
 
-- `docs/storage-contract.md` § Migrations — the manifest fields and ledger contract.
-- `wystack-agent-kit:wiki-librarian` / `wystack-agent-kit:task-manager` — apply store writes through adapters; never call provider APIs directly.
-- `publish` (marketplace skill) — enforces that a release touching the doc model / config / skills ships its manifest entry.
+- Store writes go through the adapters (`wystack-agent-kit:wiki-librarian` / `wystack-agent-kit:task-manager`) — never call provider APIs directly.

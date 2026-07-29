@@ -4,38 +4,30 @@ description: "Write a Product Requirements Document — a behavior spec of what 
 ---
 # PRD
 
-A behavior spec: what the system should do, in user language. The source of truth tickets reference — it outlives individual tasks.
-
-**Write the product, not the document** — the shared doc discipline (architecture-not-meta, first-line-is-the-thing, one-line decisions, earn-the-page) lives in `docs/doc-model.md` § Write the artifact, not the document. A PRD inherits all of it: open with what the feature *does* for the user, never "this PRD describes…"; product-level decisions default to one-liners; and before writing, ask whether this feature earns its own PRD or folds into a parent one.
+A behavior spec: what the system should do, in user language — the source of truth tickets reference; it outlives individual tasks.
 
 `$ARGUMENTS` — feature description, brainstorm output, or empty (interactive).
 
-**Prerequisite.** Load `wystack-agent-kit:workspace` for the configured doc store and provider mappings. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
+**Prerequisites.** Load `wystack-agent-kit:workspace` — doc store and provider mappings. Not set up → `wystack-agent-kit:setup-agent-kit`. Doc discipline is inherited from `docs/doc-model.md` § Write the artifact, not the document — and before writing, ask whether the feature earns its own PRD or folds into a parent one.
 
 ## What a PRD captures
 
 - **Purpose** — why this exists, what pain it solves.
 - **Users** — who uses it, what they care about.
-- **Goals / non-goals** — what we optimize for, what we explicitly won't do.
-- **Story index** — a link per story: requirement ID · one-sentence goal · link to the Story. The doc store provides the story's stable reference; the PRD never mints IDs and never mirrors story bodies. Requirement body, scenarios, edge cases, and product acceptance live on the Story — see `wystack-agent-kit:story` and `docs/doc-model.md` § Story. Surface story status inline only when the link alone wouldn't make it obvious (e.g. a Superseded story the reader shouldn't follow).
-- **Cross-story interactions** — an interaction table for behaviors that span multiple stories and are owned by no single one. Per-story scenarios and edge cases belong on the Story, not here.
+- **Goals / non-goals** — what we optimize for, what we explicitly won't do. A product-level decision with real alternatives — a chosen scope, a deliberate non-goal, a platform bet — is recorded next to the goal it shapes as _what we chose / the alternatives / why_, kept tight and edited in place as intent evolves.
+- **Story index** — one entry per story: requirement ID · one-sentence goal · link. The doc store provides the story's stable reference — the PRD never mints IDs and never mirrors story bodies; requirement sentence, scenarios, edge cases, and product acceptance live on the Story (`docs/doc-model.md` § Story). Surface story status inline only when the link would mislead (a Superseded story).
+- **Cross-story interactions** — a table for behaviors that span multiple stories and are owned by no single one. Per-story scenarios and edge cases belong on the Story.
 - **Dependencies** — what must exist first.
 
-## What vs how
-
-A PRD describes **what** and **why**, never **how**. Implementation — tech choices, schemas, API contracts, architecture, phasing, domain modeling (bounded contexts, aggregates) — belongs in `wystack-agent-kit:spec`.
-
-Test: if removing a detail changes the *user experience*, it's a PRD. If it only changes the *implementation*, it's a spec.
+**What, never how.** Test: removing the detail changes the *user experience* → PRD; only the *implementation* → `wystack-agent-kit:spec`.
 
 > PRD — "Memories are stored as human-readable markdown files."
 > Spec — "Files use YAML frontmatter: id, name, namespace, tags, indexedAt."
 
 ## Workflow
 
-1. **Research** — explore the codebase and the configured doc store for related specs, and any competitor positioning already researched — it sharpens goals and non-goals.
-2. **Interview** — if a `brainstorm` design is already in context, build the PRD from it. Otherwise invoke `Skill("wystack-agent-kit:brainstorm", "--grill")` and let it run in full — no ad-hoc inline questions.
-3. **Terms** — use canonical term names, cited from the glossary. Every domain term — product or technical — is defined once in its glossary note; the PRD cites it `[[term-slug]]` in context (a one-clause use + link), never re-defines it. A term the PRD introduces that has no note yet gets one via `wystack-agent-kit:glossary` first, then is cited. See `docs/doc-model.md` § Terms.
-4. **Write** — PRD intent, goals/non-goals, users, dependencies, and the story index. For each story: one-sentence goal and a link placeholder. Author story bodies (requirement sentence, details, scenarios, edge cases, ACs) by invoking `wystack-agent-kit:story` — the story skill owns the canonical artifact; the PRD holds the index of links. Complete coverage means every use case has a story and a corresponding index entry.
-5. **Save + cross-link** — delegate to `wiki-librarian` (title prefixed "PRD — ", full content, project, tags). Link neighbors — the specs that design it (bidirectional), the story links that form the index, and the tickets that carry it — following the Save + cross-link protocol in `docs/doc-model.md` § Cross-linking (delegate, verify backlinks resolve, report gaps as fixes).
-
-A product-level decision with real alternatives — a chosen scope, a deliberate non-goal, a platform bet — is recorded in the PRD itself, next to the goal or non-goal it shapes, as _what we chose / the alternatives / why_. Keep it tight and edit in place as intent evolves. See `docs/doc-model.md` § Cite in context (domain terms), § Story, and § Requirements in the repo for how the story index, the Story doc, and requirement IDs relate.
+1. **Research** — the codebase, the doc store's related specs, and any competitor positioning already researched — it sharpens goals and non-goals.
+2. **Interview** — a `brainstorm` design already in context → build from it. Otherwise invoke `Skill("wystack-agent-kit:brainstorm", "--grill")` and let it run in full — no ad-hoc inline questions.
+3. **Terms** — cite every domain term in context using the doc store's link form, never re-define; a term with no glossary note yet gets one first via `wystack-agent-kit:glossary`, then is cited (`docs/doc-model.md` § Terms and ubiquitous language).
+4. **Write** — intent, goals/non-goals, users, dependencies, story index. Author story bodies via `wystack-agent-kit:story` — the story skill owns the canonical artifact; the PRD holds the index of links. Complete coverage: every use case has a story and an index entry.
+5. **Save + cross-link** — delegate to `wiki-librarian` (title prefixed "PRD — ", full content, project, tags). Link the specs that design it (bidirectional), the story index, and the tickets that carry it, per `docs/doc-model.md` § Cross-linking — verify backlinks resolve; report an unwritable link as a setup gap with a fix.

@@ -37,9 +37,3 @@ Read-only: full-review *assesses and reports a verdict*. It does not fix code or
 ## Harness portability
 
 Lens agents are shared role briefs in `agents/*.md`, not custom Codex agent types. Claude consumes them as native agent definitions; Codex uses built-in transports with the role brief injected into the prompt — keep the lens name in the prompt/report, not a claimed custom transport. If engineering skills aren't exposed, say so and run a best-effort equivalent.
-
-## Reference
-
-- [SEVERITY.md](../code-review/SEVERITY.md) — MUST/SUGGEST model. Shared with `wystack-agent-kit:code-review`.
-- [REPORT-FORMAT.md](REPORT-FORMAT.md) — unified report template.
-- `docs/review-loop.md` — the convergence loop `finish-task` wraps this assessment in.

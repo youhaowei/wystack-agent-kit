@@ -112,6 +112,10 @@ truth can disclose weaker evidence.
   convergence loop when HEAD already carries a `ship` verdict (`diff_sha` +
   `verdict` only).
 - **Perspective verdicts** — `.wystack/perspective/`, one record per advisory consult. Planned.
+- **Retro syntheses** — `.wystack/retro/`, one record per retrospective, immutable.
+  Computed findings (`authority: "computed"`, `derivedFrom` the records analyzed)
+  plus the accept/reject outcome per proposal — the next retro reads it to avoid
+  re-litigating settled findings.
 - **Extension records** — normalized facts, claims, decisions, events,
   snapshots, and relations from configured extensions. May live in `.wystack/`
   local JSON or in a graph-store extension such as Knowledgebase.

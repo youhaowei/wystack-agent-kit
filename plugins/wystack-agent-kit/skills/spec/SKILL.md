@@ -4,50 +4,37 @@ description: "Write or update a technical specification — system design, compo
 ---
 # Spec
 
-A technical specification: PRD says **what**, spec says **how** — component boundaries, data flow, and the decisions that shaped them. The spec is the *living* design document, edited freely as the design evolves; its load-bearing decisions and their reasoning live in it, in the Decisions section.
-
-**Write the architecture, not the document** — the discipline that governs every doc skill (architecture-not-meta, first-line-is-the-thing, one-line-decision default, earn-the-page) lives in `docs/doc-model.md` § Write the artifact, not the document. The spec-specific rules below build on it.
-
-The spec's **Key concepts** section is a per-spec *index into the glossary* — the terms this spec leans on, each cited `[[term-slug]]`. The spec defines no terms; the glossary is the single canonical home for the project's ubiquitous language. See `docs/doc-model.md` § Terms.
-
-**Cite in context.** When the spec references the PRD it implements, give a one-clause reason inline — the tie-breaker — plus a link to the full record, placed where it shapes the design. Never a bare link or a standalone list, never a restatement of the record. See `docs/doc-model.md` § Cite in context.
+A technical specification: the PRD says **what**, the spec says **how** — component boundaries, data flow, and the decisions that shaped them. The *living* design document — edited freely in the doc store as the design evolves, no promotion gate.
 
 `$ARGUMENTS` — feature/system description, PRD reference, spec title, or empty (interactive).
 
-**Prerequisites.** Load `wystack-agent-kit:workspace` — it resolves the document store and doc-status vocabulary. The spec lives in the doc store like every other doc (default local home `.wystack/docs/specs/`); there is no promote-to-repo step. If the workspace isn't set up, run `wystack-agent-kit:setup-agent-kit`.
+**Prerequisites.** Load `wystack-agent-kit:workspace` — doc store and doc-status vocabulary. Not set up → `wystack-agent-kit:setup-agent-kit`. Doc discipline is inherited from `docs/doc-model.md` § Write the artifact, not the document.
 
-## Phase 1 — Draft
+## Workflow
 
-1. **Research** — explore the codebase; `wystack-agent-kit:principal` is a good collaborator.
-2. **Challenge trade-offs** — if the architecture isn't pressure-tested, invoke `Skill("wystack-agent-kit:brainstorm", "--grill")` and let it run in full. If a brainstorm design is already in context, build from it.
-3. **Draft the spec** — decisions over descriptions, document WHY; cross-reference the PRD, don't duplicate it. Follow `docs.specTemplate` if the workspace sets one; otherwise the default structure (drop what a given spec doesn't need, add a Domain Model section for DDD-committed projects):
+1. **Earn the page** — a substrate or utility package whose contract is its code plus a few small decisions gets no standalone spec; fold its decisions into its one architectural consumer's spec. A standalone spec is for real structure: multiple components, non-obvious data flow, contested choices.
 
-   - **Overview** — open with what the system *is*, in the first sentence (the first-line rule). One paragraph; scope it by what it does, not by framing the section.
-   - **Key concepts** — an *index into the glossary*: the domain terms this spec leans on, each cited `[[term-slug]]` with a one-clause note on why it matters *here*, not a re-definition. The glossary note is the canonical definition (canonical name, domain-precise meaning, aliases, relationships); Key concepts points at it. A term the spec uses that has **no glossary note yet** gets one first — via `wystack-agent-kit:glossary` — then is cited here; a used-but-undefined term is a coverage gap, not a license to define it inline. See `docs/doc-model.md` § Terms.
+2. **Research** — explore the codebase; `wystack-agent-kit:principal` is a good collaborator.
+
+3. **Challenge trade-offs** — architecture not pressure-tested → invoke `Skill("wystack-agent-kit:brainstorm", "--grill")` and let it run in full. A brainstorm design already in context → build from it.
+
+4. **Draft** — decisions over descriptions, document why; reference the PRD as one-clause reason + link in context (`docs/doc-model.md` § Cite in context), never duplicate it. Follow `docs.specTemplate` when the workspace sets one; otherwise the default structure — drop what a given spec doesn't need, add a Domain Model section for DDD-committed projects:
+
+   - **Overview** — what the system *is*, in the first sentence. One paragraph.
+   - **Key concepts** — an *index into the glossary*: each term this spec leans on, cited in the doc store's link form (§ Terms and ubiquitous language) with a one-clause note on why it matters *here* — never a re-definition. A used term with no glossary note gets one first via `wystack-agent-kit:glossary` (§ Terms and ubiquitous language).
    - **Boundaries** — the modules/components, what each owns, how they communicate. Diagram if it helps.
    - **Data flow** — how data moves through the system, end to end.
-   - **Decisions** — the load-bearing choices, each as _what we chose / the alternatives / why_. Record only real decisions (a genuine alternative existed); skip the obvious. Edit these in place as the design evolves — the section reflects current thinking, not a history of every choice ever made. **When `adr` is enabled** (`docs.types`) and a decision was genuinely *contested* — real alternatives weighed, trade-offs that a one-liner would flatten — offer to capture the full deliberation as an ADR via `wystack-agent-kit:adr`. Keep the one-line decision here with an `expands:` link down to it; the ADR is depth-on-demand, the spec still reads complete without it. Don't reach for an ADR for an obvious or uncontested choice — the one-liner is the default.
+   - **Decisions** — the load-bearing choices, each as _what we chose / the alternatives / why_. Only real decisions (a genuine alternative existed); edited in place — current thinking, not a change log. When `adr` is enabled (`docs.types`) and a decision was genuinely contested — trade-offs a one-liner would flatten — offer `wystack-agent-kit:adr`: the one-liner stays here with an `expands:` link down; the spec still reads complete without it.
    - **Integration** — what this touches; dependencies.
    - **Open questions** — what's unresolved or deferred.
 
-   Describe shape and intent, not code. Interfaces, message shapes, schemas, and types live in the codebase — prose that restates them is a drift-magnet. Apply the ownership test: if a detail's authoritative home is the code, the spec points to it, it does not copy it. Paste a signature in only when the prototype *is* the decision (a state machine, a reducer, a type shape the design turns on).
-4. **Critique** — invoke `wystack-agent-kit:critique` on the draft; resolve load-bearing findings before saving.
-5. **Save + cross-link** — delegate to `wiki-librarian`: save with title `"Spec — …"`, `id` `SPEC-NNNN` (next sequential). Link the PRD it implements (bidirectional) and an `Implementation tickets` section, following the Save + cross-link protocol in `docs/doc-model.md` § Cross-linking (delegate, verify backlinks resolve, report gaps as fixes).
+5. **Critique** — invoke `wystack-agent-kit:critique` on the draft; resolve load-bearing findings before saving.
 
-The spec lives in the doc store and is edited there as the design evolves — no promotion gate.
-
-## Changing a decision
-
-When a design change overturns a prior decision, **edit the Decisions section in place** — update the choice and its reasoning to reflect current thinking. The spec is the living design; it shows what's true now, not a log of what changed. If a superseded choice is still worth warning future readers about ("we tried X, it failed because Y — don't revisit"), keep a one-line note in the entry's _why_; otherwise just replace it.
-
-When `adr` is enabled and the overturned decision had an ADR, the ADR is **append-only** — don't edit it. Write a new ADR that `supersedes:` the old one, flip the old to `superseded`, and re-point the spec's one-liner `expands:` to the new ADR. The in-place edit governs the spec's one-liner; the supersession governs the ADR trail.
+6. **Save + cross-link** — delegate to `wiki-librarian`: title `"Spec — …"`, `id` `SPEC-NNNN` (next sequential). Link the PRD it implements (bidirectional) and an `Implementation tickets` section, per `docs/doc-model.md` § Cross-linking — verify backlinks resolve; report an unwritable link as a setup gap with a fix.
 
 ## Rules
 
-- **Does this spec need to exist?** Apply the earn-the-page test (`docs/doc-model.md`) before writing. A substrate or utility package whose contract is its code plus a few small decisions does *not* get a standalone spec — fold those into the Decisions section of its one architectural consumer. Reach for a standalone spec when a system has real structure: multiple components, non-obvious data flow, contested choices.
+- **Shape and intent, not code** — interfaces, message shapes, schemas, and types live in the codebase; the spec points at them, never copies. Paste a signature only when the prototype *is* the decision (a state machine, a reducer, a type shape the design turns on).
+- **Level of detail** — architecture and decisions, not vibes and not code. _Too light:_ "the engine runs workflows with agents." _Right:_ "a concurrency pool (max N, auto-fills from ready work) + an ask queue (agents park on human decisions); append-only JSONL logs over SQLite, to match session persistence and support replay-recovery." _Too heavy:_ pasted TypeScript interfaces.
 - **Tool-agnostic content** — never reference the doc store tool, page IDs, or URLs in the spec body; cross-references are name/id only.
-- **Level of detail** — architecture and decisions, not vibes and not code. _Too light:_ "the engine runs workflows with agents." _Right:_ "a concurrency pool (max N, auto-fills from ready work) + an ask queue (agents park on human decisions); append-only JSONL logs over SQLite, to match session persistence and support replay-recovery." _Too heavy:_ pasted TypeScript interfaces or schemas.
-
-## Reference
-
-- `docs/doc-model.md` — where PRDs, terms, and requirement IDs live; cross-linking; the Cite in context rule; coverage verification.
+- **Overturned decisions** — edit the spec's Decisions entry in place; a still-useful warning survives as one line in its _why_ ("we tried X, it failed because Y"). An ADR is append-only — supersede per `docs/doc-model.md` § Supersession and re-point the spec's `expands:`.

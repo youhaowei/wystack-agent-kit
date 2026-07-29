@@ -15,16 +15,14 @@ Turn a rough idea into a validated design. Two acts: **interview → design**. S
 | `--grill` | Relentless — walk every branch, resolve dependencies one by one. |
 | `--no-docs` | Skip the domain layer (deliberate terminology changes). |
 
-**The pace is the point.** One question per turn — ask, stop, wait for the answer. Never batch questions, including in Round 0. Reaching a design fast is not the goal; reaching the *right* design is. If it feels slow, it's working — rushing is the primary failure mode.
+**The pace is the point.** One question per turn — ask, stop, wait for the answer. Never batch questions, including in Round 0. Rushing is the primary failure mode; if it feels slow, it's working.
 
 ## Hard gate: no implementation
 
-Until the user explicitly accepts the wystack-agent-kit:
+Until the user explicitly accepts the design:
 
 - **Don't** edit implementation (source, tests, configs, manifests, production docs), commit/push/PR, install, migrate, deploy, or create tickets.
 - **Do** read/search code, run non-mutating inspection, and draft options, approaches, and diagrams in chat.
-
-Brainstorm ends at acceptance — capture and handoff are [a separate phase](#after-acceptance).
 
 ## The center: four-axis loop
 
@@ -43,10 +41,10 @@ After each answer, re-score and aim the next question at the weakest cell across
 
 **Act 1 — Interview**
 
-0. **Explore first** — anything the code answers doesn't get asked. Check the workspace, `CONTEXT.md`, the glossary (the project's terms), existing specs (their Key concepts index and Decisions sections), tasks, competitor profiles.
-1. **Detect lens** — pick the fitting framework(s) from [FRAMEWORKS.md](./FRAMEWORKS.md); don't announce it.
-2. **Four-axis loop** — one question per turn with a recommended answer; target the weakest axis; smart-skip what's clear. Domain layer runs here.
-3. **Readiness check** — holistic judgment the design is clear enough to propose.
+1. **Explore first** — anything the code answers doesn't get asked. Check the workspace, `CONTEXT.md`, the glossary, existing specs (their Key concepts index and Decisions sections), tasks, competitor profiles.
+2. **Detect lens** — pick the fitting framework(s) from [FRAMEWORKS.md](./FRAMEWORKS.md); don't announce it.
+3. **Four-axis loop** — one question per turn with a recommended answer; target the weakest axis; smart-skip what's clear. The domain layer runs here: when domain context is load-bearing, challenge terms against their glossary notes, sharpen fuzzy language to canonical names, cross-reference claims with code and prior decisions ([FRAMEWORKS.md §3](./FRAMEWORKS.md)).
+4. **Readiness check** — holistic judgment the design is clear enough to propose.
 
 **Act 2 — Design**
 
@@ -56,22 +54,16 @@ After each answer, re-score and aim the next question at the weakest cell across
 
 ## After acceptance
 
-Brainstorm's job ends when the user accepts the design. The accepted design is the deliverable; what happens next:
+The accepted design is the deliverable; what happens next:
 
 - **Capture** — write and deliver the design as the artifact it earns.
-- **Verify** — `wystack-agent-kit:perspective` for an advisory read of that artifact; skip if unavailable.
+- **Verify** — `wystack-agent-kit:perspective` for an advisory read; skip if unavailable.
 - **Domain** — persist resolved terms and decisions to their canonical homes per `docs/doc-model.md`: each term as a glossary note (`wystack-agent-kit:glossary`), each decision into the spec's (or PRD's) Decisions section, expanding a *contested* one into an ADR when `adr` is enabled.
-- **Continue** — one next skill: `prd` / `spec` / `breakdown` / direct implementation.
+- **Continue** — one next skill: `prd` / `spec` / `breakdown` / direct implementation. Session ran long → offer `wystack-agent-kit:handoff`.
 
-If the session ran long and the work continues in a fresh session, consider `wystack-agent-kit:handoff` to consolidate it into durable homes and emit a kickstart prompt.
+## Rules
 
-## Domain layer
-
-Runs inside the four-axis loop when domain context is load-bearing — judgment, not a file-presence rule. Challenge terms against their glossary notes, sharpen fuzzy language to canonical names, cross-reference claims with code and prior decisions, capture terms as they resolve. Details in [FRAMEWORKS.md §3](./FRAMEWORKS.md); storage mechanics in `docs/doc-model.md`.
-
-## Principles
-
-- **Scope map** — maintain a running picture of the major pieces as the interview progresses. Surface it as prose when the framing shifts ("I'm treating X and Y as separate concerns because...") — not as a formatted list, not as a question. No confirmation needed; the user corrects it by how they answer.
+- **Scope map** — maintain a running picture of the major pieces; surface it as prose when the framing shifts ("I'm treating X and Y as separate concerns because…") — never as a formatted list or a question; the user corrects it by how they answer.
 - **Persist pushback** — once a constraint is accepted, write it into the artifact that guides implementation.
 - **Parallel research** — launch Explore agents while the interview continues.
 - **YAGNI** — cut unnecessary scope from every design.
@@ -81,8 +73,3 @@ Runs inside the four-axis loop when domain context is load-bearing — judgment,
 - **Impatient / "just do it"** — once: "the hard questions are the value, two more then we move." Pushed twice → stop, ask permission to switch to implementation.
 - **Fully-formed plan with real evidence** — skip the interview, still run lens-appropriate review.
 - **Vibe shift** — builder mode turning serious ("this could be a real company") upgrades to the idea-validation lens.
-
-## Reference
-
-- [FRAMEWORKS.md](./FRAMEWORKS.md) — the four lenses and their question sets.
-- [SCORING.md](./SCORING.md) — the four-axis rubric and how to read scores.

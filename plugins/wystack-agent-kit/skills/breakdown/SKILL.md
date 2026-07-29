@@ -19,7 +19,7 @@ Prerequisite: `wystack-agent-kit:workspace`.
 
 4. **Plan each slice.** The approach from the spec's architecture — key interfaces, data changes, integration points, sequencing — enough to guide the implementer, not a binding contract. Size with `wystack-agent-kit:estimate`; size never forces a split.
 
-5. **Emit tickets.** One per slice via `wystack-agent-kit:task-manager`; require the real URLs/IDs back. Each carries: what the slice does + concrete testable ACs (the Story owns the requirement bar — link by ID, never restate), the slice's plan and estimate, verification approach, dependencies, and `Source documents` linking Story, PRD, spec.
+5. **Emit tickets.** One per slice via `wystack-agent-kit:task-manager`; require the real URLs/IDs back. Each carries: what the slice does + concrete testable ACs (the Story owns the requirement bar — link by ID, never restate), the slice's plan and estimate, verification approach, dependencies, and `Source documents` linking Story, PRD, spec. Tickets are born meeting the Ready bar (`docs/doc-model.md` § Story).
 
 6. **Back-link into sources.** Via `wystack-agent-kit:wiki-librarian`, add/update an `Implementation tickets` section on the Story, PRD, and spec — on a shared doc+task tracker the native parent/child link counts. Verify by fetching, never write receipts. Can't write → report a setup gap with the fix that automates it next time.
 
