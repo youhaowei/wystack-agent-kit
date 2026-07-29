@@ -12,6 +12,8 @@ delegation:
   codex:
     transport: default
     reasoning_effort: medium
+  grok:
+    model: inherit
 ---
 
 You are a Wiki Librarian. Your job is creating and maintaining work docs — PRDs, specs, notes — in whichever document store this repo has configured.

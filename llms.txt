@@ -1,10 +1,10 @@
 # WyStack Agent Kit
 
-> A portable agent-workflow kit that takes a coding agent through the whole software lifecycle — brainstorm → PRD → spec → breakdown → build → review → verify → ship — as one connected method. The rule holds at every stage: the agent carries the work, you carry the decisions. Runs identically on Claude Code, Codex, Cursor, and Pi.
+> A portable agent-workflow kit that takes a coding agent through the whole software lifecycle — brainstorm → PRD → spec → breakdown → build → review → verify → ship — as one connected method. The rule holds at every stage: the agent carries the work, you carry the decisions. Runs identically on Claude Code, Codex, Cursor, Grok, and Pi.
 
-WyStack Agent Kit is a **plugin/skills bundle**, not a single skill. It ships 35 lifecycle skills and 10 universal role agents under one behavioral charter: the agent does the work and surfaces the calls that are yours — scope, trade-offs, what ships. Every skill leaves durable, auditable run records under `.wystack/` (typed project state, not chat history). It is supervised by default and autonomous when you choose (`orchestrate` runs parallel multi-ticket work; you still gate merges).
+WyStack Agent Kit is a **plugin/skills bundle**, not a single skill. It ships 34 lifecycle skills and 10 universal role agents under one behavioral charter: the agent does the work and surfaces the calls that are yours — scope, trade-offs, what ships. Every skill leaves durable, auditable run records under `.wystack/` (typed project state, not chat history). It is supervised by default and autonomous when you choose — merge authority is a workspace policy: humans merge, or a verified quality gate merges for you.
 
-Where it sits in the ecosystem: discipline-primitive skill sets like [mattpocock/skills](https://github.com/mattpocock/skills) give an agent individual disciplines (TDD, domain modeling, grilling). WyStack Agent Kit is the **lifecycle layer over those primitives** — it wraps discipline into an end-to-end method with human-in-the-loop decision gates, auditable evidence, and optional parallel autonomy. The two compose: keep the primitives, add the lifecycle.
+Where it sits in the ecosystem: discipline-primitive skill sets like [mattpocock/skills](https://github.com/mattpocock/skills) give an agent individual disciplines (TDD, domain modeling, grilling). WyStack Agent Kit is the **lifecycle layer over those primitives** — it wraps discipline into an end-to-end method with human-in-the-loop decision gates and auditable evidence. The two compose: keep the primitives, add the lifecycle.
 
 MIT licensed. It is a coding-agent plugin, not an MCP server.
 
@@ -23,8 +23,8 @@ MIT licensed. It is a coding-agent plugin, not an MCP server.
 
 ## Full skill reference (by lifecycle stage)
 
-- Planning — `brainstorm`, `prd`, `spec`, `adr`, `story`, `glossary`, `breakdown`, `groom`, `estimation`, `reprioritize`, `next-task`, `new-task`
-- Execution — `start-task`, `worktree`, `orchestrate`, `finish-task`, `cleanup`, `handoff`
+- Planning — `brainstorm`, `prd`, `spec`, `adr`, `story`, `glossary`, `breakdown`, `groom`, `estimate`, `reprioritize`, `next-task`, `new-task`
+- Execution — `start-task`, `worktree`, `finish-task`, `cleanup`, `handoff`
 - Review + verification — `code-review`, `full-review`, `critique`, `verify`, `perspective`, `retro`, `improve-codebase`
 - Design — `establish-design`, `frontend-design`, `polish-design`
 - Writing + distribution — `ux-writing`, `copywriting`, `discoverability`

@@ -1,6 +1,6 @@
 # Model Tiers
 
-WyStack Agent Kit skills run on multiple harnesses (Claude Code, Codex, and any harness that loads agent definitions from `agents/*.md` frontmatter). Provider model classes are equivalent capability labels, not a shared portable vocabulary: Claude uses `haiku` / `sonnet` / `opus`, while Codex 5.6 uses `luna` / `terra` / `sol`. Skills reference **tiers**; this contract owns the mapping to model classes per harness.
+WyStack Agent Kit skills run on multiple harnesses (Claude Code, Codex, Grok Build, and any harness that loads agent definitions from `agents/*.md` frontmatter). Provider model classes are equivalent capability labels, not a shared portable vocabulary: Claude uses `haiku` / `sonnet` / `opus`, Codex 5.6 uses `luna` / `terra` / `sol`, and Grok Build currently exposes a smaller ladder (`grok-composer-2.5-fast` / `grok-4.5`). Skills reference **tiers**; this contract owns the mapping to model classes per harness.
 
 Two axes that are easy to confuse but live separately:
 
@@ -29,16 +29,19 @@ Reviewer-style agents (read code, write findings) default to `standard` — Sonn
 | ------------------ | ------------------ | -------------------- | ------------------ |
 | Claude Code        | `haiku` (e.g. `claude-haiku-4-5`) | `sonnet` (e.g. `claude-sonnet-4-6`) | `opus` (e.g. `claude-opus-4-7`) |
 | Codex 5.6          | `luna`             | `terra`              | `sol`              |
+| Grok Build         | `grok-composer-2.5-fast` | `grok-4.5` (or inherit parent) | `grok-4.5` |
 | Generic (any other LLM API harness) | provider's cheapest reasonable | provider's default | provider's strongest |
 
-The class equivalences are `haiku` = `luna`, `sonnet` = `terra`, and `opus` = `sol`. They express the same three capability bands; one provider's names do not replace another's.
+The class equivalences are `haiku` = `luna` ≈ `grok-composer-2.5-fast`, `sonnet` = `terra` ≈ `grok-4.5` (standard band), and `opus` = `sol` with `grok-4.5` covering bounded deep work. They express the same three capability bands; one provider's names do not replace another's.
+
+Agent frontmatter records Grok preferences under `delegation.grok.model` (`inherit` for standard role agents, `grok-4.5` for deep ones). Grok itself inherits the parent session model when the field is omitted or unset.
 
 Some models sit between those anchor classes:
 
 | Model and runtime            | Capability placement       | Three-tier routing guidance |
 | ---------------------------- | -------------------------- | --------------------------- |
 | Composer 2.5                 | Haiku/Luna–Sonnet/Terra    | Upper `light`; use for bounded `standard` work when the task is well specified. |
-| Grok 4.5 through Grok CLI    | Sonnet/Terra–Opus/Sol      | Upper `standard`; use for bounded `deep` work, but keep highest-assurance deep reasoning on Opus/Sol. |
+| Grok 4.5 through Grok Build  | Sonnet/Terra–Opus/Sol      | Upper `standard` and bounded `deep`; keep highest-assurance deep reasoning on Opus/Sol when available via a multi-provider setup. |
 
 These intermediate placements do not add portable tier values such as `light+` or `standard+`. Skills still request `light`, `standard`, or `deep`; a harness adapter may choose an intermediate model when its capability is sufficient for the bounded task.
 

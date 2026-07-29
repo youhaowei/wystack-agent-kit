@@ -4,7 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/@wystack/agent-kit)](https://www.npmjs.com/package/@wystack/agent-kit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Harnesses](https://img.shields.io/badge/runs%20on-Claude%20Code%20·%20Codex%20·%20Cursor%20·%20Pi-black)
+![Harnesses](https://img.shields.io/badge/runs%20on-Claude%20Code%20·%20Codex%20·%20Cursor%20·%20Grok%20·%20Pi-black)
 
 WyStack Agent Kit takes a coding agent through the whole job — planning a feature, building it, reviewing it, shipping it — as one connected method rather than scattered commands. One rule holds across all of it: the agent does the work, you make the decisions.
 
@@ -13,9 +13,9 @@ It's a synthesis of the best of the agent-skills scene, built on four pillars:
 - **Full lifecycle** — brainstorm → PRD → spec → breakdown → build → review → verify → ship, as one continuous method. Not isolated tricks.
 - **Human in the loop** — the agent does the work and surfaces the calls that are yours. You decide scope, trade-offs, and what ships.
 - **Auditable by design** — decisions, review verdicts, and run evidence become durable project state, not lost chat history. Every claim of success carries proof you can review.
-- **Autonomous when you want it** — scale to parallel, multi-ticket execution with `orchestrate`; you still gate what merges. Supervised by default, autonomous by choice.
+- **Autonomous when you want it** — `start-task` drives a task end-to-end unattended, and merge authority is a workspace policy: humans merge by default, or a verified quality gate merges for you. Supervised by default, autonomous by choice.
 
-Runs wherever you do — Claude Code, Codex, Cursor, Pi.
+Runs wherever you do — Claude Code, Codex, Cursor, Grok, Pi.
 
 ## Install — 30 seconds
 
@@ -26,11 +26,11 @@ Runs wherever you do — Claude Code, Codex, Cursor, Pi.
 /plugin install wystack-agent-kit@wystack-agent-kit
 ```
 
-Reload the session after install. Other harnesses (Codex, Cursor, Pi) → [jump to install](#other-harnesses).
+Reload the session after install. Other harnesses (Codex, Cursor, Grok, Pi) → [jump to install](#other-harnesses).
 
 ## The method, made visible
 
-The kit isn't 35 loose skills — it's one software lifecycle an agent drives end to end. At every stage the split is the same: **the agent does the work; you make the decision.**
+The kit isn't 34 loose skills — it's one software lifecycle an agent drives end to end. At every stage the split is the same: **the agent does the work; you make the decision.**
 
 ```
 brainstorm → prd → spec → breakdown → start-task → code-review → verify → finish-task
@@ -50,7 +50,7 @@ That split is enforced, not aspirational. Every skill inherits a [constitution](
 
 **It leaves a trail.** Decisions, review verdicts, and run evidence are written as durable [run records](plugins/wystack-agent-kit/docs/run-record.md) — typed, queryable project state under `.wystack/`, not chat history that dies with the session. A later `retro` or review reads what an earlier run found instead of forgetting it.
 
-**It scales when you let it.** Running one task is `start-task`. Running many is [`orchestrate`](plugins/wystack-agent-kit/skills/orchestrate/SKILL.md) — a conductor that dispatches parallel agents per ticket and brings the results back for you to gate. Supervised by default; autonomous when you choose.
+**It scales when you let it.** Every lifecycle skill is a bounded, dispatchable unit — worktree isolation, tickets groomed to Ready with a plan, one-pass PR shepherding — so any conductor (a standing session, a cron loop, CI) can drive many tasks in parallel without the kit hardcoding an orchestrator.
 
 ## First run
 
@@ -83,7 +83,7 @@ Four skills cover the everyday loop. Learn these and you're productive; the rest
 | `code-review` | A diff or branch needs a thorough, multi-angle review |
 | `finish-task` | Work is done — gate it, land it, clean up, update the tracker |
 
-Everything else is depth for when you need it — drafting a PRD, verifying runtime behavior, running parallel work across tickets, bootstrapping a design system, writing product copy. Skills self-describe through their frontmatter `description` (the trigger an LLM matches against), so the agent reaches for the right one without an index to maintain.
+Everything else is depth for when you need it — drafting a PRD, verifying runtime behavior, bootstrapping a design system, writing product copy. Skills self-describe through their frontmatter `description` (the trigger an LLM matches against), so the agent reaches for the right one without an index to maintain.
 
 <details>
 <summary><strong>Full skill reference</strong> — every skill, grouped by lifecycle stage</summary>
@@ -91,7 +91,7 @@ Everything else is depth for when you need it — drafting a PRD, verifying runt
 | Group | Skills |
 |-------|--------|
 | **Planning** | `brainstorm`, `prd`, `spec`, `adr`, `story`, `glossary`, `breakdown`, `groom`, `estimate`, `reprioritize`, `next-task`, `new-task` |
-| **Execution** | `start-task`, `worktree`, `orchestrate`, `finish-task`, `cleanup`, `handoff` |
+| **Execution** | `start-task`, `worktree`, `finish-task`, `cleanup`, `handoff` |
 | **Review + verification** | `code-review`, `full-review`, `critique`, `verify`, `perspective`, `retro`, `calibrate`, `improve-codebase` |
 | **Design** | `establish-design`, `frontend-design`, `polish-design` |
 | **Writing + distribution** | `ux-writing`, `copywriting`, `discoverability` |
@@ -127,6 +127,23 @@ git clone https://github.com/youhaowei/wystack-agent-kit.git
 # { "type": "local", "path": "/abs/path/to/wystack-agent-kit/plugins/wystack-agent-kit" }
 ```
 
+### Grok Build
+
+```bash
+grok plugin install github.com/youhaowei/wystack-agent-kit#plugins/wystack-agent-kit --trust
+grok plugin enable wystack-agent-kit
+```
+
+Local checkout (lives with skill bodies — reinstall only after structural changes):
+
+```bash
+git clone https://github.com/youhaowei/wystack-agent-kit.git
+grok plugin install ./wystack-agent-kit/plugins/wystack-agent-kit --trust
+grok plugin enable wystack-agent-kit
+```
+
+Verify: `grok plugin list` shows `wystack-agent-kit`; `grok inspect` lists its skills under `plugin: wystack-agent-kit`. Reload or start a new session so slash commands pick up the skills.
+
 ### Pi
 
 ```bash
@@ -139,7 +156,7 @@ Loads plugin skills, role agents, the `wystack_agent` subagent tool, and an `age
 
 ## How it's built
 
-One skill body runs on every harness because behavior and adapter are separated. Skill and agent bodies are **portable principles** — generic, project-agnostic. Frontmatter carries the per-harness adapter: `name`, `description`, top-level `model`, and a nested `delegation.<harness>.*` block. Claude Code reads top-level; Codex reads the nested block. Porting to a new harness is that harness reading the same frontmatter — never rewriting the method.
+One skill body runs on every harness because behavior and adapter are separated. Skill and agent bodies are **portable principles** — generic, project-agnostic. Frontmatter carries the per-harness adapter: `name`, `description`, top-level `model`, and a nested `delegation.<harness>.*` block. Claude Code reads top-level; Codex reads the nested transport block; Grok loads the same agents as plugin types (with `delegation.grok` recording preferred models). Porting to a new harness is that harness reading the same frontmatter — never rewriting the method.
 
 Every skill inherits the shared methodology docs in [`plugins/wystack-agent-kit/docs/`](plugins/wystack-agent-kit/docs/):
 
@@ -153,7 +170,7 @@ Every skill inherits the shared methodology docs in [`plugins/wystack-agent-kit/
 If you are an LLM agent reading this README to install the kit into the current project, follow the block matching your host. Each block is self-contained and does not ask the user to make sub-decisions.
 
 <details>
-<summary><strong>Agent install instructions</strong> (Claude Code · Codex · Cursor)</summary>
+<summary><strong>Agent install instructions</strong> (Claude Code · Codex · Cursor · Grok)</summary>
 
 ### Host: Claude Code
 
@@ -182,6 +199,15 @@ Verify: `codex plugin list` should include `wystack-agent-kit`. Tell the user to
    { "type": "local", "path": "~/code/wystack-agent-kit/plugins/wystack-agent-kit" }
    ```
 3. Reload the host.
+
+### Host: Grok Build
+
+```bash
+grok plugin install github.com/youhaowei/wystack-agent-kit#plugins/wystack-agent-kit --trust
+grok plugin enable wystack-agent-kit
+```
+
+Verify: `grok plugin list` includes `wystack-agent-kit`. Tell the user to start a new session (or reload plugins with `r` in `/plugins`). Then, if the project will use lifecycle skills, invoke `/setup-agent-kit` (or the qualified `wystack-agent-kit:setup-agent-kit` form if names collide).
 
 ### After install — workspace bootstrap
 

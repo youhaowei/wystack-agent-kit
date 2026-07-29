@@ -4,7 +4,7 @@ Local development, deploy, and Codex-migration workflows for WyStack Agent Kit.
 
 ## Build and deploy
 
-For the usual local development loop, deploy to every detected tool (Claude Cowork, Claude Code CLI, Codex, Cursor):
+For the usual local development loop, deploy to every detected tool (Claude Cowork, Claude Code CLI, Codex, Cursor, Grok):
 
 ```bash
 bun run deploy
@@ -19,6 +19,7 @@ bun run deploy:claude               # Cowork only
 bun run deploy:cc                   # Claude Code CLI install-cache only
 bun run deploy:codex                # Codex cache only
 bun run deploy:cursor               # Cursor local-plugin only
+bun run deploy:grok                 # Grok Build plugin install only
 ```
 
 Build / upload helpers:
@@ -29,17 +30,18 @@ Build / upload helpers:
 ./scripts/watch-deploy.sh [plugin ...]
 ```
 
-After deploy, reload the host to pick up changed plugin metadata. Codex, the Claude Code CLI cache, and Cursor are symlinks to source — they read live files on next launch, but each tool still needs a restart to re-read metadata. Cursor additionally needs Settings → Features → "Include third-party Plugins" enabled.
+After deploy, reload the host to pick up changed plugin metadata. Codex, the Claude Code CLI cache, and Cursor are symlinks to source — they read live files on next launch, but each tool still needs a restart to re-read metadata. Cursor additionally needs Settings → Features → "Include third-party Plugins" enabled. Grok local-path installs keep a `source_path` to the repo, so skill/agent bodies stay live; re-run `bun run deploy:grok` (or `grok plugin install … --trust`) after structural or manifest changes.
 
 ## Releasing
 
-Three plugin manifests carry a version and must stay in sync:
+Four plugin manifests carry a version and must stay in sync:
 
 - `wystack-agent-kit/.claude-plugin/plugin.json`
 - `wystack-agent-kit/.codex-plugin/plugin.json`
 - `wystack-agent-kit/.cursor-plugin/plugin.json`
+- `wystack-agent-kit/.grok-plugin/plugin.json`
 
-Bump all three together, commit, then `bun run deploy`. The root `package.json` version is the npm package version — align it on a publish.
+Bump all four together, commit, then `bun run deploy`. The root `package.json` version is the npm package version — align it on a publish.
 
 ## Codex migration
 

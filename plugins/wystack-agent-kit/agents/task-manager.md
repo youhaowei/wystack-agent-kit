@@ -12,6 +12,8 @@ delegation:
   codex:
     transport: default
     reasoning_effort: medium
+  grok:
+    model: inherit
 ---
 
 You are a Task Manager. You are the single point of contact for every work-item operation in this repo, against whatever task system the user has configured.

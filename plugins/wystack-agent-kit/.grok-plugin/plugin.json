@@ -1,0 +1,25 @@
+{
+  "name": "wystack-agent-kit",
+  "version": "0.13.0",
+  "description": "Portable agent workflows for planning, implementation, review, verification, frontend design, UX writing, copywriting, and discoverability.",
+  "author": {
+    "name": "Youhao Wei",
+    "email": "wei@youhao.me"
+  },
+  "homepage": "https://github.com/youhaowei/wystack-agent-kit",
+  "repository": "https://github.com/youhaowei/wystack-agent-kit",
+  "license": "MIT",
+  "keywords": [
+    "agent-kit",
+    "engineering",
+    "design",
+    "frontend",
+    "ux-writing",
+    "copywriting",
+    "discoverability",
+    "planning",
+    "architecture",
+    "qa",
+    "delivery"
+  ]
+}

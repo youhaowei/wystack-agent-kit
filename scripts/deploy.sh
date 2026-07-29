@@ -7,6 +7,7 @@
 #   - Claude Code CLI  (~/.claude/plugins/cache/local-desktop-app-uploads)
 #   - Codex            (~/.codex)
 #   - Cursor           (~/.cursor)
+#   - Grok Build       (~/.grok)
 #
 # Usage:
 #   bun deploy [plugin ...]
@@ -71,8 +72,9 @@ have_cowork=0; [ -d "$HOME/.claude/plugins/marketplaces/local-desktop-app-upload
 have_cc=0;     [ -d "$HOME/.claude/plugins/cache/local-desktop-app-uploads" ] && have_cc=1
 have_codex=0;  [ -d "$HOME/.codex" ] && have_codex=1
 have_cursor=0; [ -d "$HOME/.cursor" ] && have_cursor=1
+have_grok=0;   [ -d "$HOME/.grok" ] && command -v grok >/dev/null 2>&1 && have_grok=1
 
-echo "Detected: cowork=$have_cowork cc=$have_cc codex=$have_codex cursor=$have_cursor"
+echo "Detected: cowork=$have_cowork cc=$have_cc codex=$have_codex cursor=$have_cursor grok=$have_grok"
 echo
 
 if [ "$dry_run" -eq 1 ]; then
@@ -108,6 +110,15 @@ if [ "$dry_run" -eq 1 ]; then
     done
   else
     echo "Cursor: not detected — skip"
+  fi
+  echo
+  if [ "$have_grok" -eq 1 ]; then
+    echo "Grok plugin install preview:"
+    for plugin in "${plugins[@]}"; do
+      bun scripts/sync_grok_plugin.js --plugin "$plugin" --dry-run
+    done
+  else
+    echo "Grok: not detected — skip"
   fi
   exit 0
 fi
@@ -150,4 +161,14 @@ else
 fi
 
 echo
-echo "Done. Reload Claude / Codex / Cursor to pick up changes."
+if [ "$have_grok" -eq 1 ]; then
+  echo "Installing / refreshing Grok plugin..."
+  for plugin in "${plugins[@]}"; do
+    bun scripts/sync_grok_plugin.js --plugin "$plugin" --apply
+  done
+else
+  echo "Grok not detected — skipping."
+fi
+
+echo
+echo "Done. Reload Claude / Codex / Cursor / Grok to pick up changes."
