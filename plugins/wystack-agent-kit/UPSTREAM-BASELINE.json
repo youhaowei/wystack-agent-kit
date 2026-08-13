@@ -1,9 +1,22 @@
 {
-  "_status": "Engineering plugin has one primary substrate (superpowers) plus inspiration sources we monitor for new ideas.",
+  "_status": "Historical provenance for concept ports. This plugin is not a maintained fork.",
   "sources": [
     {
+      "id": "mattpocock-skills",
+      "source": "github.com/mattpocock/skills",
+      "author": "Matt Pocock (@mattpocock)",
+      "license": "MIT",
+      "concepts_imported": [
+        "descriptions as context pointers",
+        "context load versus cognitive load",
+        "progressive disclosure by decision branch",
+        "explicit completion criteria",
+        "split skills only for distinct invocation language"
+      ],
+      "sync_policy": "Use writing-for-agents as the editing standard; port improvements only when they reduce context or sharpen a retained semantic boundary."
+    },
+    {
       "id": "superpowers",
-      "role": "primary substrate",
       "source": "github.com/obra/superpowers",
       "author": "Jesse Vincent (@obra)",
       "license": "MIT",
@@ -12,114 +25,53 @@
         "tag": "v5.0.7",
         "date": "2026-03-31"
       },
-      "upstream_head_at_check": {
-        "sha": "e7a2d16476bf042e9add4699c9d018a90f86e4a6",
-        "date": "2026-04-28"
-      },
       "concepts_imported": [
-        "lifecycle: brainstorm → spec → plan → TDD → review → finish",
-        "subagent dispatch pattern (parallel agent execution)",
-        "git-worktree isolation per task",
-        "multi-agent code review",
-        "TDD discipline"
+        "brainstorming discipline",
+        "implementation planning",
+        "code review",
+        "runtime verification"
       ],
-      "sync_policy": "Concept-port only. Superpowers explicitly rejects compliance restructures of skills (per their CLAUDE.md). Don't open PRs upstream that restructure to our <what-to-do>/<supporting-info> pattern."
+      "sync_policy": "Concept-port only; do not inherit lifecycle choreography or mandatory multi-agent execution."
     },
     {
       "id": "gstack",
-      "role": "inspiration",
       "source": "github.com/garrytan/gstack",
       "author": "Garry Tan (@garrytan)",
       "license": "MIT",
       "pin": {
         "sha": "30fe6bb11c6915e6264440b8a044ed0dcfbe06e0",
         "version": "1.26.2.0",
-        "date": "2026-05-04",
-        "added_at": "2026-05-04"
+        "date": "2026-05-04"
       },
-      "concepts_to_consider": [
-        "role-based agents (CEO, Designer, Eng Manager, Release Manager, Doc Engineer, QA)",
-        "AskUserQuestion gating pattern with anti-rationalization clauses (v1.26.2.0)",
-        "plan-mode review skills (plan-eng-review, plan-design-review, plan-ceo-review, plan-devex-review)",
-        "skill testing infrastructure (E2E plan-mode tests, classifier outcomes)",
-        "DESIGN.md / ETHOS.md / AGENTS.md / ARCHITECTURE.md document conventions",
-        "specific skills: investigate, ship, land-and-deploy, freeze/unfreeze, retro, office-hours, pair-agent"
+      "concepts_imported": [
+        "pragmatic product judgment",
+        "software-development review and retrospectives"
       ],
-      "sync_policy": "Concept-port only. Tan's stack is opinionated for his team's workflow and Conductor MCP variant — don't mirror wholesale. Skills that align with our verb (engineering execution) and aren't already covered are candidates. Cross-pollinate to Agent Kit plugin if a skill there is design-focused (design-shotgun, design-html, design-consultation)."
-    },
-    {
-      "id": "mattpocock-skills",
-      "role": "inspiration",
-      "source": "github.com/mattpocock/skills",
-      "author": "Matt Pocock (@mattpocock)",
-      "license": "MIT",
-      "pin": {
-        "sha": "b843cb5ea74b1fe5e58a0fc23cddef9e66076fb8",
-        "date": "2026-04-30",
-        "added_at": "2026-05-04"
-      },
-      "skills_at_pin": [
-        "diagnose",
-        "grill-with-docs",
-        "improve-codebase-architecture",
-        "setup-matt-pocock-skills",
-        "tdd",
-        "to-issues",
-        "to-prd",
-        "triage",
-        "zoom-out"
-      ],
-      "concepts_to_consider": [
-        "zoom-out skill (perspective-shift skill we don't have)",
-        "grill-with-docs (interrogate library docs before integrating)",
-        "diagnose (lightweight bug diagnosis, distinct from full triage)",
-        "CONTEXT.md per-skill convention worth watching",
-        "structured `<what-to-do>` / `<supporting-info>` skill body pattern (validates our own format)"
-      ],
-      "sync_policy": "Concept-port only. Already-covered skills (improve-codebase, tdd, triage, prd) don't need re-porting unless his version has a meaningfully different angle. Net-new skills (zoom-out, grill-with-docs, diagnose) are the candidates."
+      "sync_policy": "Concept-port only; do not mirror role agents, task conductors, or repository-specific workflows."
     }
   ],
-  "checked_at": "2026-05-04",
-  "added_local": [
-    "skills/brainstorm",
-    "skills/prd",
-    "skills/breakdown",
-    "skills/spec",
-    "skills/groom",
-    "skills/start-task",
-    "skills/finish-task",
-    "skills/code-review",
-    "skills/full-review",
-    "skills/engineering-context",
-    "skills/orchestrate",
-    "skills/workspace",
-    "skills/improve-codebase",
-    "skills/next-task",
-    "skills/new-task",
-    "skills/calibrate",
-    "skills/estimate",
-    "skills/worktree",
-    "skills/perspective",
-    "skills/verify",
-    "skills/cleanup",
-    "skills/retro",
-    "agents/pm",
-    "agents/principal",
-    "agents/qa",
-    "agents/devops",
-    "agents/task-manager",
-    "agents/wiki-librarian"
+  "retained_skills": [
+    "adr",
+    "brainstorm",
+    "breakdown",
+    "code-review",
+    "copywriting",
+    "discoverability",
+    "estimate",
+    "frontend-design",
+    "glossary",
+    "improve-codebase",
+    "prd",
+    "retro",
+    "spec",
+    "story",
+    "ux-writing",
+    "verify"
   ],
-  "dropped": {
-    "_note": "Upstream skills/agents we've explicitly chosen not to mirror (yet)",
-    "skills": []
-  },
-  "renames": {},
-  "divergence_notes": [
-    "Notion integration is heavy: PRD/Spec/Tasks live in Notion Wiki",
-    "Two-label severity model (MUST/SUGGEST) with near-term-trigger test",
-    "Codex compatibility annotations in skill bodies — superpowers is Claude-Code only",
-    "Custom doc model: promoted specs in repo, drafts in wiki",
-    "Don't open PRs upstream that restructure skills to our <what-to-do>/<supporting-info> pattern — superpowers' CLAUDE.md explicitly rejects compliance restructures"
+  "local_policy": [
+    "Preserve distinct SDLC judgments and artifacts.",
+    "Remove lifecycle wrappers, task management, workspace setup, and generic role agents.",
+    "Let user and project templates override minimal built-in formats.",
+    "Prefer improving a retained skill or conditional reference over adding a skill."
   ]
 }

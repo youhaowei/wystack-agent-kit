@@ -4,7 +4,7 @@ Named patterns of generic AI-generated frontend work. Detect and avoid.
 
 > **The slop test**: If you showed this interface to someone and said "AI made this," would they believe you immediately? If yes, that's the problem. A distinctive interface should make someone ask "how was this made?" — not "which AI made this?"
 
-Loaded by `frontend-design` and `polish-design`. Adapted from impeccable v1.3.0 with our additions.
+Used by `frontend-design` when a distinctiveness audit is relevant. Adapted from impeccable v1.3.0.
 
 ---
 
@@ -83,13 +83,4 @@ Loaded by `frontend-design` and `polish-design`. Adapted from impeccable v1.3.0 
 
 ---
 
-## Detection workflow
-
-When using `polish-design`:
-
-1. Walk the interface section by section.
-2. Per section, scan against the categories above.
-3. Name the anti-pattern when found (e.g., "this is Cardocalypse — flatten").
-4. Recommend the specific replacement, not just "make it better".
-
-Naming the pattern lets the user verify the call and lets the fix be precise.
+Name a detected pattern and propose a specific replacement. The catalog is a diagnostic vocabulary, not a ban: keep a pattern when it is clearly intentional and serves the product.

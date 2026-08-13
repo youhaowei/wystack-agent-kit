@@ -1,7 +1,7 @@
 {
   "name": "wystack-agent-kit",
-  "version": "0.13.0",
-  "description": "Portable agent workflows for planning, implementation, review, verification, frontend design, UX writing, copywriting, and discoverability.",
+  "version": "0.14.0",
+  "description": "Focused skills for product, engineering, design, and writing decisions.",
   "author": {
     "name": "Youhao Wei",
     "email": "wei@youhao.me"
@@ -16,14 +16,14 @@
     "discoverability",
     "planning",
     "architecture",
-    "qa",
-    "delivery"
+    "quality",
+    "writing"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "WyStack Agent Kit",
-    "shortDescription": "Agent workflows for planning, delivery, design, and verification",
-    "longDescription": "WyStack Agent Kit skills for planning, architecture, implementation, quality assurance, frontend design, UX writing, copywriting, discoverability, and delivery. Repos configure their own task and document systems under .wystack.",
+    "shortDescription": "Focused software-development skills",
+    "longDescription": "Sixteen focused skills that sharpen product, engineering, design, review, verification, and writing work without imposing a task system or lifecycle.",
     "developerName": "Youhao Wei",
     "category": "Coding",
     "capabilities": [
@@ -31,11 +31,11 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Plan this feature before implementation",
-      "Set up this repo for WyStack Agent Kit",
+      "Brainstorm this product idea",
+      "Write an implementation-ready spec",
       "Review these code changes for regressions",
-      "Turn this task into an execution plan",
-      "Build and polish this frontend screen"
+      "Record this architectural decision",
+      "Design this frontend screen"
     ],
     "brandColor": "#2563EB",
     "screenshots": []

@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "wystack-agent-kit",
-      "description": "Portable agent workflows for planning, implementation, review, verification, frontend design, UX writing, copywriting, and discoverability.",
+      "description": "Focused skills for product, engineering, design, and writing decisions.",
       "source": "./plugins/wystack-agent-kit"
     }
   ]

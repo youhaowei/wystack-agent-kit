@@ -1,0 +1,3 @@
+interface:
+  display_name: "Story"
+  short_description: "Express a user need as testable behavior"

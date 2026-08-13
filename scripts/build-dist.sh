@@ -47,7 +47,7 @@ for p in "${plugins[@]}"; do
   prefixed="$p"
   dst="$staging/$prefixed"
 
-  rsync -a \
+  rsync -a --prune-empty-dirs \
     --exclude='.DS_Store' \
     --exclude='node_modules' \
     --exclude='.git' \

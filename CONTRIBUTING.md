@@ -30,16 +30,16 @@ Build / upload helpers:
 ./scripts/watch-deploy.sh [plugin ...]
 ```
 
-After deploy, reload the host to pick up changed plugin metadata. Codex, the Claude Code CLI cache, and Cursor are symlinks to source — they read live files on next launch, but each tool still needs a restart to re-read metadata. Cursor additionally needs Settings → Features → "Include third-party Plugins" enabled. Grok local-path installs keep a `source_path` to the repo, so skill/agent bodies stay live; re-run `bun run deploy:grok` (or `grok plugin install … --trust`) after structural or manifest changes.
+After deploy, reload the host to pick up changed plugin metadata. Codex, the Claude Code CLI cache, and Cursor are symlinks to source — they read live files on next launch, but each tool still needs a restart to re-read metadata. Cursor additionally needs Settings → Features → "Include third-party Plugins" enabled. Grok local-path installs keep a `source_path` to the repo, so skill bodies stay live; re-run `bun run deploy:grok` (or `grok plugin install … --trust`) after structural or manifest changes.
 
 ## Releasing
 
 Four plugin manifests carry a version and must stay in sync:
 
-- `wystack-agent-kit/.claude-plugin/plugin.json`
-- `wystack-agent-kit/.codex-plugin/plugin.json`
-- `wystack-agent-kit/.cursor-plugin/plugin.json`
-- `wystack-agent-kit/.grok-plugin/plugin.json`
+- `plugins/wystack-agent-kit/.claude-plugin/plugin.json`
+- `plugins/wystack-agent-kit/.codex-plugin/plugin.json`
+- `plugins/wystack-agent-kit/.cursor-plugin/plugin.json`
+- `plugins/wystack-agent-kit/.grok-plugin/plugin.json`
 
 Bump all four together, commit, then `bun run deploy`. The root `package.json` version is the npm package version — align it on a publish.
 

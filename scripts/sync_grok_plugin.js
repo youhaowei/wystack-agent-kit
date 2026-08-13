@@ -2,7 +2,7 @@
 // Install / refresh the plugin into Grok Build.
 //
 // Grok loads plugins via `grok plugin install`. For a local path source, Grok
-// records `source_path` and keeps skill/agent bodies live from that path
+// records `source_path` and keeps skill bodies live from that path
 // (`grok plugin update` reports "local symlink, already live").
 //
 // Usage:
@@ -143,4 +143,4 @@ const list = run(grokBin, ["plugin", "list"], { allowFail: true });
 if ((list.stdout || "").trim()) console.log(list.stdout.trim());
 
 console.log("done. Reload Grok (or start a new session) to pick up metadata changes.");
-console.log("Skill/agent bodies are read live from source for local-path installs.");
+console.log("Skill bodies are read live from source for local-path installs.");

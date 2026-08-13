@@ -1,45 +1,35 @@
 # WyStack Agent Kit
 
-> A portable agent-workflow kit that takes a coding agent through the whole software lifecycle — brainstorm → PRD → spec → breakdown → build → review → verify → ship — as one connected method. The rule holds at every stage: the agent carries the work, you carry the decisions. Runs identically on Claude Code, Codex, Cursor, Grok, and Pi.
+> Sixteen focused skills for product, engineering, design, and writing decisions. No task system, lifecycle conductor, role hierarchy, or required workspace format.
 
-WyStack Agent Kit is a **plugin/skills bundle**, not a single skill. It ships 34 lifecycle skills and 10 universal role agents under one behavioral charter: the agent does the work and surfaces the calls that are yours — scope, trade-offs, what ships. Every skill leaves durable, auditable run records under `.wystack/` (typed project state, not chat history). It is supervised by default and autonomous when you choose — merge authority is a workspace policy: humans merge, or a verified quality gate merges for you.
+## Product definition
 
-Where it sits in the ecosystem: discipline-primitive skill sets like [mattpocock/skills](https://github.com/mattpocock/skills) give an agent individual disciplines (TDD, domain modeling, grilling). WyStack Agent Kit is the **lifecycle layer over those primitives** — it wraps discipline into an end-to-end method with human-in-the-loop decision gates and auditable evidence. The two compose: keep the primitives, add the lifecycle.
+- `brainstorm` — shape an unclear idea into a reasoned direction
+- `prd` — define outcomes, scope, and success
+- `story` — express a user need as testable behavior
+- `glossary` — give domain terms canonical meanings
 
-MIT licensed. It is a coding-agent plugin, not an MCP server.
+## Technical decisions
 
-## Install
+- `spec` — define an implementable technical design
+- `adr` — record an architectural decision and its tradeoffs
+- `breakdown` — split requirements into independently valuable work
+- `estimate` — size work from scope, risk, and uncertainty
 
-- [Install (all harnesses)](https://github.com/youhaowei/wystack-agent-kit#install--30-seconds) — Claude Code: `/plugin marketplace add github.com/youhaowei/wystack-agent-kit` then `/plugin install wystack-agent-kit@wystack-agent-kit`
-- [npm package](https://www.npmjs.com/package/@wystack/agent-kit) — `@wystack/agent-kit`
-- [First run / workspace bootstrap](https://github.com/youhaowei/wystack-agent-kit#first-run) — `wystack-agent-kit:setup-agent-kit`, once per repo
+## Engineering quality
 
-## Everyday loop (start here)
+- `code-review` — find concrete regressions in code changes
+- `verify` — test runtime claims with proportionate evidence
+- `retro` — turn completed work into actionable learning
+- `improve-codebase` — find high-leverage structural improvements
 
-- `brainstorm` — turn a rough idea into a validated design before building
-- `start-task` — plan, set up a worktree, and write a piece of work end to end
-- `code-review` — multi-angle static review of a diff or branch before merge
-- `finish-task` — gate the work, land the branch, clean up, update the tracker
+## Product experience
 
-## Full skill reference (by lifecycle stage)
+- `frontend-design` — explore static directions and implement a distinctive interface
+- `ux-writing` — clarify interface actions, states, and recovery
+- `copywriting` — write persuasive product and marketing copy
+- `discoverability` — improve search, AI, and directory discovery
 
-- Planning — `brainstorm`, `prd`, `spec`, `adr`, `story`, `glossary`, `breakdown`, `groom`, `estimate`, `reprioritize`, `next-task`, `new-task`
-- Execution — `start-task`, `worktree`, `finish-task`, `cleanup`, `handoff`
-- Review + verification — `code-review`, `full-review`, `critique`, `verify`, `perspective`, `retro`, `improve-codebase`
-- Design — `establish-design`, `frontend-design`, `polish-design`
-- Writing + distribution — `ux-writing`, `copywriting`, `discoverability`
-- Workspace — `setup-agent-kit`, `workspace`, `engineering-context`, `upgrade`
-- Role agents — `pm`, `principal`, `qa`, `devops`, `task-manager`, `wiki-librarian`, `designer`, `ux-writer`, `copywriter`, `marketing-specialist`
+User instructions and project conventions override bundled defaults. Skills compose naturally and load detailed references only when relevant.
 
-## How it works
-
-- [Portability model](https://github.com/youhaowei/wystack-agent-kit#how-its-built) — one skill body runs on every harness; frontmatter carries the per-harness adapter
-- [The constitution](https://github.com/youhaowei/wystack-agent-kit/blob/master/plugins/wystack-agent-kit/docs/constitution.md) — the agent carries work; the human owns decisions
-- [Run records](https://github.com/youhaowei/wystack-agent-kit/blob/master/plugins/wystack-agent-kit/docs/run-record.md) — durable, queryable evidence under `.wystack/`
-
-## Lineage (all MIT)
-
-- [obra/superpowers](https://github.com/obra/superpowers) — methodology discipline
-- [garrytan/gstack](https://github.com/garrytan/gstack) — lifecycle drive
-- [mattpocock/skills](https://github.com/mattpocock/skills) — everyday-real-engineering ethos
-- [UPSTREAM.md](https://github.com/youhaowei/wystack-agent-kit/blob/master/UPSTREAM.md) — fork lineage and upstream-tracking process
+Repository: https://github.com/youhaowei/wystack-agent-kit

@@ -1,3 +1,3 @@
 interface:
   display_name: "Breakdown"
-  short_description: "Help with Breakdown tasks"
+  short_description: "Split requirements into independently valuable work"

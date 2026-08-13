@@ -1,114 +1,44 @@
 {
-  "_status": "Derivative work — no longer a maintained fork. Concepts are ported selectively from upstreams; sync is conceptual, not file-level.",
+  "_status": "Historical provenance for design, writing, and discoverability concepts.",
   "sources": [
     {
       "id": "impeccable",
       "source": "github.com/pbakaus/impeccable",
       "author": "Paul Bakaus (@pbakaus)",
-      "license": "check repo",
-      "pin": {
-        "tag": "v1.3.0",
-        "cache_path": "~/.claude/plugins/cache/impeccable/impeccable/1.3.0/"
-      },
-      "upstream_head": {
-        "tags": ["skill-v3.0.6", "ext-v1.0.3"],
-        "date": "2026-04-29",
-        "note": "Restructured: separate skill + browser extension lanes, multi-harness installers. v1.3.0 layout we forked from is gone."
-      },
+      "pin": "v1.3.0",
       "concepts_imported": [
-        "AI slop test (named anti-patterns)",
-        "brand vs product register",
+        "named design anti-patterns",
+        "brand versus product register",
         "codebase-aware polish",
-        "bold aesthetic direction principle"
+        "distinctive aesthetic direction"
       ]
     },
     {
       "id": "marketingskills",
       "source": "github.com/coreyhaines31/marketingskills",
       "author": "Corey Haines (@coreyhaines31)",
-      "license": "check repo (likely MIT)",
-      "pin": {
-        "sha": "59596ef70467",
-        "cache_path": "~/.claude/plugins/cache/marketingskills/marketing-skills/59596ef70467/"
-      },
-      "upstream_head": {
-        "tag": "v1.9.0",
-        "sha": "1bcff9fc79c64fd7886c3c7aa583f4bd63916ff2",
-        "date": "2026-04-24"
-      },
-      "files_imported": {
-        "skills/copywriting/SKILL.md": "skills/copywriting/SKILL.md (merged with copy-editing seven-sweep)",
-        "skills/copy-editing/SKILL.md": "skills/copywriting/SEVEN-SWEEPS.md (extracted methodology)",
-        "skills/marketing-psychology/SKILL.md": "references/marketing-psychology.md (verbatim, frontmatter swapped)"
-      }
+      "pin": "59596ef70467",
+      "concepts_imported": [
+        "copywriting page patterns",
+        "seven-sweep copy editing",
+        "marketing psychology",
+        "search and agent discoverability"
+      ]
     },
     {
       "id": "anthropic-frontend-design",
       "source": "github.com/anthropics/claude-plugins-official",
-      "license": "Apache-2.0",
-      "pin": {
-        "subpath": "plugins/frontend-design",
-        "note": "Unversioned, dormant since late 2025"
-      },
       "concepts_imported": [
         "distinctive-over-plausible principle",
-        "UX writing patterns (in references/ux-writing/)"
+        "interface writing patterns"
       ]
     }
   ],
-  "checked_at": "2026-05-02",
-  "skills_added_local": [
-    "skills/discoverability",
-    "skills/ux-writing"
+  "retained_skills": [
+    "frontend-design",
+    "ux-writing",
+    "copywriting",
+    "discoverability"
   ],
-  "skills_renamed_or_rewritten": {
-    "skills/build → skills/frontend-design": "renamed + rewrote SKILL.md for clarity (was ambiguous between context-loader and creator)",
-    "skills/setup → skills/establish-design": "renamed + rewrote, now scoped to DESIGN.md only (visual). PRODUCT.md is wystack-agent-kit:pm's domain."
-  },
-  "skills_dropped": {
-    "from_local": ["skills/iterate", "skills/distill"],
-    "from_impeccable": ["colorize", "bolder", "quieter", "extract", "adapt", "optimize", "animate", "harden", "audit", "normalize", "delight", "clarify", "onboard", "critique", "teach-impeccable", "frontend-design"],
-    "from_marketingskills": ["paid-ads", "referral-program", "email-sequence", "launch-strategy", "pricing-strategy", "free-tool-strategy", "marketing-ideas", "content-strategy", "social-content", "programmatic-seo", "product-marketing-context", "analytics-tracking", "ab-test-setup", "signup-flow-cro", "form-cro", "popup-cro", "paywall-upgrade-cro", "onboarding-cro", "page-cro", "schema-markup (consolidated into discoverability)", "seo-audit (consolidated into discoverability)"],
-    "from_marketingskills_v1.9.0_new": ["cold-email", "churn-prevention", "lead-magnets", "customer-research", "ad-creative", "aso-audit", "community-marketing", "revops", "sales-enablement", "image", "video"]
-  },
-  "moved_to_other_plugin": {
-    "competitor-analysis": {
-      "from": "marketingskills (competitor-profiling + competitor-alternatives merged)",
-      "to": "wystack-agent-kit/skills/competitor-analysis",
-      "reason": "Competitor research is product/PM territory, not designer's responsibility. Skill removed entirely 2026-07-01"
-    }
-  },
-  "agents": {
-    "current": ["designer", "ux-writer", "copywriter", "marketing-specialist"],
-    "removed": ["reviewer (too generic; design-review skill stays, designer self-runs)"]
-  },
-  "references": {
-    "current": [
-      "anti-patterns.md",
-      "ui-primitives.md",
-      "marketing-psychology.md",
-      "philosophies/impeccable.md",
-      "philosophies/anthropic-frontend.md",
-      "philosophies/wystack.md",
-      "ux-writing/microcopy-patterns.md",
-      "ux-writing/voice-and-tone.md",
-      "ux-writing/error-messages.md",
-      "ux-writing/empty-states.md",
-      "ux-writing/accessibility-copy.md",
-      "discoverability/traditional-search.md",
-      "discoverability/structured-data.md",
-      "discoverability/ai-search.md",
-      "discoverability/site-architecture.md",
-      "discoverability/directories.md",
-      "discoverability/agent-discoverability.md"
-    ],
-    "growth_policy": "References grow as we absorb more design philosophies. Skills stay stable; references compound."
-  },
-  "divergence_notes": [
-    "Single combined plugin replaces previous design + marketing split (2026-05-02). The merger reflects user's actual workflow: 'I design sites' bundles visual + copy + IA + SEO.",
-    "Three writer agents reflect three cognitive modes: ux-writer (functional clarity), copywriter (persuasion), marketing-specialist (channels/distribution).",
-    "establish is visual-only — defers to wystack-agent-kit:pm for PRODUCT.md (audience, brand voice, register).",
-    "design-review is a skill, not an agent — designer self-runs it as a structured quality pass.",
-    "Future syncs from impeccable port concepts only (impeccable v3+ has restructured beyond file-level sync)."
-  ]
+  "sync_policy": "Port concepts into a retained skill or conditional reference. Do not recreate narrow command families or role agents."
 }

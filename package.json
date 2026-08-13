@@ -1,7 +1,7 @@
 {
   "name": "@wystack/agent-kit",
-  "version": "0.12.0",
-  "description": "One portable agent-workflow kit — plan, build, review, verify, design, and ship — running identically on Claude Code, Codex, Cursor, Grok, and Pi.",
+  "version": "0.14.0",
+  "description": "Sixteen focused skills for product, engineering, design, and writing decisions across Claude Code, Codex, Cursor, Grok, and Pi.",
   "private": false,
   "license": "MIT",
   "author": {
@@ -27,7 +27,7 @@
     "grok-plugin",
     "pi-package",
     "skills",
-    "agentic-workflows",
+    "software-development",
     "llm-tools"
   ],
   "files": [
@@ -35,7 +35,6 @@
     "UPSTREAM.md",
     "LICENSE",
     "plugins/wystack-agent-kit",
-    "pi",
     "scripts/build-dist.sh",
     "scripts/deploy.sh",
     "scripts/sync_codex_plugin_cache.js",
@@ -46,10 +45,6 @@
     ".claude-plugin/marketplace.json"
   ],
   "pi": {
-    "extensions": [
-      "pi/extensions/wystack-agents.ts",
-      "pi/extensions/agent-browser.ts"
-    ],
     "skills": [
       "plugins/wystack-agent-kit/skills"
     ]

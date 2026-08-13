@@ -1,7 +1,7 @@
 {
   "name": "wystack-agent-kit",
-  "version": "0.13.0",
-  "description": "Portable agent workflows for planning, implementation, review, verification, frontend design, UX writing, copywriting, and discoverability.",
+  "version": "0.14.0",
+  "description": "Focused skills for product, engineering, design, and writing decisions.",
   "author": {
     "name": "Youhao Wei",
     "email": "wei@youhao.me"
@@ -16,9 +16,8 @@
     "discoverability",
     "planning",
     "architecture",
-    "qa",
-    "delivery"
+    "quality",
+    "writing"
   ],
-  "skills": "./skills",
-  "agents": "./agents"
+  "skills": "./skills"
 }
