@@ -14,7 +14,7 @@ WyStack Agent Kit adds judgment where a capable coding agent benefits from a spe
 |---|---|
 | Product definition | `brainstorm`, `prd`, `story`, `glossary` |
 | Technical decisions | `spec`, `adr`, `breakdown`, `estimate` |
-| Engineering quality | `code-review`, `verify`, `retro`, `improve-codebase` |
+| Engineering quality | `cross-review`, `verify`, `retro`, `improve-codebase` |
 | Product experience | `frontend-design`, `ux-writing`, `copywriting`, `discoverability` |
 
 Each skill owns a distinct transformation:
@@ -27,7 +27,7 @@ Each skill owns a distinct transformation:
 - `adr` records a consequential architectural decision and its tradeoffs.
 - `breakdown` creates independently valuable work slices.
 - `estimate` sizes work from scope, risk, and uncertainty.
-- `code-review` finds concrete regressions in a change.
+- `cross-review` runs independent, evidence-grounded review angles and returns an explicit gate result.
 - `verify` tests runtime claims with proportionate evidence.
 - `retro` turns completed work into actionable learning.
 - `improve-codebase` finds high-leverage structural improvements.
@@ -37,6 +37,8 @@ Each skill owns a distinct transformation:
 - `discoverability` improves how a product is found by people and agents.
 
 Use one skill or compose several naturally. The agent should follow the user's instructions and the project's existing conventions; a skill's built-in format is only a fallback.
+
+`cross-review` is the one host-specific skill: it uses the Workflow runtime shared with `pr-gate`. On hosts without that runtime, use the host's native review.
 
 ## Design principles
 

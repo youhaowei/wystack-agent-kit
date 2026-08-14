@@ -1,6 +1,6 @@
 {
   "name": "@wystack/agent-kit",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Sixteen focused skills for product, engineering, design, and writing decisions across Claude Code, Codex, Cursor, Grok, and Pi.",
   "private": false,
   "license": "MIT",

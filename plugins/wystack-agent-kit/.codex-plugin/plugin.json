@@ -1,6 +1,6 @@
 {
   "name": "wystack-agent-kit",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Focused skills for product, engineering, design, and writing decisions.",
   "author": {
     "name": "Youhao Wei",
@@ -33,7 +33,7 @@
     "defaultPrompt": [
       "Brainstorm this product idea",
       "Write an implementation-ready spec",
-      "Review these code changes for regressions",
+      "Verify this behavior with runtime evidence",
       "Record this architectural decision",
       "Design this frontend screen"
     ],

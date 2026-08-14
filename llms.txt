@@ -18,7 +18,7 @@
 
 ## Engineering quality
 
-- `code-review` — find concrete regressions in code changes
+- `cross-review` — run independent, evidence-grounded review angles
 - `verify` — test runtime claims with proportionate evidence
 - `retro` — turn completed work into actionable learning
 - `improve-codebase` — find high-leverage structural improvements
@@ -31,5 +31,6 @@
 - `discoverability` — improve search, AI, and directory discovery
 
 User instructions and project conventions override bundled defaults. Skills compose naturally and load detailed references only when relevant.
+`cross-review` requires the Workflow runtime shared with `pr-gate`; other hosts should use their native review.
 
 Repository: https://github.com/youhaowei/wystack-agent-kit
